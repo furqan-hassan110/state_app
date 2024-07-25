@@ -1,10 +1,10 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import AgentHomeScreen from '../screens/agentstack/AgentHome';
+import {createStackNavigator} from '@react-navigation/stack';
+import AgentHomeScreen from '../screens/AgentScreens/AgentHomeScreen';
 
 const Stack = createStackNavigator();
 
-const AgentStack = () => {
+const AgentNavigator = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name="AgentHome" component={AgentHomeScreen} />
@@ -12,4 +12,4 @@ const AgentStack = () => {
   );
 };
 
-export default AgentStack;
+export default AgentNavigator;

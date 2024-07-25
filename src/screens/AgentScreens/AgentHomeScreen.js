@@ -1,13 +1,14 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { useAuth } from '../../navigationscreens/authcontext';
+import {View, Text, Button, StyleSheet} from 'react-native';
+// Contexts
+import {useAuth} from '../../contexts/AuthContext';
 
-const UserHome= () => {
-  const { logout } = useAuth();
+const AgentHomeScreen = () => {
+  const {logout} = useAuth();
 
   return (
     <View style={styles.container}>
-      <Text>User Home Screen</Text>
+      <Text>Agent Home Screen</Text>
       <Button title="Logout" onPress={logout} />
     </View>
   );
@@ -21,4 +22,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UserHome;
+export default AgentHomeScreen;

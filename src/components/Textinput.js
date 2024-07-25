@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextInput, View, Text, StyleSheet } from 'react-native';
 import { useField } from 'formik';
-import colors from '../src/styles/colors';
+import colors from '../styles/colors';
 
 const Textinput = ({ label, ...props }) => {
   const [field, meta] = useField(props);

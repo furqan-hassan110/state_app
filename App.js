@@ -1,19 +1,11 @@
-import React, { useEffect } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Image
-} from 'react-native';
+import React, {useEffect} from 'react';
 import SplashScreen from 'react-native-splash-screen';
-import { NavigationContainer } from '@react-navigation/native';
-import { AuthProvider } from './navigationscreens/authcontext';
-import RootNavigator from './navigationscreens/RootNavigator';
-import { StatusBar } from 'react-native';
-
+import {NavigationContainer} from '@react-navigation/native';
+import {StatusBar} from 'react-native';
+import {AuthProvider} from './src/contexts/AuthContext';
+import RootNavigator from './src/navigations/RootNavigator';
 
 function App() {
-
   useEffect(() => {
     SplashScreen.hide();
   }, []);
@@ -29,9 +21,5 @@ function App() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-
-});
 
 export default App;

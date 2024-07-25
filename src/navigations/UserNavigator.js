@@ -1,10 +1,10 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import UserHomeScreen from '../screens/userstack/userHome';
+import {createStackNavigator} from '@react-navigation/stack';
+import UserHomeScreen from '../screens/UserScreens/UserHomeScreen';
 
 const Stack = createStackNavigator();
 
-const UserStack = () => {
+const UserNatigator = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name="UserHome" component={UserHomeScreen} />
@@ -12,4 +12,4 @@ const UserStack = () => {
   );
 };
 
-export default UserStack;
+export default UserNatigator;

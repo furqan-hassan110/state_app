@@ -1,13 +1,13 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, {createContext, useContext, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({children}) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [role, setRole] = useState(null); // user or agent
 
-  const selectRole = (selectedRole) => {
+  const selectRole = selectedRole => {
     setRole(selectedRole);
   };
 
@@ -25,7 +25,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, role, selectRole, login, logout }}>
+    <AuthContext.Provider
+      value={{isAuthenticated, role, selectRole, login, logout}}>
       {children}
     </AuthContext.Provider>
   );
