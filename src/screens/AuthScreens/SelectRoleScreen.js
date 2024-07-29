@@ -51,13 +51,13 @@ const SelectRoleScreen = () => {
         <Text style={styles.futuretext}>your future house</Text>
         <View style={{flexDirection: 'row', top: 30}}>
           <Text style={styles.findtext}>Ready to</Text>
-          <Text style={styles.findtextbold}>explore?</Text>
+          <Text style={styles.findtextbold}>explore ?</Text>
         </View>
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-around',
-            top: 120,
+            top: 130,
           }}>
           <Button
             style={styles.button}
@@ -65,8 +65,8 @@ const SelectRoleScreen = () => {
             title="Agent"
             backgroundColor={colors.buttons}
             textColor="#fff"
-            width={width * 0.35}
-            height={height * 0.08}
+            width={width * 0.30}
+            height={height * 0.07}
             borderRadius={10}
             fontFamily="Lato-Bold"
           />
@@ -76,18 +76,18 @@ const SelectRoleScreen = () => {
             title="User"
             backgroundColor={colors.buttons}
             textColor="#fff"
-            width={width * 0.35}
-            height={height * 0.08}
+            width={width * 0.30}
+            height={height * 0.07}
             borderRadius={10}
             fontFamily="Lato-Bold"
           />
         </View>
-        <View style={{flexDirection: 'row', top: 150, alignSelf: 'center'}}>
+        <View style={{flexDirection: 'row', top: 180, alignSelf: 'center'}}>
           <Text style={styles.alreadytext}>
-            If you already have an account?
+            If you already have an account ?
           </Text>
           <TouchableOpacity>
-            <Text style={styles.sign}>Sign In</Text>
+            <Text style={styles.sign}> Sign In</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -103,27 +103,28 @@ const styles = StyleSheet.create({
   imagecontainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    bottom:20,
   },
   image: {
-    width: width * 0.45,
-    height: height * 0.22,
+    width: width * 0.463,
+    height: height * 0.23,
     borderRadius: 20,
     marginTop: 10,
   },
   findtext: {
-    fontSize: 25,
+    fontSize: 22,
     color: colors.text,
     fontFamily: 'Lato-Medium',
   },
   findtextbold: {
-    fontSize: 25,
+    fontSize: 22,
     marginLeft: 10,
     color: colors.text,
     marginRight: 10,
     fontFamily: 'Lato-Black',
   },
   futuretext: {
-    fontSize: 25,
+    fontSize: 22,
     color: colors.text,
     fontFamily: 'Lato-Medium',
     marginTop: 15,

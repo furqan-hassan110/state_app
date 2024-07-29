@@ -11,6 +11,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import Ionics from 'react-native-vector-icons/Ionicons'
 // Images
 import loginImg from '../../../assets/images/login.png';
 // Styles
@@ -20,6 +21,8 @@ import {useAuth} from '../../contexts/AuthContext';
 // Components
 import Button from '../../components/Button';
 import Textinput from '../../components/Textinput';
+
+
 
 const {width, height} = Dimensions.get('window');
 
@@ -65,37 +68,46 @@ const LoginScreen = () => {
         onSubmit={handleLogin}>
         {({handleSubmit}) => (
           <>
+          <View style={{bottom:10}}>
+            
             <Textinput
+            iconSet='MaterialIcons'
               style={styles.email}
+              icon={'mail-outline'}
               // MaterialIcons={}
               name="email"
               placeholder="Email"
               keyboardType="email-address"
               autoCapitalize="none"
-            />
+              
+            >
+              
+            </Textinput>
             <Textinput
+            iconSet='MaterialIcons'
               style={styles.password}
+              icon={"lock-closed"}
               name="password"
               placeholder="Password"
               // value={password}
               // onChangeText={handleChange('password')}
               secureTextEntry
             />
+            </View>
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                width: width * 1.2,
-                alignSelf: 'center',
+                flexDirection: 'row-reverse',
+                right:10,
+                // justifyContent: 'space-around',
+                // width: width * 1.25,
+                // alignSelf: 'center',
+                bottom:50
               }}>
-              <Text style={styles.forget}>Forget password?</Text>
-              <Text style={styles.showpass} onPress={togglePasswordVisibility}>
-                {passwordVisible ? 'Hide Password' : 'Show Password'}
-              </Text>
+              <Text style={styles.forget}>Forget password ?</Text>
             </View>
 
             <Button
-              title="Login"
+              title="Sign In"
               onPress={handleSubmit}
               style={styles.button}
             />
@@ -104,12 +116,12 @@ const LoginScreen = () => {
                 flexDirection: 'row',
                 alignSelf: 'center',
                 width: width * 0.75,
-                top: 150,
+                top: 180,
                 left: 50,
               }}>
-              <Text style={styles.alreadytext}>Don't have an account?</Text>
+              <Text style={styles.alreadytext}>Don't have an account ?</Text>
               <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                <Text style={styles.signIn}>Register</Text>
+                <Text style={styles.signIn}> Register</Text>
               </TouchableOpacity>
             </View>
           </>
@@ -131,38 +143,43 @@ const styles = StyleSheet.create({
     bottom: 60,
   },
   Let: {
-    fontSize: 25,
+    fontSize: 22,
     fontFamily: 'Lato-Medium',
     color: colors.text,
+    left:10
   },
   sign: {
-    fontSize: 25,
-    fontFamily: 'Lato-Black',
+    fontSize: 22,
+    fontFamily: 'Lato-Bold',
     color: colors.boldtextcolor,
-    left: 5,
+    left: 15,
   },
   email: {
     backgroundColor: colors.textinputfill,
+    paddingLeft:50,
     fontFamily: 'Lato-Regular',
-    width: width * 0.85,
+    width: width * 0.90,
     alignSelf: 'center',
-    height: height * 0.1,
+    height: height * 0.08,
     borderRadius: 10,
     padding: 10,
+    
   },
   password: {
     backgroundColor: colors.textinputfill,
+    paddingLeft:50,
     fontFamily: 'Lato-Regular',
-    width: width * 0.85,
+    width: width * 0.90,
     alignSelf: 'center',
-    height: height * 0.1,
+    height: height * 0.08,
     borderRadius: 10,
     padding: 10,
+    bottom:20
   },
   button: {
     width: width * 0.75,
-    height: height * 0.08,
-    top: 70,
+    height: height * 0.075,
+    top: 60,
     alignSelf: 'center',
     borderRadius: 10,
     backgroundColor: colors.buttons,
@@ -171,13 +188,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'Lato-Semibold',
     color: colors.text,
-    // right: 20
   },
   showpass: {
     fontSize: 12,
     fontFamily: 'Lato-Semibold',
     color: colors.text,
-    // left: 20
   },
   alreadytext: {
     color: colors.text,
