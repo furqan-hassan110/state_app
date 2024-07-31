@@ -25,11 +25,11 @@ const data = [
 ];
 
 const propertydeatail = [
-  { id: '1', areaName: 'Westrn Bay , ',cityName:'New Castle', country: 'USA', imageSource: require('../../../assets/images/role1.png') },
-  { id: '2', areaName: 'Downtown',cityName:'New Castle', country: 'Canada', imageSource: require('../../../assets/images/role2.png') },
-  { id: '3', areaName: 'Green Acres',cityName:'New Castle', country: 'Australia', imageSource: require('../../../assets/images/role3.png') },
-  { id: '4', areaName: 'Sunset Blvd',cityName:'New Castle', country: 'USA', imageSource: require('../../../assets/images/role4.png') },
-  { id: '5', areaName: 'Shibuya',cityName:'New Castle', country: 'Japan', imageSource: require('../../../assets/images/role1.png') },
+  { id: '1', areaName: 'Westrn Bay , ',cityName:'New Castle', country: 'USA',price:'2M', imageSource: require('../../../assets/images/role1.png') },
+  { id: '2', areaName: 'Downtown',cityName:'New Castle', country: 'Canada',price:'2M', imageSource: require('../../../assets/images/role2.png') },
+  { id: '3', areaName: 'Green Acres',cityName:'New Castle', country: 'Australia',price:'2M', imageSource: require('../../../assets/images/role3.png') },
+  { id: '4', areaName: 'Sunset Blvd',cityName:'New Castle', country: 'USA', price:'2M',imageSource: require('../../../assets/images/role4.png') },
+  { id: '5', areaName: 'Shibuya',cityName:'New Castle', country: 'Japan',price:'2M', imageSource: require('../../../assets/images/role1.png') },
 ];
 
 const UserHomeScreen = () => {
@@ -108,6 +108,7 @@ const UserHomeScreen = () => {
               areaName={item.areaName}
               cityName={item.cityName}
               country={item.country}
+              price={item.price}
             />
           )}
           contentContainerStyle={styles.listContainer}

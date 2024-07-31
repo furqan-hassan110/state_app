@@ -2,12 +2,12 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons'; // or 'react-native-vector-icons/FontAwesome' for React Native CLI
-import Entypo from 'react-native-vector-icons/Entypo'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import colors from '../styles/colors'
 
 const { width, height } = Dimensions.get('window');
 
-const PropertyCard = ({ imageSource, areaName,cityName, country }) => {
+const PropertyCard = ({ imageSource, areaName,cityName, country, price }) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const toggleFavorite = () => {
@@ -18,17 +18,18 @@ const PropertyCard = ({ imageSource, areaName,cityName, country }) => {
     <View style={styles.cardContainer}>
       <View style={styles.imageContainer}>
         <Image source={imageSource} style={styles.image} />
-        <TouchableOpacity style={styles.heartIcon} onPress={toggleFavorite}>
-          <Ionicons name="heart-outline" size={24} color={isFavorite ? 'red' : 'white'} />
+        <TouchableOpacity style={[styles.heartIcon , { backgroundColor: isFavorite ? colors.buttons : colors.boldtextcolor }]} onPress={toggleFavorite}>
+          <MaterialCommunityIcons name={isFavorite ? "cards-heart" : "cards-heart-outline"} size={15} color={isFavorite ? 'white' : 'white'} />
         </TouchableOpacity>
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.areaName}>{areaName}</Text>
         <Text style={styles.areaName}>{cityName}</Text>
         <View style={styles.locationContainer}>
-          <Entypo name="map-marker" size={20} color="#000" />
+          <MaterialCommunityIcons name="map-marker" size={15} color={colors.boldtextcolor} />
           <Text style={styles.country}>{country}</Text>
         </View>
+        <Text style={styles.price}>{price}</Text>
       </View>
     </View>
   );
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     flexDirection: 'row',
     width: width*0.8,
-    height: height*0.16,
+    height: height*0.18,
     marginRight: 10,
     borderRadius: 10,
     overflow: 'hidden',
@@ -51,15 +52,21 @@ const styles = StyleSheet.create({
     
   },
   image: {
-    borderRadius:10,
+    borderRadius:25,
     width: '100%',
     height: '100%',
   },
   heartIcon: {
+    width:width*0.075,
+    height:height*0.037,
     position: 'absolute',
-    top: 10,
-    right: 10,
-    zIndex: 1,
+    justifyContent:'center',
+    alignItems:'center',
+    top: 15,
+    // right: 5,
+    // zIndex: 1,
+    left:20,
+    borderRadius:50
   },
   detailsContainer: {
     flex: 1,
@@ -74,12 +81,21 @@ const styles = StyleSheet.create({
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 5,
+    marginTop: 10,
   },
   country: {
     marginLeft: 5,
-    fontSize: 16,
+    fontFamily:'Lato-Regular',
+    fontSize: 10,
+    color:colors.boldtextcolor
   },
+  price:{
+    marginLeft: 5,
+    fontFamily:'Lato-Black',
+    fontSize: 15,
+    color:colors.boldtextcolor,
+    top:30
+  }
 });
 
 export default PropertyCard;

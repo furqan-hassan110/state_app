@@ -17,7 +17,7 @@ const SearchBar = ({ placeholder, onChangeText, value }) => {
         value={value}
       />
       <TouchableOpacity style={styles.filterIconcon}>
-        <MaterialCommunityIcons name="tune-vertical-variant" size={24} color="gray" style={styles.filterIcon} />
+        <MaterialCommunityIcons name="tune-vertical-variant" size={20} color="white" style={styles.filterIcon} />
       </TouchableOpacity>
     </View>
   );
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.textinputfill,
     borderRadius: 10,
     paddingHorizontal: 10,
-    width: width * 0.9,
+    width: width * 0.93,
     height: height * 0.08,
     alignSelf: 'center',
     marginVertical: 10,
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
   filterIconcon:{
     backgroundColor:colors.buttons,
-    width:width*0.14,
+    width:width*0.13,
     height:height*0.06,
     borderRadius:10,
     alignContent:'center',
