@@ -84,7 +84,7 @@ const LoginScreen = () => {
               
             </Textinput>
             <Textinput
-            iconSet='MaterialIcons'
+            iconSet='Ionicons'
               style={styles.password}
               icon={"lock-closed"}
               name="password"
@@ -116,7 +116,7 @@ const LoginScreen = () => {
                 flexDirection: 'row',
                 alignSelf: 'center',
                 width: width * 0.75,
-                top: 180,
+                top: 150,
                 left: 50,
               }}>
               <Text style={styles.alreadytext}>Don't have an account ?</Text>
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     height: height * 0.08,
     borderRadius: 10,
     padding: 10,
-    bottom:20
+    // bottom:20
   },
   button: {
     width: width * 0.75,

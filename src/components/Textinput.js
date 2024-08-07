@@ -36,10 +36,10 @@ const Textinput = ({ icon, label, iconSet = 'MaterialIcons', secureTextEntry, ..
       {IconComponent && <IconComponent name={icon} size={24} style={styles.icon} />}
       {isPasswordField && (
         <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)} style={{
-          padding: 5, position: 'absolute',
-          zIndex: 1,
+          
+          
         }}>
-          <IconComponent
+          <MaterialIcons
             name={isPasswordVisible ? 'visibility' : 'visibility-off'}
             size={24}
             style={styles.passwordvisible}
@@ -58,20 +58,25 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   label: {
-    marginBottom: 5,
-    fontSize: 16,
+    // marginBottom: 5,
+    // fontSize: 16,
     // color: '#333',
   },
   input: {
-    borderWidth: 1,
+    
+    
     flex: 1,
     borderColor: '#ccc',
     padding: 10,
-    borderRadius: 5,
+    // borderRadius: 5,
     fontSize: 16,
+    // justifyContent:'center',
+    alignContent:'center',
+    // alignItems:'center',
+    
   },
   error: {
-    marginTop: 5,
+    // bottom: 50,
     fontSize: 14,
     color: 'red',
   },
@@ -87,7 +92,7 @@ const styles = StyleSheet.create({
     // justifyContent:'flex-end',
     // alignContent:'flex-end',
     left: 300,
-    // bottom:65,
+    bottom:65,
     color: colors.textinputplaceholdercolor,
     // position:'absolute'
     // display:'flex'

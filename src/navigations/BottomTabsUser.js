@@ -26,9 +26,9 @@ const UserBottomTabs = () => {
             case 'Loved':
               iconName = 'heart';
               break;
-            case 'Profile':
-              iconName = 'person';
-              break;
+              case 'Profile':
+                iconName = 'person';
+                break;
             default:
               iconName = 'circle';
           }
@@ -41,10 +41,11 @@ const UserBottomTabs = () => {
         inactiveTintColor: 'gray',
       }}
     >
+      
       <Tab.Screen name="Home" component={UserHomeScreen} options={{headerShown:false}}/>
       <Tab.Screen name="Search" component={UserSearchScreen} />
       <Tab.Screen name="Loved" component={UserLovedScreen} />
-      <Tab.Screen name="Profile" component={UserProfileScreen} />
+      <Tab.Screen name="Profile" component={UserProfileScreen} options={{headerShown:false}}/>
     </Tab.Navigator>
   );
 };

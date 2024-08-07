@@ -4,6 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import colors from '../styles/colors';  // Adjust the path as per your directory structure
 
+
 const { width, height } = Dimensions.get('window');
 
 const SearchBar = ({ placeholder, onChangeText, value }) => {

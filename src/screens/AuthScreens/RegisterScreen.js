@@ -37,7 +37,7 @@ const RegisterScreen = () => {
   const handleRegister = values => {
     console.log('Registration Details:', values);
     if (role === 'user') {
-      navigation.navigate('UserStack');
+      navigation.navigate('UserProfileScreen');
     } else if (role === 'agent') {
       navigation.navigate('AgentStack');
     }
@@ -69,6 +69,13 @@ const RegisterScreen = () => {
                   name="email"
                   placeholder="Enter your email"
                   keyboardType="email"
+                  autoCapitalize="none"
+                />
+                <Textinput
+                  style={styles.Phone}
+                  name="Phone No"
+                  placeholder="Enter Phone No"
+                  keyboardType="Numeric"
                   autoCapitalize="none"
                 />
                 <Textinput
@@ -128,7 +135,7 @@ const styles = StyleSheet.create({
     bottom:40
     // height: height * 0.1,
   },
-  pass: {
+  Phone: {
     backgroundColor: colors.textinputfill,
     width: width * 0.85,
     height: height * 0.08,
@@ -137,6 +144,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     bottom:80
+    // height: height * 0.1,
+  },
+  pass: {
+    backgroundColor: colors.textinputfill,
+    width: width * 0.85,
+    height: height * 0.08,
+    alignSelf: 'center',
+    // height: '30%',
+    borderRadius: 10,
+    padding: 10,
+    bottom:120
     // height: height * 0.1,
   },
   inputcon: {
@@ -160,7 +178,7 @@ const styles = StyleSheet.create({
     width: width * 0.75,
     height: height * 0.08,
     alignSelf: 'center',
-    bottom: 50,
+    bottom: 100,
     borderRadius: 10,
     backgroundColor: colors.buttons,
   },
@@ -179,13 +197,11 @@ const styles = StyleSheet.create({
     color: colors.thintextcolo,
     fontFamily: 'Lato-Medium',
     fontSize: 12,
-    top: 110,
   },
   signIn: {
     color: colors.thintextcolo,
     fontFamily: 'Lato-Black',
     fontSize: 12,
-    top: 110,
   },
   showpass: {
     fontSize: 12,

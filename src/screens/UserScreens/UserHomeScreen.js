@@ -14,22 +14,22 @@ import Homecards from '../../components/Homecards';
 import PropertyCard from '../../components/PropertyCard';
 
 const { width, height } = Dimensions.get('window');
-const categories = ['All', 'Home', 'Apartment', 'House', "floor", "flats", "offices"];
+// const categories = ['All', 'Home', 'Apartment', 'House', "floor", "flats", "offices"];
 
-const data = [
-  { id: '1', label: 'House', imageSource: require('../../../assets/images/role1.png') },
-  { id: '2', label: 'Apartment', imageSource: require('../../../assets/images/role2.png') },
-  { id: '3', label: 'Office', imageSource: require('../../../assets/images/role3.png') },
-  { id: '4', label: 'Flat', imageSource: require('../../../assets/images/role4.png') },
-  { id: '5', label: 'Home', imageSource: require('../../../assets/images/role1.png') },
-];
+// const data = [
+//   { id: '1', label: 'House', imageSource: require('../../../assets/images/role1.png') },
+//   { id: '2', label: 'Apartment', imageSource: require('../../../assets/images/role2.png') },
+//   { id: '3', label: 'Office', imageSource: require('../../../assets/images/role3.png') },
+//   { id: '4', label: 'Flat', imageSource: require('../../../assets/images/role4.png') },
+//   { id: '5', label: 'Home', imageSource: require('../../../assets/images/role1.png') },
+// ];
 
 const propertydeatail = [
-  { id: '1', areaName: 'Westrn Bay , ',cityName:'New Castle', country: 'USA',price:'2M', imageSource: require('../../../assets/images/role1.png') },
-  { id: '2', areaName: 'Downtown',cityName:'New Castle', country: 'Canada',price:'2M', imageSource: require('../../../assets/images/role2.png') },
-  { id: '3', areaName: 'Green Acres',cityName:'New Castle', country: 'Australia',price:'2M', imageSource: require('../../../assets/images/role3.png') },
-  { id: '4', areaName: 'Sunset Blvd',cityName:'New Castle', country: 'USA', price:'2M',imageSource: require('../../../assets/images/role4.png') },
-  { id: '5', areaName: 'Shibuya',cityName:'New Castle', country: 'Japan',price:'2M', imageSource: require('../../../assets/images/role1.png') },
+  { id: '1',category:"flat", areaName: 'Westrn Bay , ',cityName:'New Castle', country: 'USA',price:'2M', imageSource: require('../../../assets/images/role1.png') },
+  { id: '2',category:"house", areaName: 'Downtown',cityName:'New Castle', country: 'Canada',price:'2M', imageSource: require('../../../assets/images/role2.png') },
+  { id: '3',category:"appartment", areaName: 'Green Acres',cityName:'New Castle', country: 'Australia',price:'2M', imageSource: require('../../../assets/images/role3.png') },
+  { id: '4',category:"office", areaName: 'Sunset Blvd',cityName:'New Castle', country: 'USA', price:'2M',imageSource: require('../../../assets/images/role4.png') },
+  { id: '5',category:"floor", areaName: 'Shibuya',cityName:'New Castle', country: 'Japan',price:'2M', imageSource: require('../../../assets/images/role1.png') },
 ];
 
 const UserHomeScreen = () => {
@@ -63,13 +63,13 @@ const UserHomeScreen = () => {
       <ScrollView>
       <View style={{ marginTop: 10 }}>
         <FlatList
-          data={data}
+          data={propertydeatail}
           horizontal
           showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item}
+          keyExtractor={(item) => item.category}
           renderItem={({ item }) => (
             <Category
-              title={item.label}
+              title={item.category}
               onPress={() => filterResults(item)}
               isSelected={item === selectedCategory}
             />
@@ -79,12 +79,12 @@ const UserHomeScreen = () => {
       </View>
       <View style={{ top: 30 }}>
         <FlatList
-          data={data}
+          data={propertydeatail}
           horizontal
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <Homecards imageSource={item.imageSource} label={item.label} />
+            <Homecards imageSource={item.imageSource} label={item.category} />
           )}
           contentContainerStyle={styles.listContainer}
         />
