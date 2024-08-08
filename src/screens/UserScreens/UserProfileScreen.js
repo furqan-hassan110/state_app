@@ -3,9 +3,10 @@ import { View, Text, StyleSheet, Modal, TouchableOpacity, Image, Dimensions } fr
 import { useNavigation } from '@react-navigation/native'
 import colors from '../../styles/colors';
 import Button from '../../components/Button';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import profile from '../../../assets/images/profile.png';
+import Feather from 'react-native-vector-icons/Feather';
 
-import UserBottomTabs from '../../navigations/BottomTabsUser';
-import Icon from '@react-native-vector-icons/material-icons';
 
 const { width, height } = Dimensions.get('window');
 const UserProfileScreen = () => {
@@ -17,7 +18,7 @@ const UserProfileScreen = () => {
   const handleSubscribe = () => {
     setIsSubscribed(true);
     setModalVisible(false);
-    navigation.navigate('UserStack'); // Replace 'Home' with the actual name of your home screen
+    navigation.navigate('UserStack');
   };
 
 
@@ -36,51 +37,63 @@ const UserProfileScreen = () => {
             <Text style={styles.modalText}>Subscribe to continue</Text>
             <Button
               onPress={handleSubscribe}
-              title="Sign In"
-              // onPress={handleSubmit}
+              title="subscribe"
               style={styles.button}
             />
           </View>
         </View>
       </Modal>
       <View style={styles.profileContainer}>
-        <View>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backbutton}>
+            <Ionicons name="chevron-back" size={18} color="black" />
+          </TouchableOpacity>
           <Text style={styles.header}>
             Profile
           </Text>
-          <Icon>
-            
-          </Icon>
-        </View>
-        <View>
-          <Image>
-
-          </Image>
-        </View>
-        <View>
 
         </View>
-      </View>
-      {/* <View style={styles.infoContainer}>
-          <Text style={styles.label}>Username:</Text> */}
-      {/* <Text style={styles.value}>{user.username}</Text> */}
-      {/* </View>
+        <View>
+          <View style={{ backgroundColor: colors.textinputfill, width: width * 0.18, height: height * 0.09, borderRadius: 50, justifyContent: 'center', alignItems: 'center', marginTop:30 }}>
+            <Image source={profile} style={styles.profile}></Image>
+          </View>
+        </View>
         <View style={styles.infoContainer}>
-          <Text style={styles.label}>Phone Number:</Text> */}
-      {/* <Text style={styles.value}>{user.phoneNumber}</Text> */}
-      {/* </View>
+          <View style=
+          {styles.username}>
+              <Feather name='user' size={18} color={colors.black} style={{marginTop:20, left:10}}/>
+          </View>
+          
+        </View>
         <View style={styles.infoContainer}>
-          <Text style={styles.label}>Email:</Text> */}
-      {/* <Text style={styles.value}>{user.email}</Text> */}
-      {/* </View>
+          <View style=
+          {styles.username}>
+              <Feather name='user' size={18} color={colors.black} style={{marginTop:20, left:10}}/>
+          </View>
+          
+        </View>
+        <View style={styles.infoContainer}>
+          <View style=
+          {styles.username}>
+              <Feather name='user' size={18} color={colors.black} style={{marginTop:20, left:10}}/>
+          </View>
+          
+        </View>
+        <View style={{flexDirection:'row'}}>
+        <Button
+              onPress={handleSubscribe}
+              title="Edit Profile"
+              
+              style={styles.Editprofilebutton}
+            />
+            <Button
+              onPress={handleSubscribe}
+              title="Log Out"
+              style={styles.button}
+            />
+          </View>
       </View>
-      <TouchableOpacity  style={styles.button}>
-        <Text style={styles.buttonText}>Edit Profile</Text>
-      </TouchableOpacity>
-      <TouchableOpacity  style={[styles.button, { backgroundColor: colors.logout }]}>
-        <Text style={styles.buttonText}>Logout</Text>
-      </TouchableOpacity>
-     */}
     </View>
   );
 };
@@ -89,8 +102,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    // justifyContent: 'center',
-    // alignItems: 'center',
+    
   },
   modalContainer: {
     flex: 1,
@@ -129,6 +141,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  Editprofilebutton:{
+    color:colors.buttons,
+
+  },
   profileContainer: {
     alignItems: 'center',
     marginVertical: 20,
@@ -137,16 +153,36 @@ const styles = StyleSheet.create({
     color: colors.boldtextcolor,
     fontFamily: "Lato-Bold",
     fontSize: 20,
+    right: 20
   },
-  profilePic: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    marginBottom: 20,
+  backbutton: {
+    backgroundColor: colors.textinputfill,
+    width: width / 7,
+    height: height / 15,
+    borderRadius: 45,
+    right: 100,
+    bottom: 10,
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
+  profile: {
+    width: width * 0.1,
+    height: height * 0.06,
+  },
+ 
   infoContainer: {
-    flexDirection: 'row',
-    marginBottom: 10,
+    // flexDirection: 'row',
+    // marginTop: 50,
+    padding:10
+  },
+  username:{
+    // top:20,
+    backgroundColor:colors.textinputfill,
+    width:width*0.8,
+    height:height*0.08,
+    borderRadius:15,
+    
   },
   label: {
     fontSize: 18,

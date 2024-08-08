@@ -1,53 +1,49 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import UserHomeScreen from '../screens/UserScreens/UserHomeScreen';
-import UserSearchScreen from '../screens/UserScreens/UserSearchScreen';
-import UserLovedScreen from '../screens/UserScreens/UserLovedScreen';
-import UserProfileScreen from '../screens/UserScreens/UserProfileScreen';
-import colors from '../styles/colors';
+
+// Screens
+import HomeScreen from '../screens/UserScreens/UserHomeScreen';
+import SearchScreen from '../screens/UserScreens/UserSearchScreen';
+import LovedScreen from '../screens/UserScreens/UserLovedScreen';
+import ProfileScreen from '../screens/UserScreens/UserProfileScreen';
 
 const Tab = createBottomTabNavigator();
 
 const UserBottomTabs = () => {
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, size }) => {
-          let iconName;
+    
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
 
-          switch (route.name) {
-            case 'Home':
-              iconName = 'home';
-              break;
-            case 'Search':
-              iconName = 'search';
-              break;
-            case 'Loved':
-              iconName = 'heart';
-              break;
-              case 'Profile':
-                iconName = 'person';
-                break;
-            default:
-              iconName = 'circle';
-          }
+            if (route.name === 'Home') {
+              iconName = focused ? 'home' : 'home-outline';
+            } else if (route.name === 'Search') {
+              iconName = focused ? 'search' : 'search-outline';
+            } else if (route.name === 'Loved') {
+              iconName = focused ? 'heart' : 'heart-outline';
+            } else if (route.name === 'Profile') {
+              iconName = focused ? 'person' : 'person-outline';
+            }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-      })}
-      tabBarOptions={{
-        activeTintColor: colors.boldtextcolor,
-        inactiveTintColor: 'gray',
-      }}
-    >
-      
-      <Tab.Screen name="Home" component={UserHomeScreen} options={{headerShown:false}}/>
-      <Tab.Screen name="Search" component={UserSearchScreen} />
-      <Tab.Screen name="Loved" component={UserLovedScreen} />
-      <Tab.Screen name="Profile" component={UserProfileScreen} options={{headerShown:false}}/>
-    </Tab.Navigator>
+            // You can return any component that you like here!
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: '#204D6C',
+          tabBarInactiveTintColor: 'gray',
+          tabBarStyle: [{ display: 'flex' }, null],
+        })}
+      >
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Search" component={SearchScreen} />
+        <Tab.Screen name="Loved" component={LovedScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen}  options={{headerShown:false}}/>
+      </Tab.Navigator>
+  
   );
-};
+}
 
 export default UserBottomTabs;
