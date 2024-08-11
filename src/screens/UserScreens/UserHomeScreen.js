@@ -53,7 +53,7 @@ const UserHomeScreen = () => {
           Hey
         </Text>
         <Text style={styles.nametext}>
-          Cynthia!
+            Cynthia!
         </Text>
       </View>
       <Text style={styles.text1}>
@@ -61,7 +61,7 @@ const UserHomeScreen = () => {
       </Text>
       <SearchBar />
       <ScrollView>
-      <View style={{ marginTop: 10 }}>
+      <View style={{}}>
         <FlatList
           data={propertydeatail}
           horizontal
@@ -77,7 +77,7 @@ const UserHomeScreen = () => {
           style={styles.categoriesList}
         />
       </View>
-      <View style={{ top: 30 }}>
+      <View style={{ }}>
         <FlatList
           data={propertydeatail}
           horizontal
@@ -123,21 +123,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
     padding: 10
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
   logoprofilecontainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
-    bottom: 20
-    // alignItems:'stretch',
   },
   logo: {
     width: width * 0.2,
     height: height * 0.1,
-    right: 15
   },
   profile: {
     width: width * 0.08,
@@ -151,11 +145,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 100,
-    left: 10
   },
   namecontainer: {
     flexDirection: 'row',
-    bottom: 25
   },
   text: {
     color: colors.primary,
@@ -167,20 +159,15 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontSize: 25,
     fontFamily: 'Lato-Medium',
-    bottom: 25,
   },
   nametext: {
     color: colors.boldtextcolor,
     fontSize: 25,
     fontFamily: 'Lato-Black',
-    left: 10,
 
   },
-  listContainer: {
-    paddingVertical: 10,
-  },
   featuredcard: {
-    marginTop: 40,
+    marginTop: 10,
     flexDirection: 'row',
     justifyContent: "space-between",
   },

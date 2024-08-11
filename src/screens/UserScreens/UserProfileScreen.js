@@ -24,34 +24,18 @@ const UserProfileScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          // Handle back button press if needed
-        }}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Subscribe to continue</Text>
-            <Button
-              onPress={handleSubscribe}
-              title="subscribe"
-              style={styles.button}
-            />
-          </View>
-        </View>
-      </Modal>
+      
       <View style={styles.profileContainer}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+        <View style={{ width:'100%',flexDirection: 'row', justifyContent:"space-between" }}>
 
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backbutton}>
             <Ionicons name="chevron-back" size={18} color="black" />
           </TouchableOpacity>
+          <View style={{alignSelf:'center', marginRight:140}}>
           <Text style={styles.header}>
             Profile
           </Text>
+          </View>
 
         </View>
         <View>
@@ -62,25 +46,33 @@ const UserProfileScreen = () => {
         <View style={styles.infoContainer}>
           <View style=
           {styles.username}>
-              <Feather name='user' size={18} color={colors.black} style={{marginTop:20, left:10}}/>
+              <Feather name='user' size={18} color={colors.black} style={{marginTop:20,}}/>
           </View>
           
         </View>
         <View style={styles.infoContainer}>
           <View style=
           {styles.username}>
-              <Feather name='user' size={18} color={colors.black} style={{marginTop:20, left:10}}/>
+              <Feather name='user' size={18} color={colors.black} style={{marginTop:20}}/>
           </View>
           
         </View>
         <View style={styles.infoContainer}>
           <View style=
           {styles.username}>
-              <Feather name='user' size={18} color={colors.black} style={{marginTop:20, left:10}}/>
+              <Feather name='user' size={18} color={colors.black} style={{marginTop:20}}/>
           </View>
           
         </View>
-        <View style={{flexDirection:'row'}}>
+        </View>
+       <View style={{marginTop:'auto', justifyContent:"space-evenly",alignContent:'center', width:'100%', alignItems:'center',}}>
+        <Button
+              onPress={handleSubscribe}
+              title="Edit Profile"
+              
+              style={styles.Subscribebutton}
+            />
+             <View style={{flexDirection:'row', marginTop:10,}}>
         <Button
               onPress={handleSubscribe}
               title="Edit Profile"
@@ -92,8 +84,10 @@ const UserProfileScreen = () => {
               title="Log Out"
               style={styles.button}
             />
+
           </View>
-      </View>
+          </View>
+      
     </View>
   );
 };
@@ -102,7 +96,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    
+    padding:10
   },
   modalContainer: {
     flex: 1,
@@ -142,43 +136,47 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   Editprofilebutton:{
-    color:colors.buttons,
+    width: width * 0.35,
+    height: height * 0.07,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.buttons,
+    borderRadius: 10,
+    marginRight:10
 
   },
   profileContainer: {
     alignItems: 'center',
-    marginVertical: 20,
+    // marginVertical: 20,
   },
   header: {
     color: colors.boldtextcolor,
     fontFamily: "Lato-Bold",
     fontSize: 20,
-    right: 20
+    alignSelf:'center'
   },
   backbutton: {
     backgroundColor: colors.textinputfill,
     width: width / 7,
     height: height / 15,
     borderRadius: 45,
-    right: 100,
-    bottom: 10,
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center'
   },
   profile: {
-    width: width * 0.1,
-    height: height * 0.06,
+    width: width * 0.09,
+    height: height * 0.049,
   },
  
   infoContainer: {
-    // flexDirection: 'row',
-    // marginTop: 50,
-    padding:10
+    padding:10,
+    marginTop:10
   },
   username:{
-    // top:20,
     backgroundColor:colors.textinputfill,
+    paddingLeft:10,
     width:width*0.8,
     height:height*0.08,
     borderRadius:15,
@@ -195,16 +193,23 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   button: {
-    width: width * 0.6,
+    width: width * 0.35,
     height: height * 0.07,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.buttons,
     borderRadius: 10,
-    // marginTop: 20,
   },
-
+  Subscribebutton:{
+    width: width * 0.72,
+    height: height * 0.07,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.boldtextcolor,
+    borderRadius: 10,
+  }
 });
 
 export default UserProfileScreen;

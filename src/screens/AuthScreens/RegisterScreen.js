@@ -47,50 +47,58 @@ const RegisterScreen = () => {
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backbutton}>
         <Ionicons name="chevron-back" size={24} color="black" />
       </TouchableOpacity>
-      <View>
-        <View style={{flexDirection: 'row', left:10}}>
+      
+        <View style={{flexDirection: 'row', marginTop:20, marginBottom:60}}>
           <Text style={styles.creat}>Create your</Text>
-          <Text style={styles.account}>account</Text>
+          <Text style={styles.account}>  account</Text>
         </View>
-        <View style={styles.inputcon}>
+        
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={handleRegister}>
             {({handleSubmit}) => (
               <>
+              <View style={{}}>
                 <Textinput
                   style={styles.name}
                   name="name"
+                  icon={'person'}
                   placeholder="Full name"
                 />
                 <Textinput
                   style={styles.email}
                   name="email"
-                  placeholder="Enter your email"
-                  keyboardType="email"
+                  icon={'mail-outline'}
+                  placeholder="Email"
+                  keyboardType="Email"
                   autoCapitalize="none"
                 />
                 <Textinput
                   style={styles.Phone}
                   name="Phone No"
+                  icon={"phone"}
                   placeholder="Enter Phone No"
                   keyboardType="Numeric"
                   autoCapitalize="none"
                 />
                 <Textinput
-                  style={styles.pass}
-                  name="password"
-                  placeholder="password"
-                  // secureTextEntry
+                   iconSet='Ionicons'
+                   style={styles.pass}
+                   icon={"lock-closed"}
+                   name="password"
+                   placeholder="Password"
+                   secureTextEntry
                 />
-                {/* <Text style={styles.showpass}>Show Password</Text> */}
+                </View>
+                <View style={{ justifyContent:'center',alignContent:'center', width:'100%', alignItems:'center'}}>
                 <Button
                   title="Register"
                   onPress={handleSubmit}
                   style={styles.button}
                 />
-                <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+                </View>
+                <View style={{flexDirection: 'row', alignSelf: 'center',marginTop:'auto'}}>
                   <Text style={styles.alreadyText}>
                     Already have an account ?
                   </Text>
@@ -99,11 +107,12 @@ const RegisterScreen = () => {
                     <Text style={styles.signIn}> Login</Text>
                   </TouchableOpacity>
                 </View>
+                
               </>
             )}
           </Formik>
-        </View>
-      </View>
+        
+      
     </View>
   );
 };
@@ -115,70 +124,70 @@ const styles = StyleSheet.create({
   },
   name: {
     backgroundColor: colors.textinputfill,
-    width: width * 0.85,
+    width: width * 0.8,
     height: height * 0.08,
-    alignSelf: 'center',
+    // alignSelf: 'center',
     // height: '30%',
     borderRadius: 10,
-    padding: 10,
+    // padding: 10,
     
     // height: height * 0.1,
   },
   email: {
     backgroundColor: colors.textinputfill,
-    width: width * 0.85,
+    width: width * 0.8,
     height: height * 0.08,
     alignSelf: 'center',
     // height: '30%',
     borderRadius: 10,
-    padding: 10,
-    bottom:40
+    // padding: 10,
+    // bottom:40
     // height: height * 0.1,
   },
   Phone: {
     backgroundColor: colors.textinputfill,
-    width: width * 0.85,
+    width: width * 0.8,
     height: height * 0.08,
     alignSelf: 'center',
     // height: '30%',
     borderRadius: 10,
-    padding: 10,
-    bottom:80
+    // padding: 10,
+    // bottom:80
     // height: height * 0.1,
   },
   pass: {
     backgroundColor: colors.textinputfill,
-    width: width * 0.85,
+    width: width * 0.72,
     height: height * 0.08,
     alignSelf: 'center',
     // height: '30%',
     borderRadius: 10,
-    padding: 10,
-    bottom:120
+    // padding: 10,
+    // bottom:120
     // height: height * 0.1,
   },
-  inputcon: {
-    top: 120,
-  },
+  // inputcon: {
+  //   top: 120,
+  // },
   creat: {
     color: colors.thintextcolo,
     fontFamily: 'Lato-Medium',
     fontSize: 25,
-    left: 10,
-    top: 20,
+    // left: 10,
+    // top: 20,
   },
   account: {
     color: colors.thintextcolo,
     fontFamily: 'Lato-Black',
     fontSize: 25,
-    left: 15,
-    top: 20,
+    // left: 15,
+    // top: 20,
   },
   button: {
     width: width * 0.75,
     height: height * 0.08,
-    alignSelf: 'center',
-    bottom: 100,
+    // alignSelf: 'center',
+    // bottom: 100,
     borderRadius: 10,
     backgroundColor: colors.buttons,
   },
@@ -187,7 +196,7 @@ const styles = StyleSheet.create({
     width: width / 7,
     height: height / 15,
     borderRadius: 45,
-    left: 20,
+    // left: 20,
     alignContent:'center',
     alignItems:'center',
     justifyContent:'center'
@@ -208,7 +217,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato-Bold',
     color: colors.text,
     alignSelf: 'flex-end',
-    right: 20,
+    // right: 20,
   },
 });
 export default RegisterScreen;

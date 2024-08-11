@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextInput, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { TextInput, View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { useField } from 'formik';
 import colors from '../styles/colors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -12,10 +12,9 @@ const iconSets = {
   FontAwesome,
   Ionicons,
   Entypo,
-  Ionicons
 };
-
-const Textinput = ({ icon, label, iconSet = 'MaterialIcons', secureTextEntry, ...props }) => {
+ const {width, height } = Dimensions.get('window')
+const CustomTextInput = ({ icon, label, iconSet = 'MaterialIcons', secureTextEntry, ...props }) => {
   const [field, meta] = useField(props);
   const IconComponent = iconSets[iconSet];
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -24,28 +23,27 @@ const Textinput = ({ icon, label, iconSet = 'MaterialIcons', secureTextEntry, ..
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
-      <TextInput
-        style={styles.input}
-        secureTextEntry={isPasswordField && !isPasswordVisible}
-        onChangeText={field.onChange(props.name)}
-        onBlur={field.onBlur(props.name)}
-        placeholderTextColor={colors.textinputplaceholdercolor}
-        value={field.value}
-        {...props}
-      />
-      {IconComponent && <IconComponent name={icon} size={24} style={styles.icon} />}
-      {isPasswordField && (
-        <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)} style={{
-          
-          
-        }}>
-          <MaterialIcons
-            name={isPasswordVisible ? 'visibility' : 'visibility-off'}
-            size={24}
-            style={styles.passwordvisible}
-          />
-        </TouchableOpacity>
-      )}
+      <View style={styles.inputContainer}>
+        {IconComponent && <IconComponent name={icon} size={24} style={styles.icon} />}
+        <TextInput
+          style={styles.input}
+          secureTextEntry={isPasswordField && !isPasswordVisible}
+          onChangeText={field.onChange(props.name)}
+          onBlur={field.onBlur(props.name)}
+          placeholderTextColor={colors.textinputplaceholdercolor}
+          value={field.value}
+          {...props} // Ensure any additional props are passed to the TextInput
+        />
+        {isPasswordField && (
+          <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+            <MaterialIcons
+              name={isPasswordVisible ? 'visibility' : 'visibility-off'}
+              size={24}
+              style={styles.passwordVisible}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
       {meta.touched && meta.error ? (
         <Text style={styles.error}>{meta.error}</Text>
       ) : null}
@@ -58,45 +56,40 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   label: {
-    // marginBottom: 5,
-    // fontSize: 16,
-    // color: '#333',
+    marginBottom: 5,
+    fontSize: 16,
+    color: '#333',
+  },
+  inputContainer: {
+    width:width*0.94,
+    flexDirection: 'row',
+    alignItems: 'center',
+    // borderColor: '#ccc',
+    // borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    backgroundColor:colors.textinputfill
   },
   input: {
-    
-    
+    width:width*0.8,
     flex: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    // borderRadius: 5,
+    paddingVertical: 10,
     fontSize: 16,
-    // justifyContent:'center',
-    alignContent:'center',
-    // alignItems:'center',
-    
+    color: colors.black,
+    backgroundColor:colors.black
   },
   error: {
-    // bottom: 50,
     fontSize: 14,
     color: 'red',
+    marginTop: 5,
   },
   icon: {
-    color: colors.black,
-    bottom: 40,
-    left: 20,
-    color: colors.textinputplaceholdercolor
-  },
-  passwordvisible: {
-    color: colors.black,
-    // alignItems:'flex-end',
-    // justifyContent:'flex-end',
-    // alignContent:'flex-end',
-    left: 300,
-    bottom:65,
+    marginRight: 10,
     color: colors.textinputplaceholdercolor,
-    // position:'absolute'
-    // display:'flex'
-  }
+  },
+  passwordVisible: {
+    color: colors.textinputplaceholdercolor,
+  },
 });
 
-export default Textinput;
+export default CustomTextInput;

@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     backgroundColor: '#f0f0f0',
+    marginTop:10
   },
   imageContainer: {
     flex: 1,
@@ -62,16 +63,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     justifyContent:'center',
     alignItems:'center',
-    top: 15,
-    // right: 5,
-    // zIndex: 1,
-    left:20,
+    margin:20,
+    zIndex: 1,
     borderRadius:50
   },
   detailsContainer: {
     flex: 1,
     padding: 10,
-    // justifyContent: 'center',
   },
   areaName: {
     fontSize: 12,
@@ -81,7 +79,6 @@ const styles = StyleSheet.create({
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
   },
   country: {
     marginLeft: 5,
@@ -90,11 +87,10 @@ const styles = StyleSheet.create({
     color:colors.boldtextcolor
   },
   price:{
-    marginLeft: 5,
+    marginTop: 40,
     fontFamily:'Lato-Black',
     fontSize: 15,
     color:colors.boldtextcolor,
-    top:30
   }
 });
 

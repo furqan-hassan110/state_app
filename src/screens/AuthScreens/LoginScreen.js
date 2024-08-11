@@ -56,10 +56,12 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
+      <View>
       <Image source={loginImg} style={styles.signimage} />
-      <View style={{flexDirection: 'row', bottom: 70}}>
+      </View>
+      <View style={{flexDirection: 'row',}}>
         <Text style={styles.Let}>Let's</Text>
-        <Text style={styles.sign}>Sign In</Text>
+        <Text style={styles.sign}> Sign In</Text>
       </View>
 
       <Formik
@@ -68,7 +70,7 @@ const LoginScreen = () => {
         onSubmit={handleLogin}>
         {({handleSubmit}) => (
           <>
-          <View style={{bottom:10}}>
+          <View style={{}}>
             
             <Textinput
             iconSet='MaterialIcons'
@@ -97,15 +99,15 @@ const LoginScreen = () => {
             <View
               style={{
                 flexDirection: 'row-reverse',
-                right:10,
+                // right:10,
                 // justifyContent: 'space-around',
                 // width: width * 1.25,
                 // alignSelf: 'center',
-                bottom:50
+                // bottom:50
               }}>
               <Text style={styles.forget}>Forget password ?</Text>
             </View>
-
+          <View style={{marginTop:'auto', justifyContent:'center',alignContent:'center', width:'100%', alignItems:'center'}}>
             <Button
               title="Sign In"
               onPress={handleSubmit}
@@ -114,15 +116,16 @@ const LoginScreen = () => {
             <View
               style={{
                 flexDirection: 'row',
-                alignSelf: 'center',
-                width: width * 0.75,
-                top: 150,
-                left: 50,
+                // alignSelf: 'center',
+                // width: "100%",
+                // top: 150,
+                // left: 50,
               }}>
               <Text style={styles.alreadytext}>Don't have an account ?</Text>
               <TouchableOpacity onPress={() => navigation.navigate('Register')}>
                 <Text style={styles.signIn}> Register</Text>
               </TouchableOpacity>
+            </View>
             </View>
           </>
         )}
@@ -140,46 +143,46 @@ const styles = StyleSheet.create({
   signimage: {
     width: width,
     height: height * 0.3,
-    bottom: 60,
+    // bottom: 60,
   },
   Let: {
     fontSize: 22,
     fontFamily: 'Lato-Medium',
     color: colors.text,
-    left:10
+    // left:10
   },
   sign: {
     fontSize: 22,
     fontFamily: 'Lato-Bold',
     color: colors.boldtextcolor,
-    left: 15,
+    // left: 15,
   },
   email: {
     backgroundColor: colors.textinputfill,
-    paddingLeft:50,
+    // paddingLeft:50,
     fontFamily: 'Lato-Regular',
-    width: width * 0.90,
+    width: width * 0.8,
     alignSelf: 'center',
     height: height * 0.08,
     borderRadius: 10,
-    padding: 10,
+    // padding: 10,
     
   },
   password: {
     backgroundColor: colors.textinputfill,
-    paddingLeft:50,
+    // paddingLeft:50,
     fontFamily: 'Lato-Regular',
-    width: width * 0.90,
+    width: width * 0.72,
     alignSelf: 'center',
     height: height * 0.08,
     borderRadius: 10,
-    padding: 10,
+    // padding: 10,
     // bottom:20
   },
   button: {
     width: width * 0.75,
     height: height * 0.075,
-    top: 60,
+    // top: 60,
     alignSelf: 'center',
     borderRadius: 10,
     backgroundColor: colors.buttons,
@@ -196,7 +199,7 @@ const styles = StyleSheet.create({
   },
   alreadytext: {
     color: colors.text,
-    alignSelf: 'center',
+    // alignSelf: 'center',
     fontFamily: 'Lato-Regular',
     fontSize: 12,
   },
