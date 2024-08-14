@@ -2,12 +2,14 @@ import React from 'react';
 import { View, TextInput, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import colors from '../styles/colors';  // Adjust the path as per your directory structure
+import colors from '../styles/colors'; 
+import { useNavigation } from '@react-navigation/native';
 
 
 const { width, height } = Dimensions.get('window');
 
 const SearchBar = ({ placeholder, onChangeText, value }) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Ionicons name="search" size={24} color="gray" style={styles.searchIcon} />
@@ -18,7 +20,7 @@ const SearchBar = ({ placeholder, onChangeText, value }) => {
         value={value}
       />
       <View>
-      <TouchableOpacity style={styles.filterIconcon}>
+      <TouchableOpacity style={styles.filterIconcon} onPress={() => navigation.navigate('UserFilter')}>
         <MaterialCommunityIcons name="tune-vertical-variant" size={20} color="white" style={styles.filterIcon} />
       </TouchableOpacity>
       </View>
@@ -60,7 +62,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     alignSelf:'center',
     marginRight:10
-    // right:5
   },
 });
 

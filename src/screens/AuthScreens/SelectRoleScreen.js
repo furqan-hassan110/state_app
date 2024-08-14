@@ -34,7 +34,7 @@ const SelectRoleScreen = () => {
 
   return (
     <View style={styles.maincontaier}>
-      <View>
+      {/* <View> */}
         <View style={styles.imagecontainer}>
           <Image source={img1} style={styles.image} />
           <Image source={img2} style={styles.image} />
@@ -43,21 +43,29 @@ const SelectRoleScreen = () => {
           <Image source={img3} style={styles.image} />
           <Image source={img4} style={styles.image} />
         </View>
-        <View style={{flexDirection: 'row', top: 20}}>
+        <View style={{flexDirection: 'row'}}>
           <Text style={styles.findtext}>Find</Text>
           <Text style={styles.findtextbold}>perfect choice</Text>
           <Text style={styles.findtext}>for</Text>
         </View>
         <Text style={styles.futuretext}>your future house</Text>
-        <View style={{flexDirection: 'row', top: 30}}>
+        <View style={{flexDirection: 'row'}}>
           <Text style={styles.findtext}>Ready to</Text>
           <Text style={styles.findtextbold}>explore ?</Text>
         </View>
+        <View style={{
+            marginTop:'auto',
+            width:'100%',
+            // justifyContent:'center',
+            alignContent:'center',
+            alignItems:'center'}}>
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-around',
-            top: 130,
+            width:'100%'
+            
+            // top: 130,
           }}>
           <Button
             style={styles.button}
@@ -82,7 +90,7 @@ const SelectRoleScreen = () => {
             fontFamily="Lato-Bold"
           />
         </View>
-        <View style={{flexDirection: 'row', top: 180, alignSelf: 'center'}}>
+        <View style={{flexDirection: 'row', marginTop:'auto'}}>
           <Text style={styles.alreadytext}>
             If you already have an account ?
           </Text>
@@ -90,7 +98,8 @@ const SelectRoleScreen = () => {
             <Text style={styles.sign}> Sign In</Text>
           </TouchableOpacity>
         </View>
-      </View>
+        </View>
+      {/* </View> */}
     </View>
   );
 };
@@ -103,13 +112,14 @@ const styles = StyleSheet.create({
   imagecontainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    bottom:20,
+    paddingBottom:20,
+
   },
   image: {
     width: width * 0.463,
     height: height * 0.23,
     borderRadius: 20,
-    marginTop: 10,
+    // marginTop: 10,
   },
   findtext: {
     fontSize: 22,

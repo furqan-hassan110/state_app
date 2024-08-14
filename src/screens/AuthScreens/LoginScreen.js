@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Formik} from 'formik';
@@ -21,6 +22,7 @@ import {useAuth} from '../../contexts/AuthContext';
 // Components
 import Button from '../../components/Button';
 import Textinput from '../../components/Textinput';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 
@@ -55,7 +57,10 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container}
+    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}>
+      <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View>
       <Image source={loginImg} style={styles.signimage} />
       </View>
@@ -130,7 +135,8 @@ const LoginScreen = () => {
           </>
         )}
       </Formik>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

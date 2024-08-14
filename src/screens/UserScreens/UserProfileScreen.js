@@ -68,21 +68,22 @@ const UserProfileScreen = () => {
        <View style={{marginTop:'auto', justifyContent:"space-evenly",alignContent:'center', width:'100%', alignItems:'center',}}>
         <Button
               onPress={handleSubscribe}
-              title="Edit Profile"
+              title="Subscribe"
               
               style={styles.Subscribebutton}
             />
              <View style={{flexDirection:'row', marginTop:10,}}>
         <Button
-              onPress={handleSubscribe}
+              // onPress={handleSubscribe}
               title="Edit Profile"
               
               style={styles.Editprofilebutton}
             />
             <Button
-              onPress={handleSubscribe}
+              // onPress={handleSubscribe}
               title="Log Out"
               style={styles.button}
+              // onPress={navigation.navigate('logout')}
             />
 
           </View>
