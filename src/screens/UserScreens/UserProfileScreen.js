@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity, Image, Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native'
+import { View, Text, StyleSheet, Modal, TouchableOpacity, Image, Dimensions, TextInput, KeyboardAvoidingView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
 import Button from '../../components/Button';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import profile from '../../../assets/images/profile.png';
 import Feather from 'react-native-vector-icons/Feather';
-
+import { useAuth } from '../../contexts/AuthContext';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const { width, height } = Dimensions.get('window');
+
 const UserProfileScreen = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [modalVisible, setModalVisible] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
 
   const navigation = useNavigation();
+  const { userData, setUserData } = useAuth();
 
   const handleSubscribe = () => {
     setIsSubscribed(true);
@@ -21,75 +25,91 @@ const UserProfileScreen = () => {
     navigation.navigate('UserStack');
   };
 
+  const handleEditProfile = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const handleTextChange = (field, value) => {
+    setUserData({
+      ...userData,
+      [field]: value,
+    });
+  };
 
   return (
-    <View style={styles.container}>
-      
+    <KeyboardAvoidingView style={styles.container}>
+      <ScrollView>
       <View style={styles.profileContainer}>
-        <View style={{ width:'100%',flexDirection: 'row', justifyContent:"space-between" }}>
-
+        <View style={{ width: '100%', flexDirection: 'row', justifyContent: "space-between" }}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backbutton}>
             <Ionicons name="chevron-back" size={18} color="black" />
           </TouchableOpacity>
-          <View style={{alignSelf:'center', marginRight:140}}>
-          <Text style={styles.header}>
-            Profile
-          </Text>
+          <View style={{ alignSelf: 'center', marginRight: 140 }}>
+            <Text style={styles.header}>
+              Profile
+            </Text>
           </View>
-
         </View>
         <View>
-          <View style={{ backgroundColor: colors.textinputfill, width: width * 0.18, height: height * 0.09, borderRadius: 50, justifyContent: 'center', alignItems: 'center', marginTop:30 }}>
-            <Image source={profile} style={styles.profile}></Image>
+          <View style={styles.profileImageContainer}>
+            <Image source={profile} style={styles.profile} />
           </View>
         </View>
         <View style={styles.infoContainer}>
-          <View style=
-          {styles.username}>
-              <Feather name='user' size={18} color={colors.black} style={{marginTop:20,}}/>
+          <View style={styles.username}>
+            <Feather name='user' size={18} color={colors.black} style={{ padding: 10 }} />
+            <TextInput
+              style={styles.infoText}
+              value={userData.name}
+              editable={isEditing}
+              onChangeText={(value) => handleTextChange('name', value)}
+            />
           </View>
-          
         </View>
         <View style={styles.infoContainer}>
-          <View style=
-          {styles.username}>
-              <Feather name='user' size={18} color={colors.black} style={{marginTop:20}}/>
+          <View style={styles.username}>
+            <Feather name='phone' size={18} color={colors.black} style={{ padding: 10 }} />
+            <TextInput
+              style={styles.infoText}
+              value={userData.phoneNo}
+              editable={isEditing}
+              onChangeText={(value) => handleTextChange('phoneNo', value)}
+            />
           </View>
-          
         </View>
         <View style={styles.infoContainer}>
-          <View style=
-          {styles.username}>
-              <Feather name='user' size={18} color={colors.black} style={{marginTop:20}}/>
+          <View style={styles.username}>
+            <Feather name='mail' size={18} color={colors.black} style={{ padding: 10 }} />
+            <TextInput
+              style={styles.infoText}
+              value={userData.email}
+              editable={isEditing}
+              onChangeText={(value) => handleTextChange('email', value)}
+            />
           </View>
-          
         </View>
-        </View>
-       <View style={{marginTop:'auto', justifyContent:"space-evenly",alignContent:'center', width:'100%', alignItems:'center',}}>
+      </View>
+      <View style={styles.buttonContainer}>
         <Button
-              onPress={handleSubscribe}
-              title="Subscribe"
-              
-              style={styles.Subscribebutton}
-            />
-             <View style={{flexDirection:'row', marginTop:10,}}>
-        <Button
-              // onPress={handleSubscribe}
-              title="Edit Profile"
-              
-              style={styles.Editprofilebutton}
-            />
-            <Button
-              // onPress={handleSubscribe}
-              title="Log Out"
-              style={styles.button}
-              // onPress={navigation.navigate('logout')}
-            />
-
-          </View>
-          </View>
-      
-    </View>
+          onPress={handleSubscribe}
+          title="Subscribe"
+          style={styles.subscribeButton}
+        />
+        <View style={styles.buttonGroup}>
+          <Button
+            onPress={handleEditProfile}
+            title="Edit Profile"
+            style={styles.editProfileButton}
+          />
+          <Button
+            title="Log Out"
+            style={styles.button}
+            onPress={() => navigation.navigate('logout')}
+          />
+        </View>
+      </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -97,7 +117,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    padding:10
+    padding: 10,
+  },
+  profileImageContainer: {
+    backgroundColor: colors.textinputfill,
+    width: width * 0.18,
+    height: height * 0.09,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 30,
   },
   modalContainer: {
     flex: 1,
@@ -123,7 +152,7 @@ const styles = StyleSheet.create({
     color: colors.boldtextcolor,
     marginBottom: 16,
     fontSize: 15,
-    fontFamily: "Lato-Bold"
+    fontFamily: "Lato-Bold",
   },
   subscribeButton: {
     backgroundColor: '#2196F3',
@@ -131,12 +160,19 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
   },
+  infoText: {
+    fontSize: 16,
+    color: colors.boldtextcolor,
+    paddingLeft: 10,
+    fontFamily: 'Lato-Bold',
+    flex: 1,
+  },
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  Editprofilebutton:{
+  editProfileButton: {
     width: width * 0.35,
     height: height * 0.07,
     alignSelf: 'center',
@@ -144,18 +180,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.buttons,
     borderRadius: 10,
-    marginRight:10
-
+    marginRight: 10,
   },
   profileContainer: {
     alignItems: 'center',
-    // marginVertical: 20,
   },
   header: {
     color: colors.boldtextcolor,
     fontFamily: "Lato-Bold",
     fontSize: 20,
-    alignSelf:'center'
+    alignSelf: 'center',
   },
   backbutton: {
     backgroundColor: colors.textinputfill,
@@ -164,24 +198,23 @@ const styles = StyleSheet.create({
     borderRadius: 45,
     alignContent: 'center',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   profile: {
     width: width * 0.09,
     height: height * 0.049,
   },
- 
   infoContainer: {
-    padding:10,
-    marginTop:10
+    padding: 10,
+    marginTop: 10,
   },
-  username:{
-    backgroundColor:colors.textinputfill,
-    paddingLeft:10,
-    width:width*0.8,
-    height:height*0.08,
-    borderRadius:15,
-    
+  username: {
+    backgroundColor: colors.textinputfill,
+    width: width * 0.9,
+    height: height * 0.09,
+    borderRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   label: {
     fontSize: 18,
@@ -202,7 +235,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.buttons,
     borderRadius: 10,
   },
-  Subscribebutton:{
+  subscribeButton: {
     width: width * 0.72,
     height: height * 0.07,
     alignSelf: 'center',
@@ -210,7 +243,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.boldtextcolor,
     borderRadius: 10,
-  }
+  },
+  buttonContainer: {
+    marginTop: '10%',
+    justifyContent: "space-evenly",
+    alignContent: 'center',
+    width: '100%',
+    alignItems: 'center',
+  },
+  buttonGroup: {
+    flexDirection: 'row',
+    marginTop: 10,
+  },
 });
 
 export default UserProfileScreen;

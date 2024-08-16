@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Formik} from 'formik';
@@ -18,17 +19,19 @@ import {useAuth} from '../../contexts/AuthContext';
 import Textinput from '../../components/Textinput';
 import Button from '../../components/Button';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const {width, height} = Dimensions.get('window');
 
 const RegisterScreen = () => {
-  const initialValues = {name: '', email: '', password: ''};
-  const {role} = useAuth();
+  const initialValues = {name: '', email: '', password: '', phoneNo:''};
+  const {role, setUserData } = useAuth();
   const navigation = useNavigation();
 
   const validationSchema = Yup.object({
     name: Yup.string().required('Name is required'),
     email: Yup.string().email('Invalid email address').required('Required'),
+    phoneNo: Yup.number().required('required'),
     password: Yup.string()
       .min(6, 'Password must be at least 6 characters')
       .required('Required'),
@@ -36,6 +39,7 @@ const RegisterScreen = () => {
 
   const handleRegister = values => {
     console.log('Registration Details:', values);
+    setUserData(values);
     if (role === 'user') {
       navigation.navigate('UserProfileScreen');
     } else if (role === 'agent') {
@@ -43,7 +47,8 @@ const RegisterScreen = () => {
     }
   };
   return (
-    <View style={styles.main}>
+    <KeyboardAvoidingView style={styles.main}>
+      <ScrollView>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backbutton}>
         <Ionicons name="chevron-back" size={24} color="black" />
       </TouchableOpacity>
@@ -76,7 +81,7 @@ const RegisterScreen = () => {
                 />
                 <Textinput
                   style={styles.Phone}
-                  name="Phone No"
+                  name="phoneNo"
                   icon={"phone"}
                   placeholder="Enter Phone No"
                   keyboardType="Numeric"
@@ -112,8 +117,8 @@ const RegisterScreen = () => {
             )}
           </Formik>
         
-      
-    </View>
+          </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 const styles = StyleSheet.create({

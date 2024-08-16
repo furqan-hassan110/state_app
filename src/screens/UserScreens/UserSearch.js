@@ -126,6 +126,7 @@ cardCount: {
     fontWeight: 'bold',
     marginHorizontal: 16,
     marginTop: 10,
+    marginBottom: 10,
     color: colors.primary,
 },
   backbutton: {
