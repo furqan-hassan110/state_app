@@ -1,16 +1,18 @@
-// UserSearchScreen.js
 import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useRoute } from '@react-navigation/native';
-import PropertyCard from '../../components/PropertyCard';
+import SearchCards from '../../components/SearchCards';
 import colors from '../../styles/colors';
+
+const { width, height } = Dimensions.get('window');
+
 
 const UserSearchScreen = () => {
   const route = useRoute();
   const { query } = route.params || {};
 
   const propertyDetail = [
-    // Same propertyDetail array as before or you can fetch from an API
     { id: '1', category: 'flat', areaName: 'Western Bay', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role1.png') },
     { id: '2', category: 'house', areaName: 'Downtown', cityName: 'New Castle', country: 'Canada', price: '2M', imageSource: require('../../../assets/images/role2.png') },
     { id: '3', category: 'apartment', areaName: 'Green Acres', cityName: 'New Castle', country: 'Australia', price: '2M', imageSource: require('../../../assets/images/role3.png') },
@@ -18,33 +20,60 @@ const UserSearchScreen = () => {
     { id: '5', category: 'floor', areaName: 'Shibuya', cityName: 'New Castle', country: 'Japan', price: '2M', imageSource: require('../../../assets/images/role1.png') },
   ];
 
-  const filteredProperties = propertyDetail.filter(property =>
-    property.areaName.toLowerCase().includes(query.toLowerCase()) ||
-    property.category.toLowerCase().includes(query.toLowerCase()) ||
-    property.cityName.toLowerCase().includes(query.toLowerCase()) ||
-    property.country.toLowerCase().includes(query.toLowerCase())
-  );
-
+  const filteredProperties = query
+    ? propertyDetail.filter(property =>
+        property.category.toLowerCase().includes(query.toLowerCase()) ||
+        property.cityName.toLowerCase().includes(query.toLowerCase()) ||
+        property.country.toLowerCase().includes(query.toLowerCase())
+      )
+    : propertyDetail;
+    const renderSearchResult = ({ item }) => {
+      return <SearchCards item={item} />;
+    };
+    
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Search results</Text>
+        <TouchableOpacity style={styles.backbutton} onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back" size={24} color={colors.primary} />
+        </TouchableOpacity>
+        {/* <Text style={styles.resultCount}>Found {filteredProperties.length} estates</Text> */}
+      </View>
       {filteredProperties.length > 0 ? (
         <FlatList
-          data={filteredProperties}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <PropertyCard
-              id={item.id}
-              imageSource={item.imageSource}
-              areaName={item.areaName}
-              cityName={item.cityName}
-              country={item.country}
-              price={item.price}
-            />
-          )}
+          // data={filteredProperties}
+          // keyExtractor={(item) => item.id}
+          renderItem={renderSearchResult}
+          data={propertyDetail}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        //     <SearchCards
+        //     data={propertyDetail}
+        //       // id={item.id}
+        //       // imageSource={item.imageSource}
+        //       // areaName={item.areaName}
+        //       // cityName={item.cityName}
+        //       // country={item.country}
+        //       // price={item.price}
+        //       keyExtractor={(item) => item.id}
+        // renderItem={renderSearchResult}
+        // numColumns={2}
+        //     />
+          
           contentContainerStyle={styles.listContainer}
         />
       ) : (
-        <Text style={styles.noResults}>No results found for "{query}"</Text>
+        <View style={styles.noResultsContainer}>
+          {/* <Image
+            // source={require('../../../assets/images/no_results_icon.png')} // Replace with your no-results icon
+            style={styles.noResultsIcon}
+          /> */}
+          <Text style={styles.noResultsText}>Search not found</Text>
+          <Text style={styles.suggestionText}>
+            Sorry, we can't find the real estates you are looking for. Maybe, a little spelling mistake?
+          </Text>
+        </View>
       )}
     </View>
   );
@@ -56,15 +85,53 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     padding: 10,
   },
+  header: {
+    marginBottom: 20,
+  },
+  headerText: {
+    fontSize: 20,
+    fontFamily:'Lato-Bold',
+    alignSelf:'center',
+    // fontWeight: 'bold',
+    color: colors.boldtextcolor,
+  },
+  resultCount: {
+    fontSize: 16,
+    color: colors.black,
+  },
   listContainer: {
     paddingVertical: 10,
   },
-  noResults: {
-    textAlign: 'center',
+  backbutton: {
+    backgroundColor: colors.textinputfill,
+    width: width / 7,
+    height: height / 15,
+    borderRadius: 45,
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  noResultsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noResultsIcon: {
+    width: 60,
+    height: 60,
+    marginBottom: 20,
+  },
+  noResultsText: {
+    fontSize: 24,
+    fontWeight: 'bold',
     color: colors.boldtextcolor,
-    fontFamily: 'Lato-Bold',
+    marginBottom: 10,
+  },
+  suggestionText: {
     fontSize: 16,
-    marginTop: 20,
+    color: colors.lighttextcolor,
+    textAlign: 'center',
+    paddingHorizontal: 20,
   },
 });
 
