@@ -9,6 +9,7 @@ import UserProfileScreen from '../screens/UserScreens/UserProfileScreen';
 import UserFilter from '../screens/UserScreens/UserFilter';
 import UserSearch from '../screens/UserScreens/UserSearch';
 import UserSearchScreen from '../screens/UserScreens/UserSearchScreen';
+import PropertyDetail from '../screens/UserScreens/PropertyDetail';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ const RootNavigator = () => {
       <Stack.Screen name="UserFilter" component={UserFilter} />
       <Stack.Screen name="UserSearch" component={UserSearch} />
       <Stack.Screen name="UserSearchScreen" component={UserSearchScreen} />
+      <Stack.Screen name="PropertyDetail" component={PropertyDetail} />
       <Stack.Screen name="AgentStack" component={AgentNavigator} />
     </Stack.Navigator>
   );

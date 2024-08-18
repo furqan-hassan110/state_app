@@ -1,6 +1,6 @@
 // UserHomeScreen.js
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, FlatList, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, Dimensions, FlatList, ScrollView, TouchableOpacity } from 'react-native';
 import { LovedProvider } from '../../contexts/LovedContext';
 import logo from '../../../assets/images/logo.png';
 import profile from '../../../assets/images/profile.png';
@@ -9,23 +9,30 @@ import Category from '../../components/Category';
 import PropertyCard from '../../components/PropertyCard';
 import colors from '../../styles/colors';
 import Homecards from '../../components/Homecards';
+import { useRoute, useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
 const propertyDetail = [
-  { id: '1', category: 'flat', areaName: 'Western Bay', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role1.png') },
-  { id: '2', category: 'house', areaName: 'Downtown', cityName: 'New Castle', country: 'Canada', price: '2M', imageSource: require('../../../assets/images/role2.png') },
-  { id: '3', category: 'apartment', areaName: 'Green Acres', cityName: 'New Castle', country: 'Australia', price: '2M', imageSource: require('../../../assets/images/role3.png') },
-  { id: '4', category: 'office', areaName: 'Sunset Blvd', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role4.png') },
-  { id: '5', category: 'floor', areaName: 'Shibuya', cityName: 'New Castle', country: 'Japan', price: '2M', imageSource: require('../../../assets/images/role1.png') },
+  { id: '1', category: 'flat',Title: 'Bungalow House', areaName: 'Western Bay', cityName: 'New Castle', country: 'USA', price: '2M',bedroom:"2",bathroom:'3', garage:'2', imageSource: require('../../../assets/images/role1.png') },
+  { id: '2', category: 'house',Title: 'Bungalow House', areaName: 'Downtown', cityName: 'New Castle', country: 'Canada', price: '2M',bedroom:"2",bathroom:'3', garage:'2', imageSource: require('../../../assets/images/role2.png') },
+  { id: '3', category: 'apartment',Title: 'Bungalow House', areaName: 'Green Acres', cityName: 'New Castle', country: 'Australia', price: '2M',bedroom:"2",bathroom:'3', garage:'2', imageSource: require('../../../assets/images/role3.png') },
+  { id: '4', category: 'office',Title: 'Bungalow House', areaName: 'Sunset Blvd', cityName: 'New Castle', country: 'USA', price: '2M',bedroom:"2",bathroom:'3', garage:'2', imageSource: require('../../../assets/images/role4.png') },
+  { id: '5', category: 'floor',Title: 'Bungalow House', areaName: 'Shibuya', cityName: 'New Castle', country: 'Japan', price: '2M',bedroom:"2",bathroom:'3', garage:'2', imageSource: require('../../../assets/images/role1.png') },
 ];
 
 const UserHomeScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
+  const navigation = useNavigation();
+
   const filterResults = (category) => {
     setSelectedCategory(category);
+  };
+
+  const handlePropertyClick = (item) => {
+    navigation.navigate('PropertyDetail', { property: item });
   };
 
   return (
@@ -86,6 +93,7 @@ const UserHomeScreen = () => {
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handlePropertyClick(item)}>
               <PropertyCard
                 id={item.id}
                 imageSource={item.imageSource}
@@ -94,6 +102,7 @@ const UserHomeScreen = () => {
                 country={item.country}
                 price={item.price}
               />
+              </TouchableOpacity>
             )}
             contentContainerStyle={styles.listContainer}
           />

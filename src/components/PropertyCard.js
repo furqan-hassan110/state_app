@@ -84,6 +84,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color:colors.boldtextcolor,
   },
+  cityName:{
+    fontSize: 12,
+    fontWeight: 'bold',
+    color:colors.boldtextcolor,
+  },
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
