@@ -14,11 +14,11 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 const { width, height } = Dimensions.get('window');
 
 const propertyDetail = [
-  { id: '1', category: 'flat',Title: 'Bungalow House', areaName: 'Western Bay', cityName: 'New Castle', country: 'USA', price: '2M',bedroom:"2",bathroom:'3', garage:'2', imageSource: require('../../../assets/images/role1.png') },
-  { id: '2', category: 'house',Title: 'Bungalow House', areaName: 'Downtown', cityName: 'New Castle', country: 'Canada', price: '2M',bedroom:"2",bathroom:'3', garage:'2', imageSource: require('../../../assets/images/role2.png') },
-  { id: '3', category: 'apartment',Title: 'Bungalow House', areaName: 'Green Acres', cityName: 'New Castle', country: 'Australia', price: '2M',bedroom:"2",bathroom:'3', garage:'2', imageSource: require('../../../assets/images/role3.png') },
-  { id: '4', category: 'office',Title: 'Bungalow House', areaName: 'Sunset Blvd', cityName: 'New Castle', country: 'USA', price: '2M',bedroom:"2",bathroom:'3', garage:'2', imageSource: require('../../../assets/images/role4.png') },
-  { id: '5', category: 'floor',Title: 'Bungalow House', areaName: 'Shibuya', cityName: 'New Castle', country: 'Japan', price: '2M',bedroom:"2",bathroom:'3', garage:'2', imageSource: require('../../../assets/images/role1.png') },
+  { id: '1', category: 'flat',Title: 'Bungalow House', areaName: 'Western Bay', cityName: 'New Castle', country: 'USA', price: '$ 2M',bedroom:"2",bathroom:'3', garage:'2', imageSource: require('../../../assets/images/role1.png') },
+  { id: '2', category: 'house',Title: 'Bungalow House', areaName: 'Downtown', cityName: 'New Castle', country: 'Canada', price: '$ 2M',bedroom:"2",bathroom:'3', garage:'2', imageSource: require('../../../assets/images/role2.png') },
+  { id: '3', category: 'apartment',Title: 'Bungalow House', areaName: 'Green Acres', cityName: 'New Castle', country: 'Australia', price: '$ 2M',bedroom:"2",bathroom:'3', garage:'2', imageSource: require('../../../assets/images/role3.png') },
+  { id: '4', category: 'office',Title: 'Bungalow House', areaName: 'Sunset Blvd', cityName: 'New Castle', country: 'USA', price: '$ 2M',bedroom:"2",bathroom:'3', garage:'2', imageSource: require('../../../assets/images/role4.png') },
+  { id: '5', category: 'floor',Title: 'Bungalow House', areaName: 'Shibuya', cityName: 'New Castle', country: 'Japan', price: '$ 2M',bedroom:"2",bathroom:'3', garage:'2', imageSource: require('../../../assets/images/role1.png') },
 ];
 
 const UserHomeScreen = () => {
