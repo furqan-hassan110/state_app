@@ -27,15 +27,11 @@ const PropertyDetail = ({ route, navigation }) => {
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
-  const navigateToImageSlider = () => {
-    navigation.navigate('ImageSliderScreen', {
-      images: [
-        property.imageSource, 
-        property.imageSource2, 
-        property.imageSource3
-        // Add more images if needed
-      ],
-    });
+
+  const handleImagePress = () => {
+    const images = [property.imageSource]; // Replace with actual image URIs
+    navigation.navigate('ImageSlider', { images });
+    console.log(property)
   };
 
   return (
@@ -71,7 +67,7 @@ const PropertyDetail = ({ route, navigation }) => {
         <View>
           <Image source={property.imageSource} style={{marginBottom:15, width: width * 0.2, height: height * 0.08, borderRadius: 20, borderWidth: 2, borderColor: colors.white }}></Image>
         </View>
-        <TouchableOpacity onPress={navigateToImageSlider}>
+        <TouchableOpacity onPress={handleImagePress}>
           <View style={{backgroundColor:colors.black, opacity:0.5,width: width * 0.2, height: height * 0.08,borderRadius: 20,}}>
           <Image source={property.imageSource} style={{marginBottom:15, width: width * 0.2, height: height * 0.08, borderRadius: 20, borderWidth: 2, borderColor: colors.white }}></Image>
           </View>

@@ -1,4 +1,3 @@
-// LovedContext.js
 import React, { createContext, useState, useContext } from 'react';
 
 const LovedContext = createContext();
@@ -7,7 +6,16 @@ export const LovedProvider = ({ children }) => {
     const [lovedProperties, setLovedProperties] = useState([]);
 
     const addToLoved = (property) => {
-        setLovedProperties((prevLoved) => [...prevLoved, property]);
+        setLovedProperties((prevLoved) => {
+            const isAlreadyLoved = prevLoved.some((p) => p.id === property.id);
+            if (isAlreadyLoved) {
+                console.log('Removing from loved:', property);
+                return prevLoved.filter((p) => p.id !== property.id);
+            } else {
+                console.log('Adding to loved:', property);
+                return [...prevLoved, property];
+            }
+        });
     };
 
     const removeFromLoved = (id) => {

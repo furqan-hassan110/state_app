@@ -33,6 +33,7 @@ const UserHomeScreen = () => {
 
   const handlePropertyClick = (item) => {
     navigation.navigate('PropertyDetail', { property: item });
+    // console.log(item)
   };
 
   return (

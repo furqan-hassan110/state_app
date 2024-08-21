@@ -1,4 +1,3 @@
-// PropertyCard.js
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -8,13 +7,15 @@ import { useLoved } from '../contexts/LovedContext';
 const { width, height } = Dimensions.get('window');
 
 const PropertyCard = ({ id, imageSource, areaName, cityName, country, price }) => {
-    const { isLoved, addToLoved, removeFromLoved } = useLoved();
+    const { isLoved, addToLoved, removeFromLoved  } = useLoved();
     const isFavorite = isLoved(id);
 
     const handleAddToLoved = () => {
-      const property = { id, imageSource, areaName, cityName, country, price };
-      addToLoved(property);
-  };
+        const property = { id, imageSource, areaName, cityName, country, price };
+        console.log('Clicked Loved Icon:', property);
+        addToLoved(property);
+        ;
+    };
 
     return (
         <View style={styles.cardContainer}>
@@ -22,7 +23,8 @@ const PropertyCard = ({ id, imageSource, areaName, cityName, country, price }) =
                 <Image source={imageSource} style={styles.image} />
                 <TouchableOpacity
                     style={[styles.heartIcon, { backgroundColor: isFavorite ? colors.buttons : colors.boldtextcolor }]}
-                    onPress={handleAddToLoved}>
+                    onPress={handleAddToLoved}
+                >
                     <MaterialCommunityIcons
                         name={isFavorite ? 'cards-heart' : 'cards-heart-outline'}
                         size={15}

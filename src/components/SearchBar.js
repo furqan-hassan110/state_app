@@ -3,12 +3,18 @@ import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import colors from '../styles/colors'; 
+import colors from '../styles/colors';
 import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
-const SearchBar = ({ placeholder, value, onChangeText = () => {} }) => { // Default value for onChangeText
+const SearchBar = ({ 
+  placeholder, 
+  value, onChangeText = () => { }, 
+  customWidth = width * 0.93, // Default width 93% of the screen width
+  customHeight = height * 0.07 
+}) => 
+  { // Default value for onChangeText
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState(value || '');
 
@@ -17,11 +23,12 @@ const SearchBar = ({ placeholder, value, onChangeText = () => {} }) => { // Defa
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { width: customWidth, height: customHeight }]}>
       <Ionicons name="search" size={24} color="gray" style={styles.searchIcon} onPress={handleSearch} />
       <TextInput
         style={styles.input}
         placeholder={placeholder}
+        placeholderTextColor={colors.textinputplaceholdercolor}
         onChangeText={(text) => {
           setSearchQuery(text);
           onChangeText(text); // Call the passed onChangeText function
@@ -42,8 +49,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.textinputfill,
     borderRadius: 10,
     paddingHorizontal: 10,
-    width: width * 0.93,
-    height: height * 0.07,
     alignSelf: 'center',
     marginVertical: 10,
   },

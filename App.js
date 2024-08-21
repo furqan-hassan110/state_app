@@ -15,11 +15,13 @@ function App() {
     <>
       <StatusBar backgroundColor="#fff" barStyle="light-content" />
       <NavigationContainer>
-        <LovedProvider>
+        
         <AuthProvider>
+        <LovedProvider>
           <RootNavigator />
+          </LovedProvider>
         </AuthProvider>
-        </LovedProvider>
+        
       </NavigationContainer>
     </>
   );

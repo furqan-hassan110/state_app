@@ -1,4 +1,3 @@
-// UserLovedScreen.js
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, Dimensions } from 'react-native';
 import { useLoved } from '../../contexts/LovedContext';
@@ -19,6 +18,7 @@ const UserLovedScreen = () => {
             </View>
         );
     }
+    else{
 
     return (
         <View style={styles.container}>
@@ -40,6 +40,7 @@ const UserLovedScreen = () => {
         </View>
     );
 };
+}
 
 const styles = StyleSheet.create({
     container: {
