@@ -31,9 +31,8 @@ const UserHomeScreen = () => {
     setSelectedCategory(category);
   };
 
-  const handlePropertyClick = (item) => {
-    navigation.navigate('PropertyDetail', { property: item });
-    // console.log(item)
+  const handlePropertyClick = (property) => {  // **Changed parameter to 'property'**
+    navigation.navigate('PropertyDetail', { property });  // **Changed to pass 'property' object**
   };
 
   return (
@@ -89,12 +88,12 @@ const UserHomeScreen = () => {
             <Text style={styles.featuredtext}>View all</Text>
           </View>
           <FlatList
-            data={propertyDetail}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => handlePropertyClick(item)}>
+          data={propertyDetail}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => handlePropertyClick(item)}>
               <PropertyCard
                 id={item.id}
                 imageSource={item.imageSource}
@@ -103,10 +102,10 @@ const UserHomeScreen = () => {
                 country={item.country}
                 price={item.price}
               />
-              </TouchableOpacity>
-            )}
-            contentContainerStyle={styles.listContainer}
-          />
+            </TouchableOpacity>
+          )}
+          contentContainerStyle={styles.listContainer}
+        />
         </ScrollView>
       </View>
     </LovedProvider>

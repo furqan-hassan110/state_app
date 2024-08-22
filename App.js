@@ -1,8 +1,8 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import SplashScreen from 'react-native-splash-screen';
-import {NavigationContainer} from '@react-navigation/native';
-import {StatusBar} from 'react-native';
-import {AuthProvider} from './src/contexts/AuthContext';
+import { NavigationContainer } from '@react-navigation/native';
+import { StatusBar } from 'react-native';
+import { AuthProvider } from './src/contexts/AuthContext';
 import RootNavigator from './src/navigations/RootNavigator';
 import { LovedProvider } from './src/contexts/LovedContext';
 
@@ -14,15 +14,13 @@ function App() {
   return (
     <>
       <StatusBar backgroundColor="#fff" barStyle="light-content" />
-      <NavigationContainer>
-        
-        <AuthProvider>
+      <AuthProvider>
         <LovedProvider>
-          <RootNavigator />
-          </LovedProvider>
-        </AuthProvider>
-        
-      </NavigationContainer>
+          <NavigationContainer>
+            <RootNavigator />
+          </NavigationContainer>
+        </LovedProvider>
+      </AuthProvider>
     </>
   );
 }

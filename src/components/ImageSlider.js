@@ -1,50 +1,93 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
-import SliderShow from 'react-native-image-slider-show';
-// import img1 from require('../../assets/images/role1.png')
-// import img2 from require('../../assets/images/role2.png')
+import { View, ScrollView, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
+import colors from '../styles/colors';
+// import UserNavigation from '../navigations/UserNavigator';
 
-const ImageSlider = ({ route }) => {
-  
-  const { images } = route.params;
-  console.log(images);
-  console.log(route.params)
+const { width, height } = Dimensions.get('window');
 
-// console.log(styles.paginationBoxStyle)
-// console.log(images)
-// const image = [
-//   require('../../assets/images/role1.png'),
-//   require('../../assets/images/role2.png'),
-//   require('../../assets/images/role3.png'),
-// ];
+const images = [
+  require('../../assets/images/role1.png'),
+  require('../../assets/images/role2.png'),
+  require('../../assets/images/role3.png'),
+];
 
+const ImageSlider = (route) => {
+  const navigation = useNavigation();
   return (
-    // <View style={styles.container}>
-      <View>
-      <SliderShow
-      dataSource={images}
-      />
-      {/* <Image source={img1}/> */}
-      
-
+    <View style={styles.container}>
+      <View style={{
+        // flexDirection: 'row', top: 30,
+        // left: 20,
+        // zIndex: 10, justifyContent: 'space-between', width: '100%', position: 'absolute', alignItems: 'center', alignContent: 'center'
+      }}>
+        
       </View>
+      <View style={styles.overlay} />
+      <TouchableOpacity style={styles.backbutton} onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back" size={20} color={colors.black} />
+        </TouchableOpacity>
+      <ScrollView
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        style={styles.scrollView}
+      >
+        {images.map((image, index) => (
+          <View key={index} style={styles.imageContainer}>
+            <Image
+              source={image}
+              style={styles.image}
+              resizeMode="contain" // This keeps the aspect ratio
+            />
+          </View>
+        ))}
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'black',
+    // justifyContent: 'center',
+    // alignItems: 'center',
   },
-  paginationBoxStyle: {
+  overlay: {
     position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
     bottom: 0,
-    padding: 0,
-    alignItems: 'center',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    paddingVertical: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Semi-transparent black background
   },
+  scrollView: {
+    width: '100%',
+  },
+  imageContainer: {
+    width: width,
+    height: 'auto', // Allows height to adjust based on the image's aspect ratio
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: '100%',
+    height: undefined,
+    aspectRatio: 1, // Adjust this value or use a specific height instead of 'undefined' if needed
+  },
+  backbutton:{width: width * 0.13,
+    height: height * 0.06,
+    backgroundColor:colors.white,
+    borderRadius:30, 
+    justifyContent:'center', 
+    alignItems:'center', 
+    flexDirection:'row', 
+    marginLeft:10, 
+    marginTop:10
+            
+        }
 });
 
 export default ImageSlider;

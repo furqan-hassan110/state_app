@@ -7,42 +7,48 @@ import { useLoved } from '../contexts/LovedContext';
 const { width, height } = Dimensions.get('window');
 
 const PropertyCard = ({ id, imageSource, areaName, cityName, country, price }) => {
-    const { isLoved, addToLoved, removeFromLoved  } = useLoved();
-    const isFavorite = isLoved(id);
+  const { lovedProperties, setLovedProperties } = useLoved();
 
-    const handleAddToLoved = () => {
-        const property = { id, imageSource, areaName, cityName, country, price };
-        console.log('Clicked Loved Icon:', property);
-        addToLoved(property);
-        ;
-    };
+  const handleToggleLoved = () => {
+    setLovedProperties((prev) => {
+      const isAlreadyLoved = prev.some((p) => p.id === id);
 
-    return (
-        <View style={styles.cardContainer}>
-            <View style={styles.imageContainer}>
-                <Image source={imageSource} style={styles.image} />
-                <TouchableOpacity
-                    style={[styles.heartIcon, { backgroundColor: isFavorite ? colors.buttons : colors.boldtextcolor }]}
-                    onPress={handleAddToLoved}
-                >
-                    <MaterialCommunityIcons
-                        name={isFavorite ? 'cards-heart' : 'cards-heart-outline'}
-                        size={15}
-                        color='white'
-                    />
-                </TouchableOpacity>
-            </View>
-            <View style={styles.detailsContainer}>
-                <Text style={styles.areaName}>{areaName}</Text>
-                <Text style={styles.cityName}>{cityName}</Text>
-                <View style={styles.locationContainer}>
-                    <MaterialCommunityIcons name='map-marker' size={15} color={colors.boldtextcolor} />
-                    <Text style={styles.country}>{country}</Text>
-                </View>
-                <Text style={styles.price}>{price}</Text>
-            </View>
+      if (isAlreadyLoved) {
+        return prev.filter((p) => p.id !== id);
+      } else {
+        return [...prev, { id, imageSource, areaName, cityName, country, price }];
+      }
+    });
+  };
+
+  const isLoved = lovedProperties.some((p) => p.id === id);
+
+  return (
+    <View style={styles.cardContainer}>
+      <View style={styles.imageContainer}>
+        <Image source={imageSource} style={styles.image} />
+        <TouchableOpacity
+          style={[styles.heartIcon, { backgroundColor: isLoved ? colors.buttons : 'transparent' }]}
+          onPress={handleToggleLoved}
+        >
+          <MaterialCommunityIcons
+            name={isLoved ? 'cards-heart-outline' : 'cards-heart'}
+            size={15}
+            color='white'
+          />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.detailsContainer}>
+        <Text style={styles.areaName}>{areaName}</Text>
+        <Text style={styles.cityName}>{cityName}</Text>
+        <View style={styles.locationContainer}>
+          <MaterialCommunityIcons name='map-marker' size={15} color={colors.boldtextcolor} />
+          <Text style={styles.country}>{country}</Text>
         </View>
-    );
+        <Text style={styles.price}>{price}</Text>
+      </View>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
