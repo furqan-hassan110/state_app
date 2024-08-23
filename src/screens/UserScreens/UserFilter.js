@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState , useCallback} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-// import Slider from '@react-native-community/slider'; // Corrected import for Slider
-import colors from '../../styles/colors'; 
+// import RangeSlider from 'react-native-range-slider'
+// import Slider from 'rn-range-slider';
+import Slider from '@react-native-community/slider'; // Corrected import for Slider
+import colors from '../../styles/colors';
 import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
@@ -17,6 +19,7 @@ const UserFilter = () => {
   const [selectedConstructionStatus, setSelectedConstructionStatus] = useState('New');
   const [selectedPropertyType, setSelectedPropertyType] = useState('Commercial');
   const [selectedLandSize, setSelectedLandSize] = useState(600);
+  
 
   const navigation = useNavigation();
 
@@ -67,7 +70,7 @@ const UserFilter = () => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Filter</Text>
         <TouchableOpacity style={styles.filterIconContainer}>
-        <MaterialCommunityIcons name="tune-vertical-variant" size={24} color="white"/>
+          <MaterialCommunityIcons name="tune-vertical-variant" size={24} color="white" />
         </TouchableOpacity>
       </View>
 
@@ -80,20 +83,22 @@ const UserFilter = () => {
       {/* Price Range */}
       <Text style={styles.sectionTitle}>Price Range</Text>
       <View style={styles.sliderContainer}>
-        {/* <Slider
-          style={{ width: '100%' }}
-          minimumValue={1000}
-          maximumValue={50000}
-          step={1000}
-          minimumTrackTintColor={colors.primary}
-          maximumTrackTintColor="#ccc"
-          thumbTintColor={colors.primary}
-          value={selectedPrice}
-          onValueChange={setSelectedPrice}
-        /> */}
-        <View style={styles.priceLabels}>
-          <Text style={styles.priceText}>${selectedPrice}</Text>
+        <View style={{ flex: 1, height: 40, width: '100%', }}>
+        <Slider
+        style={styles.slider}
+        minimumValue={0}
+        maximumValue={5000}
+        step={6}
+        value={selectedPrice}
+        onValueChange={value => setSelectedPrice(value)}
+        minimumTrackTintColor={colors.buttons}
+        maximumTrackTintColor={colors.textinputplaceholdercolor}
+        thumbTintColor={colors.buttons}
+      />
         </View>
+        {/* <View style={styles.priceLabels}>
+          <Text style={styles.priceText}>${selectedPrice}</Text>
+        </View> */}
       </View>
 
       {/* Bedrooms */}
@@ -158,6 +163,10 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 10,
   },
+  slider: {
+    width: '100%',
+    height: 40,
+  },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -190,9 +199,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 8,
     // width:width*0.7,
-    
+
   },
-  optionsContainer2:{
+  optionsContainer2: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginHorizontal: 16,
@@ -202,7 +211,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: colors.primary,
     // width:width*0.2,
-    backgroundColor:colors.textinputfill,
+    backgroundColor: colors.textinputfill,
     borderRadius: 20,
     paddingVertical: 8,
     paddingHorizontal: 12,
@@ -247,7 +256,7 @@ const styles = StyleSheet.create({
   },
   resetButtonText: {
     color: colors.buttons,
-    fontFamily:'Lato-Bold',
+    fontFamily: 'Lato-Bold',
     fontWeight: 'bold',
   },
   applyButton: {
@@ -255,10 +264,10 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 10,
-    width:width*0.4,
-    height:height*0.07,
-    justifyContent:'center',
-    alignItems:'center',
+    width: width * 0.4,
+    height: height * 0.07,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   applyButtonText: {
     color: '#fff',
