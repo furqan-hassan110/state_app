@@ -7,64 +7,83 @@ import {
   TouchableOpacity,
   Dimensions,
   KeyboardAvoidingView,
+  ScrollView,
+  Platform,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {Formik} from 'formik';
+import { useNavigation } from '@react-navigation/native';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 // Styles
 import colors from '../../styles/colors';
 // Contexts
-import {useAuth} from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 // Components
 import Textinput from '../../components/Textinput';
 import Button from '../../components/Button';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { ScrollView } from 'react-native-gesture-handler';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const RegisterScreen = () => {
-  const initialValues = {name: '', email: '', password: '', phoneNo:''};
-  const {role, setUserData } = useAuth();
+  const initialValues = { name: '', email: '', password: '', phoneNo: '' };
+  const { role, setUserData, login } = useAuth();
   const navigation = useNavigation();
 
   const validationSchema = Yup.object({
     name: Yup.string().required('Name is required'),
     email: Yup.string().email('Invalid email address').required('Required'),
-    phoneNo: Yup.number().required('required'),
+    phoneNo: Yup.string().required('Required'),
     password: Yup.string()
       .min(6, 'Password must be at least 6 characters')
       .required('Required'),
   });
 
-  const handleRegister = values => {
-    console.log('Registration Details:', values);
-    setUserData(values);
-    if (role === 'user') {
-      navigation.navigate('UserProfileScreen');
-    } else if (role === 'agent') {
-      navigation.navigate('AgentStack');
+  const handleRegister = async (values) => {
+    try {
+      // Replace this with actual API call for registration
+      const userData = {
+        name: values.name,
+        email: values.email,
+        phoneNo: values.phoneNo,
+        // Add other user data as needed
+      };
+
+      await login(userData); // Automatically log in the user after registration
+
+      // Navigation will be handled automatically by RootNavigator based on auth state
+    } catch (error) {
+      console.error('Registration error:', error);
+      // Optionally show error message to user
     }
   };
+
   return (
-    <KeyboardAvoidingView style={styles.main}>
+    <KeyboardAvoidingView
+      style={styles.main}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}
+    >
       <ScrollView>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backbutton}>
-        <Ionicons name="chevron-back" size={24} color="black" />
-      </TouchableOpacity>
-      
-        <View style={{flexDirection: 'row', marginTop:20, marginBottom:60}}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backbutton}
+        >
+          <Ionicons name="chevron-back" size={24} color="black" />
+        </TouchableOpacity>
+
+        <View style={{ flexDirection: 'row', marginTop: 20, marginBottom: 60 }}>
           <Text style={styles.creat}>Create your</Text>
-          <Text style={styles.account}>  account</Text>
+          <Text style={styles.account}> account</Text>
         </View>
-        
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleRegister}>
-            {({handleSubmit}) => (
-              <>
-              <View style={{}}>
+
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleRegister}
+        >
+          {({ handleSubmit }) => (
+            <>
+              <View>
                 <Textinput
                   style={styles.name}
                   name="name"
@@ -76,48 +95,58 @@ const RegisterScreen = () => {
                   name="email"
                   icon={'mail-outline'}
                   placeholder="Email"
-                  keyboardType="Email"
+                  keyboardType="email-address"
                   autoCapitalize="none"
                 />
                 <Textinput
                   style={styles.Phone}
                   name="phoneNo"
-                  icon={"phone"}
+                  icon={'phone'}
                   placeholder="Enter Phone No"
-                  keyboardType="Numeric"
+                  keyboardType="phone-pad"
                   autoCapitalize="none"
                 />
                 <Textinput
-                   iconSet='Ionicons'
-                   style={styles.pass}
-                   icon={"lock-closed"}
-                   name="password"
-                   placeholder="Password"
-                   secureTextEntry
+                  iconSet="Ionicons"
+                  style={styles.pass}
+                  icon={'lock-closed'}
+                  name="password"
+                  placeholder="Password"
+                  secureTextEntry
                 />
-                </View>
-                <View style={{ justifyContent:'center',alignContent:'center', width:'100%', alignItems:'center'}}>
+              </View>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignContent: 'center',
+                  width: '100%',
+                  alignItems: 'center',
+                }}
+              >
                 <Button
                   title="Register"
                   onPress={handleSubmit}
                   style={styles.button}
                 />
-                </View>
-                <View style={{flexDirection: 'row', alignSelf: 'center',marginTop:'auto'}}>
-                  <Text style={styles.alreadyText}>
-                    Already have an account ?
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate('Login')}>
-                    <Text style={styles.signIn}> Login</Text>
-                  </TouchableOpacity>
-                </View>
-                
-              </>
-            )}
-          </Formik>
-        
-          </ScrollView>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignSelf: 'center',
+                  marginTop: 'auto',
+                }}
+              >
+                <Text style={styles.alreadyText}>
+                  Already have an account ?
+                </Text>
+                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                  <Text style={styles.signIn}> Login</Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
+        </Formik>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
@@ -135,7 +164,7 @@ const styles = StyleSheet.create({
     // height: '30%',
     borderRadius: 10,
     // padding: 10,
-    
+
     // height: height * 0.1,
   },
   email: {
@@ -202,9 +231,9 @@ const styles = StyleSheet.create({
     height: height / 15,
     borderRadius: 45,
     // left: 20,
-    alignContent:'center',
-    alignItems:'center',
-    justifyContent:'center'
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
 
   alreadyText: {

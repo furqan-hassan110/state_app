@@ -54,7 +54,7 @@ const AgentHomeScreen = () => {
         <Text style={styles.text1}>Let's start exploring</Text>
         <View style={{marginRight:80, flexDirection:'row', alignItems:'center'}}>
         <SearchBar
-        customWidth={width*0.75}
+        customWidth={width*0.95}
         customHeight={height*0.07}
           // width={width*0.7}
           // height={height*0.1} 
@@ -62,9 +62,9 @@ const AgentHomeScreen = () => {
           value={searchQuery}
           onChangeText={(text) => setSearchQuery(text)}
         />
-        <View style={{width:width*0.13, height:height*0.06, backgroundColor:colors.buttons,borderRadius:100, justifyContent:'center', alignItems:'center', marginLeft:10}}>
+        {/* <View style={{width:width*0.13, height:height*0.06, backgroundColor:colors.buttons,borderRadius:100, justifyContent:'center', alignItems:'center', marginLeft:10}}>
         <MaterialCommunityIcons name={"plus"} size ={20} color={colors.white}/>
-        </View>
+        </View> */}
         </View>
         <ScrollView>
           <View>

@@ -15,7 +15,12 @@ const UserProfileScreen = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const navigation = useNavigation();
-  const { userData, setUserData } = useAuth();
+  // const { userData, setUserData } = useAuth();
+  const { userData, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   useEffect(() => {
     const checkSubscriptionStatus = async () => {
@@ -39,10 +44,17 @@ const UserProfileScreen = () => {
   };
 
   const handleTextChange = (field, value) => {
-    setUserData({
-      ...userData,
+    setUserData(prevData => ({
+      ...prevData,
       [field]: value,
-    });
+    }));
+    if (!userData) {
+      return (
+        <View style={styles.container}>
+          <Text>Loading...</Text>
+        </View>
+      );
+    }
   };
 
   return (
@@ -115,7 +127,7 @@ const UserProfileScreen = () => {
             <Button
               title="Log Out"
               style={styles.button}
-              onPress={() => navigation.navigate('logout')}
+              onPress={handleLogout}
             />
           </View>
         </View>

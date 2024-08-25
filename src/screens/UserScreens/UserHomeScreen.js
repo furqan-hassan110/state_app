@@ -32,7 +32,9 @@ const UserHomeScreen = () => {
   };
 
   const handlePropertyClick = (property) => {  // **Changed parameter to 'property'**
-    navigation.navigate('PropertyDetail', { property });  // **Changed to pass 'property' object**
+    // navigation.navigate('UserStack', { screen: 'UserSearch' });
+
+    navigation.navigate('UserStack', {screen: 'PropertyDetail' , params:{property}});  // **Changed to pass 'property' object**
   };
 
   return (

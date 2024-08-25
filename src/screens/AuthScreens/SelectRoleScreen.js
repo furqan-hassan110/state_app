@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 // Images
 import img1 from '../../../assets/images/role1.png';
 import img2 from '../../../assets/images/role2.png';
@@ -17,56 +17,55 @@ import img4 from '../../../assets/images/role4.png';
 // Styles
 import colors from '../../styles/colors';
 // Contexts
-import {useAuth} from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 // Components
 import Button from '../../components/Button';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 const SelectRoleScreen = () => {
-  const {selectRole} = useAuth();
+  const { selectRole } = useAuth();
   const navigation = useNavigation();
 
-  const handleRoleSelection = role => {
-    console.log('selected role: ', role);
-    selectRole(role);
-    navigation.navigate('Login');
+  const handleRoleSelection = (selectedRole) => {
+    selectRole(selectedRole);
+    navigation.navigate('Register'); // Navigate to Register screen after selecting role
   };
 
   return (
     <View style={styles.maincontaier}>
-      {/* <View> */}
-        <View style={styles.imagecontainer}>
-          <Image source={img1} style={styles.image} />
-          <Image source={img2} style={styles.image} />
-        </View>
-        <View style={styles.imagecontainer}>
-          <Image source={img3} style={styles.image} />
-          <Image source={img4} style={styles.image} />
-        </View>
-        <View style={{flexDirection: 'row'}}>
-          <Text style={styles.findtext}>Find</Text>
-          <Text style={styles.findtextbold}>perfect choice</Text>
-          <Text style={styles.findtext}>for</Text>
-        </View>
-        <Text style={styles.futuretext}>your future house</Text>
-        <View style={{flexDirection: 'row'}}>
-          <Text style={styles.findtext}>Ready to</Text>
-          <Text style={styles.findtextbold}>explore ?</Text>
-        </View>
-        <View style={{
-            marginTop:'auto',
-            width:'100%',
-            // justifyContent:'center',
-            alignContent:'center',
-            alignItems:'center'}}>
+      <View style={styles.imagecontainer}>
+        <Image source={img1} style={styles.image} />
+        <Image source={img2} style={styles.image} />
+      </View>
+      <View style={styles.imagecontainer}>
+        <Image source={img3} style={styles.image} />
+        <Image source={img4} style={styles.image} />
+      </View>
+      <View style={{ flexDirection: 'row' }}>
+        <Text style={styles.findtext}>Find</Text>
+        <Text style={styles.findtextbold}> perfect choice </Text>
+        <Text style={styles.findtext}>for</Text>
+      </View>
+      <Text style={styles.futuretext}>your future house</Text>
+      <View style={{ flexDirection: 'row' }}>
+        <Text style={styles.findtext}>Ready to</Text>
+        <Text style={styles.findtextbold}> explore ?</Text>
+      </View>
+      <View
+        style={{
+          marginTop: 'auto',
+          width: '100%',
+          alignContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-around',
-            width:'100%'
-            
-            // top: 130,
-          }}>
+            width: '100%',
+          }}
+        >
           <Button
             style={styles.button}
             onPress={() => handleRoleSelection('agent')}
@@ -90,16 +89,15 @@ const SelectRoleScreen = () => {
             fontFamily="Lato-Bold"
           />
         </View>
-        <View style={{flexDirection: 'row', marginTop:'auto'}}>
+        <View style={{ flexDirection: 'row', marginTop: 'auto' }}>
           <Text style={styles.alreadytext}>
             If you already have an account ?
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
             <Text style={styles.sign}> Sign In</Text>
           </TouchableOpacity>
         </View>
-        </View>
-      {/* </View> */}
+      </View>
     </View>
   );
 };
@@ -112,7 +110,7 @@ const styles = StyleSheet.create({
   imagecontainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingBottom:20,
+    paddingBottom: 20,
 
   },
   image: {

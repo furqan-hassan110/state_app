@@ -19,7 +19,10 @@ const SearchBar = ({
   const [searchQuery, setSearchQuery] = useState(value || '');
 
   const handleSearch = () => {
-    navigation.navigate('UserSearchScreen', { query: searchQuery });
+    navigation.navigate('UserStack', {
+      screen: 'UserSearchScreen',
+      params: { query: searchQuery }  // Correctly passing the query as a param
+    });
   };
 
   return (
@@ -35,7 +38,7 @@ const SearchBar = ({
         }}
         value={searchQuery}
       />
-      <TouchableOpacity style={styles.filterIconcon} onPress={() => navigation.navigate('UserFilter')}>
+      <TouchableOpacity style={styles.filterIconcon} onPress={() => navigation.navigate('UserStack', {screen: 'userFilter'})}>
         <MaterialCommunityIcons name="tune-vertical-variant" size={20} color="white" style={styles.filterIcon} />
       </TouchableOpacity>
     </View>

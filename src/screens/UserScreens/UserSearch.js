@@ -21,19 +21,19 @@ const UserSearch = () => {
 
 
   const searchResults = [
-    { id: '1', category: "Apartment",Title:'Bungalow House', areaName: 'Westrn Bay , ', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role1.png') },
-    { id: '2', category: "Apartment",Title:'Bungalow House', areaName: 'Westrn Bay , ', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role1.png') },
-    { id: '3', category: "Apartment",Title:'Bungalow House', areaName: 'Westrn Bay , ', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role1.png') },
-    { id: '4', category: "Apartment",Title:'Bungalow House', areaName: 'Westrn Bay , ', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role1.png') },
-    { id: '5', category: "Apartment",Title:'Bungalow House', areaName: 'Westrn Bay , ', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role1.png') },
-    { id: '6', category: "Apartment",Title:'Bungalow House', areaName: 'Westrn Bay , ', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role1.png') },
-    { id: '7', category: "Apartment",Title:'Bungalow House', areaName: 'Westrn Bay , ', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role1.png') },
-    { id: '8', category: "House",Title:'Mill Sper House', areaName: 'Downtown', cityName: 'New Castle', country: 'Canada', price: '2M', imageSource: require('../../../assets/images/role1.png') },
-    { id: '9', category: "House",Title:'Bungalow House', areaName: 'Green Acres', cityName: 'New Castle', country: 'Australia', price: '2M', imageSource: require('../../../assets/images/role3.png') },
-    { id: '10', category: "House",Title:'Mill Sper House', areaName: 'Sunset Blvd', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role4.png') },
-    { id: '11', category: "House",Title:'Mill Sper House', areaName: 'Shibuya', cityName: 'New Castle', country: 'Japan', price: '2M', imageSource: require('../../../assets/images/role1.png') },
-    { id: '12', category: "House",Title:'Mill Sper House', areaName: 'Sunset Blvd', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role4.png') },
-    { id: '13', category: "House",Title:'Mill Sper House', areaName: 'Shibuya', cityName: 'New Castle', country: 'Japan', price: '2M', imageSource: require('../../../assets/images/role1.png') },
+    { id: '1', category: "Apartment", Title: 'Bungalow House', areaName: 'Westrn Bay , ', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role1.png') },
+    { id: '2', category: "Apartment", Title: 'Bungalow House', areaName: 'Westrn Bay , ', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role1.png') },
+    { id: '3', category: "Apartment", Title: 'Bungalow House', areaName: 'Westrn Bay , ', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role1.png') },
+    { id: '4', category: "Apartment", Title: 'Bungalow House', areaName: 'Westrn Bay , ', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role1.png') },
+    { id: '5', category: "Apartment", Title: 'Bungalow House', areaName: 'Westrn Bay , ', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role1.png') },
+    { id: '6', category: "Apartment", Title: 'Bungalow House', areaName: 'Westrn Bay , ', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role1.png') },
+    { id: '7', category: "Apartment", Title: 'Bungalow House', areaName: 'Westrn Bay , ', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role1.png') },
+    { id: '8', category: "House", Title: 'Mill Sper House', areaName: 'Downtown', cityName: 'New Castle', country: 'Canada', price: '2M', imageSource: require('../../../assets/images/role1.png') },
+    { id: '9', category: "House", Title: 'Bungalow House', areaName: 'Green Acres', cityName: 'New Castle', country: 'Australia', price: '2M', imageSource: require('../../../assets/images/role3.png') },
+    { id: '10', category: "House", Title: 'Mill Sper House', areaName: 'Sunset Blvd', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role4.png') },
+    { id: '11', category: "House", Title: 'Mill Sper House', areaName: 'Shibuya', cityName: 'New Castle', country: 'Japan', price: '2M', imageSource: require('../../../assets/images/role1.png') },
+    { id: '12', category: "House", Title: 'Mill Sper House', areaName: 'Sunset Blvd', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role4.png') },
+    { id: '13', category: "House", Title: 'Mill Sper House', areaName: 'Shibuya', cityName: 'New Castle', country: 'Japan', price: '2M', imageSource: require('../../../assets/images/role1.png') },
   ];
   // const searchResults = [
   //   {
@@ -81,10 +81,10 @@ const UserSearch = () => {
           <MaterialCommunityIcons name="tune-vertical-variant" size={20} color="white" style={styles.filterIcon} />
         </TouchableOpacity>
       </View>
-    <SearchBar showFilterIcon={false} ></SearchBar>
+      <SearchBar showFilterIcon={false} ></SearchBar>
 
-    <Text style={styles.cardCount}>
-    Found {filteredResults.length} result{filteredResults.length !== 1 ? 's' : ''} estates
+      <Text style={styles.cardCount}>
+        Found {filteredResults.length} result{filteredResults.length !== 1 ? 's' : ''} estates
       </Text>
       {/* Search Results */}
       <FlatList
@@ -121,14 +121,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 8,
   },
-cardCount: {
+  cardCount: {
     fontSize: 16,
     fontWeight: 'bold',
     marginHorizontal: 16,
     marginTop: 10,
     marginBottom: 10,
     color: colors.primary,
-},
+  },
   backbutton: {
     backgroundColor: colors.textinputfill,
     width: width / 7,

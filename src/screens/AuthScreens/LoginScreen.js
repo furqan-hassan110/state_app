@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -8,30 +8,29 @@ import {
   TouchableOpacity,
   Dimensions,
   KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {Formik} from 'formik';
+import { useNavigation } from '@react-navigation/native';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
-import Ionics from 'react-native-vector-icons/Ionicons'
+import Ionics from 'react-native-vector-icons/Ionicons';
 // Images
 import loginImg from '../../../assets/images/login.png';
 // Styles
 import colors from '../../styles/colors';
 // Contexts
-import {useAuth} from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 // Components
 import Button from '../../components/Button';
 import Textinput from '../../components/Textinput';
-import { ScrollView } from 'react-native-gesture-handler';
 
-
-
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const LoginScreen = () => {
   const navigation = useNavigation();
-  const {role} = useAuth();
-  const initialValues = {email: '', password: ''};
+  const { role, login } = useAuth(); // Destructure login function
+  const initialValues = { email: '', password: '' };
 
   const validationSchema = Yup.object({
     email: Yup.string().email('Invalid email address').required('Required'),
@@ -40,101 +39,105 @@ const LoginScreen = () => {
       .required('Required'),
   });
 
-  const handleLogin = values => {
-    console.log('Entered Credentials:', values);
-    if (role === 'user') {
-      navigation.navigate('UserStack');
-    } else if (role === 'agent') {
-      navigation.navigate('AgentStack');
+  const handleLogin = async (values) => {
+    try {
+      // Replace this with actual API call for authentication
+      // const response = await api.login(values.email, values.password);
+      const userData = {
+        name: 'John Doe',
+        email: values.email,
+        // Add other user data as needed
+      };
+
+      await login(userData); // Call login function from AuthContext
+
+      // Navigation will be handled automatically by RootNavigator based on auth state
+    } catch (error) {
+      console.error('Login error:', error);
+      // Optionally show error message to user
     }
   };
 
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [password, setPassword] = useState('');
-
-  const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible);
-  };
-
   return (
-    <KeyboardAvoidingView style={styles.container}
-    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}>
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
-      <View>
-      <Image source={loginImg} style={styles.signimage} />
-      </View>
-      <View style={{flexDirection: 'row',}}>
-        <Text style={styles.Let}>Let's</Text>
-        <Text style={styles.sign}> Sign In</Text>
-      </View>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}
+    >
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <View>
+          <Image source={loginImg} style={styles.signimage} />
+        </View>
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={styles.Let}>Let's</Text>
+          <Text style={styles.sign}> Sign In</Text>
+        </View>
 
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleLogin}>
-        {({handleSubmit}) => (
-          <>
-          <View style={{}}>
-            
-            <Textinput
-            iconSet='MaterialIcons'
-              style={styles.email}
-              icon={'mail-outline'}
-              // MaterialIcons={}
-              name="email"
-              placeholder="Email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              
-            >
-              
-            </Textinput>
-            <Textinput
-            iconSet='Ionicons'
-              style={styles.password}
-              icon={"lock-closed"}
-              name="password"
-              placeholder="Password"
-              // value={password}
-              // onChangeText={handleChange('password')}
-              secureTextEntry
-            />
-            </View>
-            <View
-              style={{
-                flexDirection: 'row-reverse',
-                // right:10,
-                // justifyContent: 'space-around',
-                // width: width * 1.25,
-                // alignSelf: 'center',
-                // bottom:50
-              }}>
-              <Text style={styles.forget}>Forget password ?</Text>
-            </View>
-          <View style={{marginTop:'auto', justifyContent:'center',alignContent:'center', width:'100%', alignItems:'center'}}>
-            <Button
-              title="Sign In"
-              onPress={handleSubmit}
-              style={styles.button}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                // alignSelf: 'center',
-                // width: "100%",
-                // top: 150,
-                // left: 50,
-              }}>
-              <Text style={styles.alreadytext}>Don't have an account ?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                <Text style={styles.signIn}> Register</Text>
-              </TouchableOpacity>
-            </View>
-            </View>
-          </>
-        )}
-      </Formik>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleLogin}
+        >
+          {({ handleSubmit }) => (
+            <>
+              <View>
+                <Textinput
+                  iconSet="MaterialIcons"
+                  style={styles.email}
+                  icon={'mail-outline'}
+                  name="email"
+                  placeholder="Email"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+                <Textinput
+                  iconSet="Ionicons"
+                  style={styles.password}
+                  icon={'lock-closed'}
+                  name="password"
+                  placeholder="Password"
+                  secureTextEntry
+                />
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row-reverse',
+                }}
+              >
+                <Text style={styles.forget}>Forget password ?</Text>
+              </View>
+              <View
+                style={{
+                  marginTop: 'auto',
+                  justifyContent: 'center',
+                  alignContent: 'center',
+                  width: '100%',
+                  alignItems: 'center',
+                }}
+              >
+                <Button
+                  title="Sign In"
+                  onPress={handleSubmit}
+                  style={styles.button}
+                />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                  }}
+                >
+                  <Text style={styles.alreadytext}>
+                    Don't have an account ?
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('Register')}
+                  >
+                    <Text style={styles.signIn}> Register</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </>
+          )}
+        </Formik>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -172,7 +175,7 @@ const styles = StyleSheet.create({
     height: height * 0.08,
     borderRadius: 10,
     // padding: 10,
-    
+
   },
   password: {
     backgroundColor: colors.textinputfill,

@@ -56,7 +56,8 @@ const UserFilter = () => {
       propertyType: selectedPropertyType,
       landSize: selectedLandSize,
     };
-    navigation.navigate('UserSearch', { filters });
+    // console.log("Navigating to UserSearch with filters:", filters);
+  navigation.navigate('UserStack', { screen: 'UserSearch', params: { filters } });
   };
 
   // console.log("UserFilter Component Rendered");
