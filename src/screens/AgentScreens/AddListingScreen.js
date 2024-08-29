@@ -3,10 +3,17 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SearchBar from '../../components/SearchBar';
 import colors from '../../styles/colors';
+import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
 const AddListingScreen = () => {
+  const navigation = useNavigation();
+  // const [listingTitle, setListingTitle] = useState(route.params?.listingTitle || '');
+
+  // const handleNext = () => {
+    
+  // };
   const [listingType, setListingType] = useState(null);
   const [propertyCategory, setPropertyCategory] = useState(null);
   const [propertyType, setPropertyType] = useState(null);
@@ -26,7 +33,13 @@ const AddListingScreen = () => {
   };
 
   const handleNext = () => {
-    // Add your logic here to proceed to the next screen
+    // Navigate to AddListingStep2 and pass the data
+    navigation.navigate('AddListingScreen2', {
+      // listingTitle,
+      listingType,
+      propertyCategory,
+      propertyType,
+    });
   };
 
   return (

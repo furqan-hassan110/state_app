@@ -24,7 +24,7 @@ const AgentBottomTabs = () => {
             } else if (route.name === 'Search') {
               iconName = focused ? 'search' : 'search-outline';
             } else if (route.name === 'Loved') {
-              iconName = focused ? 'heart' : 'heart-outline';
+              iconName = focused ? 'add-circle' : 'add-circle-outline';
             } else if (route.name === 'Profile') {
               iconName = focused ? 'person' : 'person-outline';
             }

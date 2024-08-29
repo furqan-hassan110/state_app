@@ -30,7 +30,9 @@ const PropertyDetail = ({ route, navigation }) => {
 
   const handleImagePress = () => {
     const images = [property.imageSource]; // Replace with actual image URIs
-    navigation.navigate('ImageSlider', { images });
+    navigation.navigate('UserStack', { screen: 'UserSearch' });
+
+    navigation.navigate('UserStack', {screen:'ImageSlider', params:{images} });
     console.log(property)
   };
 

@@ -17,7 +17,7 @@ const UserProfileScreen = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   const navigation = useNavigation();
-  const { userData, setUserData } = useAuth();
+  const { userData, setUserData, logout } = useAuth();
 
   const handleSubscribe = () => {
     setIsSubscribed(true);
@@ -34,6 +34,18 @@ const UserProfileScreen = () => {
       ...userData,
       [field]: value,
     });
+  };
+  const handleLogout = async () => {
+    try {
+      await logout(); // Call the logout function from useAuth
+      // Ensure navigation resets to the RoleSelection screen
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'SelectRoleScreen' }], // Adjust to the correct screen name
+      });
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   return (
@@ -104,7 +116,7 @@ const UserProfileScreen = () => {
           <Button
             title="Log Out"
             style={styles.button}
-            onPress={() => navigation.navigate('logout')}
+            onPress={handleLogout}
           />
         </View>
       </View>

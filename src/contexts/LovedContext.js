@@ -1,11 +1,10 @@
-// contexts/LovedContext.js
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Create the context
 export const LovedContext = createContext();
 
-// Create a custom hook to use the LovedContext
+// Custom hook to use the LovedContext
 export const useLoved = () => {
     const context = useContext(LovedContext);
     if (context === undefined) {
@@ -14,41 +13,54 @@ export const useLoved = () => {
     return context;
 };
 
-// Create the provider component
+// Provider component
 export const LovedProvider = ({ children }) => {
     const [lovedProperties, setLovedProperties] = useState([]);
+    const [subscribedUsers, setSubscribedUsers] = useState([]);
 
-    // Load loved properties from AsyncStorage when the component mounts
+    // Load loved properties and subscribed users from AsyncStorage when the component mounts
     useEffect(() => {
         const loadLovedProperties = async () => {
             try {
                 const savedLovedProperties = await AsyncStorage.getItem('lovedProperties');
+                const savedSubscribedUsers = await AsyncStorage.getItem('subscribedUsers');
+                
                 if (savedLovedProperties) {
                     setLovedProperties(JSON.parse(savedLovedProperties));
                 }
+                
+                if (savedSubscribedUsers) {
+                    setSubscribedUsers(JSON.parse(savedSubscribedUsers));
+                }
             } catch (error) {
-                console.error('Failed to load loved properties from storage:', error);
+                console.error('Failed to load data from storage:', error);
             }
         };
 
         loadLovedProperties();
     }, []);
 
-    // Save loved properties to AsyncStorage whenever they change
+    // Save loved properties and subscribed users to AsyncStorage whenever they change
     useEffect(() => {
-        const saveLovedProperties = async () => {
+        const saveData = async () => {
             try {
                 await AsyncStorage.setItem('lovedProperties', JSON.stringify(lovedProperties));
+                await AsyncStorage.setItem('subscribedUsers', JSON.stringify(subscribedUsers));
             } catch (error) {
-                console.error('Failed to save loved properties to storage:', error);
+                console.error('Failed to save data to storage:', error);
             }
         };
 
-        saveLovedProperties();
-    }, [lovedProperties]);
+        saveData();
+    }, [lovedProperties, subscribedUsers]);
+
+    // Function to add a subscribed user
+    const addSubscribedUser = (user) => {
+        setSubscribedUsers((prevUsers) => [...prevUsers, user]);
+    };
 
     return (
-        <LovedContext.Provider value={{ lovedProperties, setLovedProperties }}>
+        <LovedContext.Provider value={{ lovedProperties, setLovedProperties, subscribedUsers, addSubscribedUser }}>
             {children}
         </LovedContext.Provider>
     );

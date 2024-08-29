@@ -8,6 +8,7 @@ import profile from '../../../assets/images/profile.png';
 import Feather from 'react-native-vector-icons/Feather';
 import { useAuth } from '../../contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useLoved } from '../../contexts/LovedContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -17,6 +18,7 @@ const UserProfileScreen = () => {
   const navigation = useNavigation();
   // const { userData, setUserData } = useAuth();
   const { userData, logout } = useAuth();
+  const { addSubscribedUser } = useLoved();
 
   const handleLogout = async () => {
     await logout();
@@ -36,8 +38,18 @@ const UserProfileScreen = () => {
   const handleSubscribe = async () => {
     setIsSubscribed(true);
     await AsyncStorage.setItem('isSubscribed', 'true'); // Save subscription status
+    addSubscribedUser(userData); // Add user to subscribed users
     navigation.navigate('UserStack'); // Navigate to home screen
-  };
+};
+  // Example using context
+
+
+const addUserToSubscribedList = (userData) => {
+  const { setLovedUsers } = useLoved();
+
+  setLovedUsers((prevUsers) => [...prevUsers, userData]);
+};
+
 
   const handleEditProfile = () => {
     setIsEditing(!isEditing);

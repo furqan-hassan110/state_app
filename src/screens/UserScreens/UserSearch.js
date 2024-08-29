@@ -11,7 +11,7 @@ import img2 from '../../../assets/images/role2.png'
 import SearchBar from '../../components/SearchBar';
 
 
-const { width, height } = Dimensions.get('window');
+  const { width, height } = Dimensions.get('window');
 
 
 const UserSearch = () => {
