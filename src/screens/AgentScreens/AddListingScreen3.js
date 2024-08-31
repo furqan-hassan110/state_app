@@ -31,7 +31,6 @@ const AddListingStep3 = ({ route }) => {
   };
 
   const handleNext = () => {
-    // Show the modal
     setModalVisible(true);
     console.log('Final details:', {
       ...route.params,
@@ -44,7 +43,7 @@ const AddListingStep3 = ({ route }) => {
       screen: 'Search',
       params: { finalDetails },
     });
-    setModalVisible(false); // Hide the modal
+    setModalVisible(false);
   };
 
   return (

@@ -13,21 +13,20 @@ const AgentSearchScreen = () => {
   const route = useRoute();
   const [propertyList, setPropertyList] = useState([]);
 
-
   useEffect(() => {
     if (route.params?.finalDetails) {
       setPropertyList(prevList => {
         const existingIndex = prevList.findIndex(
           property => property.id === route.params.finalDetails.id
         );
-        
+
         if (existingIndex !== -1) {
-          // Update the existing property
+          // Update existing property
           const updatedList = [...prevList];
           updatedList[existingIndex] = route.params.finalDetails;
           return updatedList;
         } else {
-          // Add the new property
+          // Add new property
           return [...prevList, route.params.finalDetails];
         }
       });
@@ -35,22 +34,27 @@ const AgentSearchScreen = () => {
   }, [route.params?.finalDetails]);
 
   const handleAddListing = () => {
-    navigation.navigate('AddListingScreen'); // Ensure this matches your actual route name
+    navigation.navigate('AddListingScreen'); 
   };
+
+  const renderEmptyList = () => (
+    <View style={styles.emptyContainer}>
+      <Text style={styles.emptyText}>No listings yet!</Text>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
-       <View style={styles.header}>
+      <View style={styles.header}>
         <TouchableOpacity style={styles.backbutton} onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={24} color={colors.primary} />
         </TouchableOpacity>
-        <Text style={styles.headerText}>Search results</Text>
+        <Text style={styles.headerText}>Your Listing</Text>
       </View>
       <FlatList
         data={propertyList}
-        // horizontal
         showsHorizontalScrollIndicator={false}
-        keyExtractor={(item, index) => index.toString()} // Ideally use item.id if available
+        keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity>
             <PropertyCardForAgent
@@ -65,14 +69,14 @@ const AgentSearchScreen = () => {
               sellPrice={item.sellPrice}
               totalRooms={item.totalRooms}
               images={item.images}
-              
             />
           </TouchableOpacity>
         )}
+        ListEmptyComponent={renderEmptyList}
         contentContainerStyle={styles.listContainer}
       />
       <FloatingAction
-        color={colors.buttons} // Customize the button color
+        color={colors.buttons}
         onPressMain={handleAddListing}
         floatingIcon={<Ionicons name="add" size={24} color="white" />}
       />
@@ -84,10 +88,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    padding:10
+    padding: 10,
   },
   listContainer: {
     paddingHorizontal: 10,
+    flexGrow: 1,
   },
   header: {
     flexDirection: 'row',
@@ -107,6 +112,17 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: height * 0.6, // Adjust height as needed
+  },
+  emptyText: {
+    fontSize: 18,
+    fontFamily: 'Lato-Bold',
+    color: colors.textinputplaceholdercolor,
   },
 });
 

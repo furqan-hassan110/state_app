@@ -37,11 +37,10 @@ const UserProfileScreen = () => {
   };
   const handleLogout = async () => {
     try {
-      await logout(); // Call the logout function from useAuth
-      // Ensure navigation resets to the RoleSelection screen
+      await logout(); 
       navigation.reset({
         index: 0,
-        routes: [{ name: 'SelectRoleScreen' }], // Adjust to the correct screen name
+        routes: [{ name: 'SelectRoleScreen' }],
       });
     } catch (error) {
       console.error('Logout failed:', error);

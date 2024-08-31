@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, TextInput, KeyboardAvoidingView, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions, TextInput, KeyboardAvoidingView, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
 import Button from '../../components/Button';
@@ -16,8 +16,7 @@ const UserProfileScreen = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const navigation = useNavigation();
-  // const { userData, setUserData } = useAuth();
-  const { userData, logout } = useAuth();
+  const { userData, logout, handleSubscribe } = useAuth(); // Use handleSubscribe from AuthContext
   const { addSubscribedUser } = useLoved();
 
   const handleLogout = async () => {
@@ -35,21 +34,17 @@ const UserProfileScreen = () => {
     checkSubscriptionStatus();
   }, []);
 
-  const handleSubscribe = async () => {
-    setIsSubscribed(true);
-    await AsyncStorage.setItem('isSubscribed', 'true'); // Save subscription status
-    addSubscribedUser(userData); // Add user to subscribed users
-    navigation.navigate('UserStack'); // Navigate to home screen
-};
-  // Example using context
-
-
-const addUserToSubscribedList = (userData) => {
-  const { setLovedUsers } = useLoved();
-
-  setLovedUsers((prevUsers) => [...prevUsers, userData]);
-};
-
+  const handleUserSubscribe = async () => {
+    try {
+      await handleSubscribe(); // Call handleSubscribe from AuthContext
+      setIsSubscribed(true);
+      addSubscribedUser(userData); // Add user to subscribed users
+      Alert.alert("Success", "Your application has been submitted. Please wait for your approval.");
+      // Additional navigation or actions can be added here if needed
+    } catch (error) {
+      console.error('Subscription failed:', error);
+    }
+  };
 
   const handleEditProfile = () => {
     setIsEditing(!isEditing);
@@ -60,14 +55,15 @@ const addUserToSubscribedList = (userData) => {
       ...prevData,
       [field]: value,
     }));
-    if (!userData) {
-      return (
-        <View style={styles.container}>
-          <Text>Loading...</Text>
-        </View>
-      );
-    }
   };
+
+  if (!userData) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -125,7 +121,7 @@ const addUserToSubscribedList = (userData) => {
         <View style={styles.buttonContainer}>
           {!isSubscribed && ( // Conditionally render the subscribe button if the user has not subscribed
             <Button
-              onPress={handleSubscribe}
+              onPress={handleUserSubscribe}
               title="Subscribe"
               style={styles.subscribeButton}
             />

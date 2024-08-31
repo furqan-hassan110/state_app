@@ -9,11 +9,7 @@ const { width, height } = Dimensions.get('window');
 
 const AddListingScreen = () => {
   const navigation = useNavigation();
-  // const [listingTitle, setListingTitle] = useState(route.params?.listingTitle || '');
-
-  // const handleNext = () => {
-    
-  // };
+  
   const [listingType, setListingType] = useState(null);
   const [propertyCategory, setPropertyCategory] = useState(null);
   const [propertyType, setPropertyType] = useState(null);
@@ -143,7 +139,7 @@ const styles = StyleSheet.create({
   highlight: {
     // fontWeight: 'bold',
     fontFamily:'Lato-Bold',
-    color: colors.boldtextcolor, // Customize color to match the design
+    color: colors.boldtextcolor,
   },
   backbutton: {
     backgroundColor: colors.textinputfill,
@@ -200,7 +196,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   selectedOption: {
-    backgroundColor: colors.primary, // Customize selected background color
+    backgroundColor: colors.primary, 
     borderColor: '#0047AB',
   },
   optionText: {
@@ -211,7 +207,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   nextButton: {
-    backgroundColor: colors.buttons, // Customize button color
+    backgroundColor: colors.buttons, 
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',

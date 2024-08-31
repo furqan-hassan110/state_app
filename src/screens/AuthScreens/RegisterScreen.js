@@ -26,7 +26,7 @@ const { width, height } = Dimensions.get('window');
 
 const RegisterScreen = () => {
   const initialValues = { name: '', email: '', password: '', phoneNo: '' };
-  const { role, setUserData, login } = useAuth();
+  const { role, setUserData, login, selectRole } = useAuth();
   const navigation = useNavigation();
 
   const validationSchema = Yup.object({
@@ -40,20 +40,21 @@ const RegisterScreen = () => {
 
   const handleRegister = async (values) => {
     try {
-      // Replace this with actual API call for registration
-      const userData = {
-        name: values.name,
-        email: values.email,
-        phoneNo: values.phoneNo,
-        // Add other user data as needed
-      };
+      
+      setUserData(values);
 
-      await login(userData); // Automatically log in the user after registration
+     
 
-      // Navigation will be handled automatically by RootNavigator based on auth state
+      await login(values); 
+      if (role === 'user') {
+        
+        navigation.navigate('UserProfileScreen');
+      } else {
+
+        console.log('Role is not user:', role);
+      }
     } catch (error) {
       console.error('Registration error:', error);
-      // Optionally show error message to user
     }
   };
 
@@ -150,6 +151,7 @@ const RegisterScreen = () => {
     </KeyboardAvoidingView>
   );
 };
+
 const styles = StyleSheet.create({
   main: {
     flex: 1,
@@ -160,68 +162,42 @@ const styles = StyleSheet.create({
     backgroundColor: colors.textinputfill,
     width: width * 0.8,
     height: height * 0.08,
-    // alignSelf: 'center',
-    // height: '30%',
     borderRadius: 10,
-    // padding: 10,
-
-    // height: height * 0.1,
   },
   email: {
     backgroundColor: colors.textinputfill,
     width: width * 0.8,
     height: height * 0.08,
     alignSelf: 'center',
-    // height: '30%',
     borderRadius: 10,
-    // padding: 10,
-    // bottom:40
-    // height: height * 0.1,
   },
   Phone: {
     backgroundColor: colors.textinputfill,
     width: width * 0.8,
     height: height * 0.08,
     alignSelf: 'center',
-    // height: '30%',
     borderRadius: 10,
-    // padding: 10,
-    // bottom:80
-    // height: height * 0.1,
   },
   pass: {
     backgroundColor: colors.textinputfill,
     width: width * 0.72,
     height: height * 0.08,
     alignSelf: 'center',
-    // height: '30%',
     borderRadius: 10,
-    // padding: 10,
-    // bottom:120
-    // height: height * 0.1,
   },
-  // inputcon: {
-  //   top: 120,
-  // },
   creat: {
     color: colors.thintextcolo,
     fontFamily: 'Lato-Medium',
     fontSize: 25,
-    // left: 10,
-    // top: 20,
   },
   account: {
     color: colors.thintextcolo,
     fontFamily: 'Lato-Black',
     fontSize: 25,
-    // left: 15,
-    // top: 20,
   },
   button: {
     width: width * 0.75,
     height: height * 0.08,
-    // alignSelf: 'center',
-    // bottom: 100,
     borderRadius: 10,
     backgroundColor: colors.buttons,
   },
@@ -230,12 +206,10 @@ const styles = StyleSheet.create({
     width: width / 7,
     height: height / 15,
     borderRadius: 45,
-    // left: 20,
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center'
   },
-
   alreadyText: {
     color: colors.thintextcolo,
     fontFamily: 'Lato-Medium',
@@ -251,7 +225,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato-Bold',
     color: colors.text,
     alignSelf: 'flex-end',
-    // right: 20,
   },
 });
+
 export default RegisterScreen;

@@ -2,16 +2,13 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
-
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  
   const [isAuthenticated, setIsAuthenticated] = useState(null); // Start with null to handle loading state
   const [role, setRole] = useState(null); // 'user' or 'agent'
-  // const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // Loading state
-
+  const [isSubscribed, setIsSubscribed] = useState(false); // Subscription state
   const navigation = useNavigation();
 
   const [userData, setUserData] = useState({
@@ -27,11 +24,13 @@ export const AuthProvider = ({ children }) => {
         const token = await AsyncStorage.getItem('userToken');
         const storedRole = await AsyncStorage.getItem('userRole');
         const storedUserData = await AsyncStorage.getItem('userData');
+        const subscriptionStatus = await AsyncStorage.getItem('isSubscribed');
 
         if (token && storedRole && storedUserData) {
           setIsAuthenticated(true);
           setRole(storedRole);
           setUserData(JSON.parse(storedUserData));
+          setIsSubscribed(subscriptionStatus === 'true');
         } else {
           setIsAuthenticated(false);
         }
@@ -48,12 +47,14 @@ export const AuthProvider = ({ children }) => {
 
   const selectRole = (selectedRole) => {
     setRole(selectedRole);
+    // Redirect user to UserProfileScreen if they select 'user' role
+    if (selectedRole === 'user') {
+      navigation.navigate('UserProfileScreen');
+    }
   };
 
   const login = async (data) => {
     try {
-      // Here you would typically make an API call to authenticate the user
-      // For demonstration, we'll assume login is always successful
       const dummyToken = 'dummy-token'; // Replace with actual token from API
       await AsyncStorage.setItem('userToken', dummyToken);
       await AsyncStorage.setItem('userRole', role);
@@ -65,31 +66,41 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const handleSubscribe = async () => {
+    try {
+      // Perform any necessary operations for subscription (API calls, etc.)
+      setIsSubscribed(true);
+      await AsyncStorage.setItem('isSubscribed', 'true');
+      alert("Your application has been submitted. Please wait for your approval.");
+    } catch (e) {
+      console.error('Subscription failed:', e);
+    }
+  };
+
   const logout = async () => {
     try {
       // Clear user authentication data from AsyncStorage
       await AsyncStorage.removeItem('userToken');
       await AsyncStorage.removeItem('userRole');
       await AsyncStorage.removeItem('userData');
-  
+      await AsyncStorage.removeItem('isSubscribed');
+
       // Reset the authentication state in the context
       setIsAuthenticated(false);
       setRole(null);
-      // setUserData(null);
       setUserData({
         name: '',
         email: '',
         phoneNo: '',
       });
-  
-      // Ensure the navigation stack is reset and directed to the login screen
-      // Ensure `navigation` is correctly passed or obtained (use useNavigation if needed)
+      setIsSubscribed(false);
+
+      // Reset navigation stack and redirect to login screen
       navigation.reset({
         index: 0,
         routes: [{ name: 'LoginScreen' }], // Adjust according to your actual screen name
       });
-    } 
-    catch (error) {
+    } catch (error) {
       console.error('Logout failed:', error);
     }
   };
@@ -99,10 +110,12 @@ export const AuthProvider = ({ children }) => {
     role,
     userData,
     isLoading,
+    isSubscribed,
     selectRole,
     login,
     logout,
     setUserData,
+    handleSubscribe, // Add handleSubscribe to context
   };
 
   return (

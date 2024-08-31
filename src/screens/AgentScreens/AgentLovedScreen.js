@@ -1,57 +1,65 @@
 import React, {useState} from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { useLoved } from '../../contexts/LovedContext'; // Import the useLoved hook
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useLoved } from '../../contexts/LovedContext';
 import colors from '../../styles/colors';
 
 const { width, height } = Dimensions.get('window');
 
 const AgentLovedScreen = () => {
-  const { subscribedUsers } = useLoved(); // Access subscribed users from the context
+  const { subscribedUsers } = useLoved(); 
   const [approvedUsers, setApprovedUsers] = useState([]);
-
 
   const handleApprove = (user) => {
     setApprovedUsers((prevApproved) => [...prevApproved, user]);
-    // Optionally, you can also remove the user from subscribedUsers or perform other actions
   };
 
-  // Render function for each subscribed user
-  const renderUserItem = ({ item }) =>{
+  const handleCancel = (user) => {
+    setApprovedUsers((prevApproved) => prevApproved.filter(u => u !== user));
+  };
+
+  const renderUserItem = ({ item }) => {
     const isApproved = approvedUsers.includes(item);
-  
-  return (  
-    <View style={styles.userCard}>
-      <Text style={styles.userName}>{item.name}</Text>
-      <Text style={styles.userDetails}>Phone: {item.phoneNo}</Text>
-      <Text style={styles.userDetails}>Email: {item.email}</Text>
-      {!isApproved ? (
-          <TouchableOpacity
-            style={styles.approveButton}
-            onPress={() => handleApprove(item)}
-          >
-            <Text style={styles.approveButtonText}>Approve</Text>
-          </TouchableOpacity>
+
+    return (
+      <View style={styles.userCard}>
+        <Text style={styles.userName}>{item.name}</Text>
+        <Text style={styles.userDetails}>Phone: {item.phoneNo}</Text>
+        <Text style={styles.userDetails}>Email: {item.email}</Text>
+        {!isApproved ? (
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.approveButton}
+              onPress={() => handleApprove(item)}
+            >
+              <Text style={styles.approveButtonText}>Approve</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={() => handleCancel(item)}
+            >
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
         ) : (
           <Text style={styles.approvedText}>Approved</Text>
         )}
-    </View>
-  );
-};
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
       <View style={{ width: '100%', flexDirection: 'row', justifyContent: "space-between" }}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backbutton}>
-            <Ionicons name="chevron-back" size={18} color="black" />
-          </TouchableOpacity>
-          <View style={{ alignSelf: 'center', marginRight: 140 }}>
-            <Text style={styles.header}>
-              Subscription List
-            </Text>
-          </View>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backbutton}>
+          <Ionicons name="chevron-back" size={18} color="black" />
+        </TouchableOpacity>
+        <View style={{ alignSelf: 'center', marginRight: 140 }}>
+          <Text style={styles.header}>
+            Subscription List
+          </Text>
         </View>
-      {/* <Text style={styles.header}>Subscribed Users</Text> */}
+      </View>
       {subscribedUsers.length > 0 ? (
         <FlatList
           data={subscribedUsers}
@@ -72,18 +80,11 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff',
   },
-  // header: {
-  //   fontSize: 20,
-  //   fontWeight: 'bold',
-  //   marginBottom: 10,
-  //   textAlign: 'center',
-  // },
   header: {
     color: colors.boldtextcolor,
     fontFamily: "Lato-Bold",
     fontSize: 20,
-    // alignSelf: 'center',
-    marginLeft:35
+    marginLeft: 35,
   },
   listContainer: {
     paddingBottom: 20,
@@ -106,25 +107,41 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontSize: 18,
-    fontFamily:'Lato-Bold',
-    color:colors.boldtextcolor
-    // fontWeight: 'bold',
+    fontFamily: 'Lato-Bold',
+    color: colors.boldtextcolor,
   },
   userDetails: {
     fontSize: 14,
-    // color: '#666',
-    color:colors.black,
-    fontFamily:"Lato-Regular"
+    color: colors.black,
+    fontFamily: "Lato-Regular",
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
   },
   approveButton: {
-    marginTop: 10,
+    flex: 1,
     padding: 10,
     backgroundColor: colors.buttons,
     borderRadius: 8,
     alignItems: 'center',
+    marginRight: 5,
   },
   approveButtonText: {
-    color: colors.buttons,
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  cancelButton: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#ff4d4d', // Use a different color for cancel
+    borderRadius: 8,
+    alignItems: 'center',
+    marginLeft: 5,
+  },
+  cancelButtonText: {
+    color: 'white',
     fontWeight: 'bold',
   },
   approvedText: {
