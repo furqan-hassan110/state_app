@@ -54,10 +54,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (data) => {
+    const {name, token, user_type} = data
     try {
-      const dummyToken = 'dummy-token'; // Replace with actual token from API
-      await AsyncStorage.setItem('userToken', dummyToken);
-      await AsyncStorage.setItem('userRole', role);
+      if (token) {
+        await AsyncStorage.setItem('token', token); // Store the token
+        console.log("Token stored in AsyncStorage:", token); // Debugging to confirm token is stored
+      } else {
+        console.log("Token is undefined or null"); // Debugging if token is not found in data
+      }
+      await AsyncStorage.setItem('userRole', user_type);
       await AsyncStorage.setItem('userData', JSON.stringify(data));
       setUserData(data);
       setIsAuthenticated(true);

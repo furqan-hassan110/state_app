@@ -23,7 +23,7 @@ const PropertyCardForAgent = ({
     <View style={styles.cardContainer}>
       <View style={styles.imageContainer}>
         {/* Assuming images is an array, display the first image as the main one */}
-        <Image source={images[0]} style={styles.image} />
+        {/* <Image source={images[0]} style={styles.image} /> */}
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.propertyCategory}>{propertyCategory}</Text>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, Dimensions } from 'react-native';
 import { useLoved } from '../../contexts/LovedContext';
 import PropertyCard from '../../components/PropertyCard';
@@ -9,7 +9,9 @@ const { width, height } = Dimensions.get('window');
 const UserLovedScreen = () => {
     const { lovedProperties } = useLoved();
 
-    console.log('Loved Properties:', lovedProperties); // Debugging log
+    useEffect(() => {
+        console.log('Loved Properties updated:', lovedProperties); // Debugging log
+    }, [lovedProperties]);
 
     if (!lovedProperties || lovedProperties.length === 0) {
         return (
@@ -18,7 +20,6 @@ const UserLovedScreen = () => {
             </View>
         );
     }
-    else{
 
     return (
         <View style={styles.container}>
@@ -40,7 +41,6 @@ const UserLovedScreen = () => {
         </View>
     );
 };
-}
 
 const styles = StyleSheet.create({
     container: {

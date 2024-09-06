@@ -22,7 +22,11 @@ import Textinput from '../../components/Textinput';
 import Button from '../../components/Button';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import { postRequest } from '../../utils/apiUtils'; // adjust the path if necessary
+
+
 const { width, height } = Dimensions.get('window');
+
 
 const RegisterScreen = () => {
   const initialValues = { name: '', email: '', password: '', phoneNo: '' };
@@ -40,18 +44,28 @@ const RegisterScreen = () => {
 
   const handleRegister = async (values) => {
     try {
-      
-      setUserData(values);
-
-     
-
-      await login(values); 
-      if (role === 'user') {
+      const response = await postRequest({
+        url: `${BASE_URL}register`, // replace 'register' with your actual endpoint
+        data: {
+          name: values.name,
+          email: values.email,
+          password: values.password,
+          phoneNo: values.phoneNo,
+        },
+      });
+  
+      if (response) {
+        console.log('Registration successful:', response);
+  
+        setUserData(response); // store the user data, adjust if needed
+  
+        await login(response); // log in the user, adjust if needed
         
-        navigation.navigate('UserProfileScreen');
-      } else {
-
-        console.log('Role is not user:', role);
+        if (role === 'user') {
+          navigation.navigate('UserProfileScreen');
+        } else {
+          console.log('Role is not user:', role);
+        }
       }
     } catch (error) {
       console.error('Registration error:', error);

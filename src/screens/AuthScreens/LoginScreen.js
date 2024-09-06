@@ -13,14 +13,11 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import Ionics from 'react-native-vector-icons/Ionicons';
-// Images
+// Import the login function from your API file
+import { login as apiLogin } from '../../utils/apiUtils';
 import loginImg from '../../../assets/images/login.png';
-// Styles
 import colors from '../../styles/colors';
-// Contexts
 import { useAuth } from '../../contexts/AuthContext';
-// Components
 import Button from '../../components/Button';
 import Textinput from '../../components/Textinput';
 
@@ -28,7 +25,8 @@ const { width, height } = Dimensions.get('window');
 
 const LoginScreen = () => {
   const navigation = useNavigation();
-  const { role, login } = useAuth(); // Destructure login function
+  const { login, role } = useAuth(); // Destructure login function from AuthContext
+
   const initialValues = { email: '', password: '' };
 
   const validationSchema = Yup.object({
@@ -39,22 +37,20 @@ const LoginScreen = () => {
   });
 
   const handleLogin = async (values) => {
-    try {
-      // Replace this with actual API call for authentication
-      // const response = await api.login(values.email, values.password);
-      const userData = {
-        name: 'John Doe',
-        email: values.email,
-        // Add other user data as needed
-      };
-
-      await login(userData); // Call login function from AuthContext
-
-      // Navigation will be handled automatically by RootNavigator based on auth state
-    } catch (error) {
-      console.error('Login error:', error);
-      // Optionally show error message to user
-    }
+    apiLogin (
+      values.email,
+      values.password
+    ).then(async (res)=>{
+      console.log("[LOGIN RES] ==> ", res)
+      if(res.data.user_type === role){
+        await login(res.data)
+        console.log("OK to go..")
+      }else{
+        console.log("Permission denied..")
+      }
+    }).catch((err)=>{
+      console.log("[LOGIN ERR] ==> ", err)
+    })
   };
 
   return (
@@ -151,46 +147,38 @@ const styles = StyleSheet.create({
   signimage: {
     width: width,
     height: height * 0.3,
-    // bottom: 60,
   },
   Let: {
     fontSize: 22,
     fontFamily: 'Lato-Medium',
     color: colors.text,
-    // left:10
   },
   sign: {
     fontSize: 22,
     fontFamily: 'Lato-Bold',
     color: colors.boldtextcolor,
-    // left: 15,
   },
   email: {
     backgroundColor: colors.textinputfill,
-    // paddingLeft:50,
+    color:colors.black,
     fontFamily: 'Lato-Regular',
     width: width * 0.8,
     alignSelf: 'center',
     height: height * 0.08,
     borderRadius: 10,
-    // padding: 10,
-
   },
   password: {
     backgroundColor: colors.textinputfill,
-    // paddingLeft:50,
+    color:colors.black,
     fontFamily: 'Lato-Regular',
     width: width * 0.72,
     alignSelf: 'center',
     height: height * 0.08,
     borderRadius: 10,
-    // padding: 10,
-    // bottom:20
   },
   button: {
     width: width * 0.75,
     height: height * 0.075,
-    // top: 60,
     alignSelf: 'center',
     borderRadius: 10,
     backgroundColor: colors.buttons,
@@ -200,14 +188,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato-Semibold',
     color: colors.text,
   },
-  showpass: {
-    fontSize: 12,
-    fontFamily: 'Lato-Semibold',
-    color: colors.text,
-  },
   alreadytext: {
     color: colors.text,
-    // alignSelf: 'center',
     fontFamily: 'Lato-Regular',
     fontSize: 12,
   },

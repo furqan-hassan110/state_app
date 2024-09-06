@@ -54,18 +54,17 @@ const CustomTextInput = ({ icon, label, iconSet = 'MaterialIcons', secureTextEnt
 const styles = StyleSheet.create({
   container: {
     marginBottom: 15,
+    // backgroundColor:colors.black
   },
-  label: {
-    marginBottom: 5,
-    fontSize: 16,
-    color: '#333',
-  },
+  // label: {
+  //   marginBottom: 5,
+  //   fontSize: 16,
+  //   color: '#333',
+  // },
   inputContainer: {
     width:width*0.94,
     flexDirection: 'row',
     alignItems: 'center',
-    // borderColor: '#ccc',
-    // borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
     backgroundColor:colors.textinputfill
@@ -75,8 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     fontSize: 16,
-    color: colors.black,
-    backgroundColor:colors.black
+  
   },
   error: {
     fontSize: 14,

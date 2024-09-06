@@ -5,13 +5,40 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FloatingAction } from 'react-native-floating-action';
 import colors from '../../styles/colors';
 import PropertyCardForAgent from '../../components/PropertyCardForAgent';
+import { getProperties } from '../../utils/apiUtils';
+import { useAuth } from '../../contexts/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
 const AgentSearchScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  
+  const token = AsyncStorage.getItem('token');
   const [propertyList, setPropertyList] = useState([]);
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token'); // Await for the token
+        console.log("Retrieved token:", token); // Debugging line to log the token
+
+        if (token) {
+          const res = await getProperties(token); // Call the API with the token
+          console.log("[RES - GET ALL PROPERTIES] ==> ", res);
+          setPropertyList(res?.data || []); // Assuming `res.data` contains the property list
+        } else {
+          console.log("Token not found"); // If no token is found in AsyncStorage
+        }
+      } catch (err) {
+        console.log("[RES - GET ALL PROPERTIES] ==> ", err);
+      }
+    };
+
+    fetchProperties();
+  }, []);
+
 
   useEffect(() => {
     if (route.params?.finalDetails) {
@@ -52,29 +79,29 @@ const AgentSearchScreen = () => {
         <Text style={styles.headerText}>Your Listing</Text>
       </View>
       <FlatList
-        data={propertyList}
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity>
-            <PropertyCardForAgent
-              bathrooms={item.bathrooms}
-              bedrooms={item.bedrooms}
-              carSpace={item.carSpace}
-              listingType={item.listingType}
-              propertyCategory={item.propertyCategory}
-              propertyType={item.propertyType}
-              rentPrice={item.rentPrice}
-              rentType={item.rentType}
-              sellPrice={item.sellPrice}
-              totalRooms={item.totalRooms}
-              images={item.images}
-            />
-          </TouchableOpacity>
-        )}
-        ListEmptyComponent={renderEmptyList}
-        contentContainerStyle={styles.listContainer}
+  data={propertyList}
+  showsHorizontalScrollIndicator={false}
+  keyExtractor={(item, index) => index.toString()}
+  renderItem={({ item }) => (
+    <TouchableOpacity>
+      <PropertyCardForAgent
+        bathrooms={item.bathroomCount} 
+        bedrooms={item.bedroomCount}   
+        carSpace={item.carSpaceCount}   
+        totalRooms={item.totalRoomCount} 
+        listingType={item.listingType}
+        propertyCategory={item.propertyCategory}
+        propertyType={item.propertyType}
+        rentPrice={item.rentPrice}
+        rentType={item.rentPayable}
+        sellPrice={item.sellingPrice}
+        images={item.images}
       />
+    </TouchableOpacity>
+  )}
+  ListEmptyComponent={renderEmptyList}
+  contentContainerStyle={styles.listContainer}
+/>
       <FloatingAction
         color={colors.buttons}
         onPressMain={handleAddListing}
