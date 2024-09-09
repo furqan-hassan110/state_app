@@ -22,7 +22,7 @@ import Textinput from '../../components/Textinput';
 import Button from '../../components/Button';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { postRequest } from '../../utils/apiUtils'; // adjust the path if necessary
+import { register as apiregister, register } from '../../utils/apiUtils'; // adjust the path if necessary
 
 
 const { width, height } = Dimensions.get('window');
@@ -41,36 +41,61 @@ const RegisterScreen = () => {
       .min(6, 'Password must be at least 6 characters')
       .required('Required'),
   });
-
   const handleRegister = async (values) => {
     try {
-      const response = await postRequest({
-        url: `${BASE_URL}register`, // replace 'register' with your actual endpoint
-        data: {
-          name: values.name,
-          email: values.email,
-          password: values.password,
-          phoneNo: values.phoneNo,
-        },
-      });
-  
-      if (response) {
-        console.log('Registration successful:', response);
-  
-        setUserData(response); // store the user data, adjust if needed
-  
-        await login(response); // log in the user, adjust if needed
+      // Call the registration API with user details
+      const res = await apiregister(
+        values.name,
+        values.email,
+        values.password,
+        values.phoneNo
+      );
+      console.log("[REGISTER RES] ==> ", res);
+    
+      // Check if the token is received, meaning the registration was successful
+      if (res.data.token) {
+        console.log("Registration successful. Token received:", res.data.token);
         
-        if (role === 'user') {
-          navigation.navigate('UserProfileScreen');
-        } else {
-          console.log('Role is not user:', role);
-        }
+        // Navigate to the profile screen or any screen after registration
+        navigation.navigate('UserProfileScreen');
+      } else {
+        console.log("Registration failed: No token received.");
       }
-    } catch (error) {
-      console.error('Registration error:', error);
+    } catch (err) {
+      console.log("[REGISTER ERR] ==> ", err);
     }
   };
+  
+  
+  // const handleRegister = async (values) => {
+  //   try {
+  //     const response = await postRequest({
+  //       url: `${BASE_URL}register`, // replace 'register' with your actual endpoint
+  //       data: {
+  //         name: values.name,
+  //         email: values.email,
+  //         password: values.password,
+  //         phoneNo: values.phoneNo,
+  //       },
+  //     });
+  
+  //     if (response) {
+  //       console.log('Registration successful:', response);
+  
+  //       setUserData(response); // store the user data, adjust if needed
+  
+  //       await login(response); // log in the user, adjust if needed
+        
+  //       if (role === 'user') {
+  //         navigation.navigate('UserProfileScreen');
+  //       } else {
+  //         console.log('Role is not user:', role);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error('Registration error:', error);
+  //   }
+  // };
 
   return (
     <KeyboardAvoidingView
@@ -174,12 +199,14 @@ const styles = StyleSheet.create({
   },
   name: {
     backgroundColor: colors.textinputfill,
+    color:colors.black,
     width: width * 0.8,
     height: height * 0.08,
     borderRadius: 10,
   },
   email: {
     backgroundColor: colors.textinputfill,
+    color:colors.black,
     width: width * 0.8,
     height: height * 0.08,
     alignSelf: 'center',
@@ -187,6 +214,7 @@ const styles = StyleSheet.create({
   },
   Phone: {
     backgroundColor: colors.textinputfill,
+    color:colors.black,
     width: width * 0.8,
     height: height * 0.08,
     alignSelf: 'center',
@@ -194,6 +222,7 @@ const styles = StyleSheet.create({
   },
   pass: {
     backgroundColor: colors.textinputfill,
+    color:colors.black,
     width: width * 0.72,
     height: height * 0.08,
     alignSelf: 'center',

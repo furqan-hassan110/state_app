@@ -4,10 +4,14 @@ import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import colors from '../../styles/colors';
+import { createCategories } from '../../utils/apiUtils';
+import { useAuth } from '../../contexts/AuthContext';
 
 const { width, height } = Dimensions.get('window');
 
 const AddListingStep3 = ({ route }) => {
+  const token = useAuth();
+  console.log("Token:", token)
   const navigation = useNavigation();
   const [sellPrice, setSellPrice] = useState('');
   const [rentPrice, setRentPrice] = useState('');
@@ -30,13 +34,33 @@ const AddListingStep3 = ({ route }) => {
     totalRooms,
   };
 
-  const handleNext = () => {
-    setModalVisible(true);
-    console.log('Final details:', {
-      ...route.params,
-      ...finalDetails,
-    });
+  const handleNext = async () => {
+    try {
+      // Get the token from the context
+      // const { token } = useAuth(); // Make sure the token is correctly accessed
+      const { userData } = token;
+      const userToken = userData?.token;
+      console.log(userToken)
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+  
+      // Post property details to the API
+      const response = await createCategories(finalDetails, userToken);
+  
+      // If successful, show the modal
+      if (response && response.success) {
+        setModalVisible(true);
+      } else {
+        console.error("Error creating property:", response.message);
+      }
+    } catch (error) {
+      console.error("Error creating property:", error);
+    }
   };
+  
+  
 
   const handleModalFinish = () => {
     navigation.navigate('BottomTabAgent', {

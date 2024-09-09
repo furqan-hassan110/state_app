@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
     // Function to load authentication state from AsyncStorage
     const loadAuthState = async () => {
       try {
-        const token = await AsyncStorage.getItem('userToken');
+        const token = await AsyncStorage.getItem('token');
         const storedRole = await AsyncStorage.getItem('userRole');
         const storedUserData = await AsyncStorage.getItem('userData');
         const subscriptionStatus = await AsyncStorage.getItem('isSubscribed');

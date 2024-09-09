@@ -7,11 +7,13 @@ import colors from '../../styles/colors';
 import PropertyCardForAgent from '../../components/PropertyCardForAgent';
 import { getProperties } from '../../utils/apiUtils';
 import { useAuth } from '../../contexts/AuthContext';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
 const AgentSearchScreen = () => {
+  // const token = useAuth();
   const navigation = useNavigation();
   const route = useRoute();
   
@@ -85,6 +87,7 @@ const AgentSearchScreen = () => {
   renderItem={({ item }) => (
     <TouchableOpacity>
       <PropertyCardForAgent
+      id={item.id}
         bathrooms={item.bathroomCount} 
         bedrooms={item.bedroomCount}   
         carSpace={item.carSpaceCount}   
@@ -96,6 +99,8 @@ const AgentSearchScreen = () => {
         rentType={item.rentPayable}
         sellPrice={item.sellingPrice}
         images={item.images}
+  //       token={userToken}   // Ensure token is passed
+  // onRefresh={refreshPropertiesList}
       />
     </TouchableOpacity>
   )}

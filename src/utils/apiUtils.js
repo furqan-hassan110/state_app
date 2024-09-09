@@ -142,6 +142,12 @@ export const login = (email, password) => {
   return postRequest({ url, data, token: null });
 };
 
+export const register = (name, email, password, phone_no) => {
+  const url = `${BASE_URL}/register`;
+  const data = { name, email, password,c_password: password, phone_no };
+  return postRequest({ url, data, token: null });
+};
+
 export const getProperties = (token, abortToken = null) => {
   const url = `${BASE_URL}/properties`;
 
@@ -149,7 +155,7 @@ export const getProperties = (token, abortToken = null) => {
 };
 
 export const createCategories = (data, token) => {
-  const url = `${BASE_URL}categories`;
+  const url = `${BASE_URL}/categories`;
 
   return postRequest({ url, token, data });
 };
@@ -159,7 +165,14 @@ export const updateCategory = (id, data, token) => {
   return patchRequest({ url, token, data });
 };
 
-export const deleteCategory = (id, token) => {
-  const url = `${BASE_URL}categories/${id}`;
-  return deleteRequest({ url, token });
+export const deleteCategory = async (id, token) => {
+  const url = `${BASE_URL}/categories/${id}`;  // Ensure this URL is correct
+
+  try {
+    const response = await deleteRequest({ url, token });
+    return response;
+  } catch (error) {
+    console.log("Delete Error:", error);  // Log the error to see what's wrong
+    throw error;
+  }
 };

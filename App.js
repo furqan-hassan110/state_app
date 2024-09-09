@@ -5,6 +5,7 @@ import { AuthProvider } from './src/contexts/AuthContext';
 import RootNavigator from './src/navigations/RootNavigator';
 import { LovedProvider } from './src/contexts/LovedContext';
 import { NavigationContainer } from '@react-navigation/native';
+import { MenuProvider } from 'react-native-popup-menu';
 
 function App() {
   useEffect(() => {
@@ -15,13 +16,13 @@ function App() {
     <>
       <StatusBar backgroundColor="#fff" barStyle="light-content" />
       <NavigationContainer>
-        <AuthProvider>
-          <LovedProvider>
-
-            <RootNavigator />
-
-          </LovedProvider>
-        </AuthProvider>
+        <MenuProvider>
+          <AuthProvider>
+            <LovedProvider>
+              <RootNavigator />
+            </LovedProvider>
+          </AuthProvider>
+        </MenuProvider>
       </NavigationContainer>
     </>
   );
