@@ -1,5 +1,9 @@
 // UserHomeScreen.js
+<<<<<<< HEAD
 import React, { useState } from 'react';
+=======
+import React, { useState, useEffect } from 'react';
+>>>>>>> 005a42c (crud agent)
 import { View, Text, Image, StyleSheet, Dimensions, FlatList, ScrollView, TouchableOpacity } from 'react-native';
 import { LovedProvider } from '../../contexts/LovedContext';
 import logo from '../../../assets/images/logo.png';
@@ -9,7 +13,13 @@ import Category from '../../components/Category';
 import PropertyCard from '../../components/PropertyCard';
 import colors from '../../styles/colors';
 import Homecards from '../../components/Homecards';
+<<<<<<< HEAD
 import { useRoute, useNavigation } from '@react-navigation/native';
+=======
+import { getProperties } from '../../utils/apiUtils';
+import { useRoute, useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+>>>>>>> 005a42c (crud agent)
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const { width, height } = Dimensions.get('window');
@@ -25,16 +35,48 @@ const propertyDetail = [
 const AgentHomeScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+<<<<<<< HEAD
 
   const navigation = useNavigation();
 
+=======
+  const [properties, setProperties] = useState([]);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token'); 
+        console.log("Retrieved token:", token); 
+
+        if (token) {
+          const res = await getProperties(token); 
+          console.log("[RES - GET ALL PROPERTIES] ==> ", res);
+          setProperties(res?.data || []); 
+        } else {
+          console.log("Token not found"); 
+        }
+      } catch (err) {
+        console.log("[RES - GET ALL PROPERTIES] ==> ", err);
+      }
+    };
+    fetchProperties();
+  }, []);
+
+  
+
+>>>>>>> 005a42c (crud agent)
   const filterResults = (category) => {
     setSelectedCategory(category);
   };
 
   const handlePropertyClick = (item) => {
     
+<<<<<<< HEAD
     navigation.navigate('PropertyDetail', { property: item });
+=======
+    // navigation.navigate('PropertyDetail', { property: item });
+>>>>>>> 005a42c (crud agent)
     // console.log("go")
   };
 
@@ -100,6 +142,7 @@ const AgentHomeScreen = () => {
             <Text style={styles.featuredtext}>View all</Text>
           </View>
           <FlatList
+<<<<<<< HEAD
             data={propertyDetail}
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -114,6 +157,22 @@ const AgentHomeScreen = () => {
                 country={item.country}
                 price={item.price}
               />
+=======
+            data={properties} // Use fetched properties
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => item.id.toString()} // Ensure unique keys
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handlePropertyClick(item)}>
+                <PropertyCard
+                  id={item.id}
+                  imageSource={item.image ? { uri: item.image } : require('../../../assets/images/role1.png')} // Ensure the image source is handled correctly
+                  title={item.title}
+                  // cityName={item.city_name}
+                  country={item.location}
+                  price={item.sellingPrice}
+                />
+>>>>>>> 005a42c (crud agent)
               </TouchableOpacity>
             )}
             contentContainerStyle={styles.listContainer}

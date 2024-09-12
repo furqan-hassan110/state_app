@@ -6,7 +6,11 @@ import { useLoved } from '../contexts/LovedContext';
 
 const { width, height } = Dimensions.get('window');
 
+<<<<<<< HEAD
 const PropertyCard = ({ id, imageSource, areaName, cityName, country, price }) => {
+=======
+const PropertyCard = ({ id, imageSource, title, cityName, country, price }) => {
+>>>>>>> 005a42c (crud agent)
   const { lovedProperties, setLovedProperties } = useLoved();
 
   const handleToggleLoved = () => {
@@ -16,7 +20,11 @@ const PropertyCard = ({ id, imageSource, areaName, cityName, country, price }) =
       if (isAlreadyLoved) {
         return prev.filter((p) => p.id !== id);
       } else {
+<<<<<<< HEAD
         return [...prev, { id, imageSource, areaName, cityName, country, price }];
+=======
+        return [...prev, { id, imageSource, title, cityName, country, price }];
+>>>>>>> 005a42c (crud agent)
       }
     });
   };
@@ -39,8 +47,13 @@ const PropertyCard = ({ id, imageSource, areaName, cityName, country, price }) =
         </TouchableOpacity>
       </View>
       <View style={styles.detailsContainer}>
+<<<<<<< HEAD
         <Text style={styles.areaName}>{areaName}</Text>
         <Text style={styles.cityName}>{cityName}</Text>
+=======
+        <Text style={styles.title}>{title}</Text>
+        {/* <Text style={styles.cityName}>{cityName}</Text> */}
+>>>>>>> 005a42c (crud agent)
         <View style={styles.locationContainer}>
           <MaterialCommunityIcons name='map-marker' size={15} color={colors.boldtextcolor} />
           <Text style={styles.country}>{country}</Text>
@@ -87,10 +100,18 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
   },
+<<<<<<< HEAD
   areaName: {
     fontSize: 12,
     fontWeight: 'bold',
     color:colors.boldtextcolor,
+=======
+  title: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color:colors.boldtextcolor,
+    marginBottom:10
+>>>>>>> 005a42c (crud agent)
   },
   cityName:{
     fontSize: 12,

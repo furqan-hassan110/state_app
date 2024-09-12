@@ -4,13 +4,22 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import colors from '../styles/colors';
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import { deleteCategory } from '../utils/apiUtils';
+<<<<<<< HEAD
 // import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+=======
+import { useAuth } from '../contexts/AuthContext';
+ import { useNavigation } from '@react-navigation/native';
+>>>>>>> 005a42c (crud agent)
 
 const { width, height } = Dimensions.get('window');
 
 const PropertyCardForAgent = ({ 
   id, 
   images, 
+<<<<<<< HEAD
+=======
+  title,
+>>>>>>> 005a42c (crud agent)
   propertyCategory, 
   propertyType, 
   listingType, 
@@ -21,6 +30,7 @@ const PropertyCardForAgent = ({
   bathrooms, 
   carSpace, 
   totalRooms,
+<<<<<<< HEAD
   token, // pass the token for authentication
   onRefresh  // Callback for deleting the property
 }) => {
@@ -58,11 +68,54 @@ const PropertyCardForAgent = ({
       </View>
      
       <View style={styles.detailsContainer}>
+=======
+  onRefresh  
+}) => {
+  const token= useAuth();
+  const navigation = useNavigation();
+
+  const handleDelete = () => {
+    const { userData } = token;
+    const userToken = userData?.token;
+
+    console.log(userToken)
+    deleteCategory(id, userToken).then (res=>{
+      console.log('PROPERTY DELETED [RES] ==> ', res)
+      if(res.success) {
+        Alert.alert(
+          'Success', 'Property category deleted successfully'
+        )
+      }else{
+        Alert.alert(
+          'Error', 'Failed to delete property category'
+        )
+      }
+    }).catch(err=>{
+      console.log('PROPERTY DELETED [ERR] ==> ', err)
+    })
+  };
+  const handleUpdate =() =>{
+navigation.navigate('EditListingScreen',{id:id})
+  }
+  return (
+    <View style={styles.cardContainer}>
+      <View style={styles.imageContainer}>
+      
+        <Image source={images ? {uri:images}:require('../../assets/images/role1.png')} style={styles.image} />
+      </View>
+     
+      <View style={styles.detailsContainer}>
+        <Text style={styles.propertyCategory}>{title}</Text>
+>>>>>>> 005a42c (crud agent)
         <Text style={styles.propertyCategory}>{propertyCategory}</Text>
         <Text style={styles.propertyType}>{propertyType}</Text>
         <Text style={styles.listingType}>{listingType}</Text>
         <View style={styles.priceContainer}>
+<<<<<<< HEAD
           {sellPrice && <Text style={styles.price}>Sell: ${sellPrice}</Text>}
+=======
+          <Text style={styles.price}>Sell: ${sellPrice}</Text>
+>>>>>>> 005a42c (crud agent)
           {rentPrice && <Text style={styles.price}>Rent: ${rentPrice} {rentType}</Text>}
         </View>
         <View style={styles.featuresContainer}>
@@ -82,7 +135,11 @@ const PropertyCardForAgent = ({
         <MenuOptions>
         
             <TouchableOpacity>
+<<<<<<< HEAD
             <MenuOption >
+=======
+            <MenuOption onSelect={handleUpdate}>
+>>>>>>> 005a42c (crud agent)
             <Text style={styles.menuText}>Update</Text>
             </MenuOption>
             </TouchableOpacity>

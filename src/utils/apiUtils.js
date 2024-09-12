@@ -153,20 +153,39 @@ export const getProperties = (token, abortToken = null) => {
 
   return getRequest({ url, token, abortToken });
 };
+<<<<<<< HEAD
 
 export const createCategories = (data, token) => {
   const url = `${BASE_URL}/categories`;
+=======
+export const getPropertiesById = (id, token, abortToken = null) => {
+  const url = `${BASE_URL}/properties/${id}`;
+
+  return getRequest({ url, token, abortToken });
+};
+
+export const createProperties = (data, token) => {
+  const url = `${BASE_URL}/properties`;
+>>>>>>> 005a42c (crud agent)
 
   return postRequest({ url, token, data });
 };
 
 export const updateCategory = (id, data, token) => {
+<<<<<<< HEAD
   const url = `${BASE_URL}categories/${id}`;
+=======
+  const url = `${BASE_URL}/properties/${id}`;
+>>>>>>> 005a42c (crud agent)
   return patchRequest({ url, token, data });
 };
 
 export const deleteCategory = async (id, token) => {
+<<<<<<< HEAD
   const url = `${BASE_URL}/categories/${id}`;  // Ensure this URL is correct
+=======
+  const url = `${BASE_URL}/properties/${id}`;  // Ensure this URL is correct
+>>>>>>> 005a42c (crud agent)
 
   try {
     const response = await deleteRequest({ url, token });

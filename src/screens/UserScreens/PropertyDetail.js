@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
+=======
+import React, { useState, useEffect } from 'react';
+>>>>>>> 005a42c (crud agent)
 import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,6 +17,12 @@ const { width, height } = Dimensions.get('window');
 
 const PropertyDetail = ({ route, navigation }) => {
   const { property } = route.params;
+<<<<<<< HEAD
+=======
+  useEffect(() => {
+    console.log('Property received in detail screen:', property);  // Check if the property is being received correctly
+  }, []);
+>>>>>>> 005a42c (crud agent)
 
 
   const [isFavorite, setIsFavorite] = useState(false);
@@ -58,6 +68,7 @@ const PropertyDetail = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.category}>
+<<<<<<< HEAD
         <Text style={styles.categorytext}>{property.category}</Text>
       </View>
 
@@ -72,6 +83,22 @@ const PropertyDetail = ({ route, navigation }) => {
         <TouchableOpacity onPress={handleImagePress}>
           <View style={{backgroundColor:colors.black, opacity:0.5,width: width * 0.2, height: height * 0.08,borderRadius: 20,}}>
           <Image source={property.imageSource} style={{marginBottom:15, width: width * 0.2, height: height * 0.08, borderRadius: 20, borderWidth: 2, borderColor: colors.white }}></Image>
+=======
+        <Text style={styles.categorytext}>{property.propertyCategory}</Text>
+      </View>
+
+      <Image source={property.imageSource ? {uri: property.imageSource}: require('../../../assets/images/role1.png')} style={styles.image} />
+      <View style={{left: 250,top:200 , position:'absolute'}}>
+        <View >
+          <Image source={property.imageSource ? {uri: property.imageSource}: require('../../../assets/images/role3.png')} style={{marginBottom:15, width: width * 0.2, height: height * 0.08, borderRadius: 20, borderWidth: 2, borderColor: colors.white }}></Image>
+        </View>
+        <View>
+          <Image source={property.imageSource ? {uri: property.imageSource}: require('../../../assets/images/role2.png')} style={{marginBottom:15, width: width * 0.2, height: height * 0.08, borderRadius: 20, borderWidth: 2, borderColor: colors.white }}></Image>
+        </View>
+        <TouchableOpacity onPress={handleImagePress}>
+          <View style={{backgroundColor:colors.black, opacity:0.5,width: width * 0.2, height: height * 0.08,borderRadius: 20,}}>
+          <Image source={property.imageSource ? {uri: property.imageSource}: require('../../../assets/images/role1.png')} style={{marginBottom:15, width: width * 0.2, height: height * 0.08, borderRadius: 20, borderWidth: 2, borderColor: colors.white }}></Image>
+>>>>>>> 005a42c (crud agent)
           </View>
           
         </TouchableOpacity>
@@ -79,10 +106,17 @@ const PropertyDetail = ({ route, navigation }) => {
       </View>
       <View style={styles.detailsContainer}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+<<<<<<< HEAD
           <Text style={styles.title}>{property.Title}</Text>
           <Text style={styles.price}>{property.price}</Text>
         </View>
         <Text style={styles.location}>{property.cityName}, {property.country}</Text>
+=======
+          <Text style={styles.title}>{property.title}</Text>
+          <Text style={styles.price}>{property.sellingPrice}</Text>
+        </View>
+        <Text style={styles.location}>{property.location}</Text>
+>>>>>>> 005a42c (crud agent)
         <Button
           title="Contact Agent"
           onPress={toggleModal}
@@ -102,6 +136,7 @@ const PropertyDetail = ({ route, navigation }) => {
         <View style={styles.livingdetails}>
           <View style={styles.bedroomcontainer}>
             <MaterialIcon name='bedroom-parent' color={colors.buttons} size={20} />
+<<<<<<< HEAD
             <Text style={styles.livingtext}>Bedrooms {property.bedroom}</Text>
           </View>
           <View style={styles.bedroomcontainer}>
@@ -111,6 +146,17 @@ const PropertyDetail = ({ route, navigation }) => {
           <View style={styles.bedroomcontainer}>
             <MaterialIcon name='garage' color={colors.buttons} size={20} />
             <Text style={styles.livingtext}>Garage {property.garage}</Text>
+=======
+            <Text style={styles.livingtext}>Bedrooms {property.bedroomCount}</Text>
+          </View>
+          <View style={styles.bedroomcontainer}>
+            <MaterialIcon name='bathroom' color={colors.buttons} size={20} />
+            <Text style={styles.livingtext}>Bathroom {property.bathroomCount}</Text>
+          </View>
+          <View style={styles.bedroomcontainer}>
+            <MaterialIcon name='garage' color={colors.buttons} size={20} />
+            <Text style={styles.livingtext}>Garage {property.carSpaceCount}</Text>
+>>>>>>> 005a42c (crud agent)
           </View>
         </View>
         <View style={styles.locationdetailscontainer}>
@@ -120,7 +166,11 @@ const PropertyDetail = ({ route, navigation }) => {
               <MaterialCommunityIcons name='map-marker' size={24} color={colors.black} />
             </View>
             <Text style={styles.adreessText}>
+<<<<<<< HEAD
               {property.areaName}, {property.cityName}, {property.country},
+=======
+              {property.location}
+>>>>>>> 005a42c (crud agent)
             </Text>
           </View>
           <View >
@@ -130,7 +180,11 @@ const PropertyDetail = ({ route, navigation }) => {
               height: height * 0.06,
               backgroundColor: colors.textinputfill, borderRadius: 25, justifyContent: 'center', alignItems: 'center', marginBottom: 10
             }}>
+<<<<<<< HEAD
               <Text style={styles.priceText}>{property.price}</Text>
+=======
+              <Text style={styles.priceText}>{property.sellingPrice}</Text>
+>>>>>>> 005a42c (crud agent)
             </View>
           </View>
 

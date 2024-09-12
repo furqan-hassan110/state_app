@@ -4,7 +4,11 @@ import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import colors from '../../styles/colors';
+<<<<<<< HEAD
 import { createCategories } from '../../utils/apiUtils';
+=======
+import { createProperties } from '../../utils/apiUtils';
+>>>>>>> 005a42c (crud agent)
 import { useAuth } from '../../contexts/AuthContext';
 
 const { width, height } = Dimensions.get('window');
@@ -23,6 +27,7 @@ const AddListingStep3 = ({ route }) => {
 
   const [isModalVisible, setModalVisible] = useState(false);
 
+<<<<<<< HEAD
   const finalDetails = {
     ...route.params,
     sellPrice,
@@ -58,6 +63,62 @@ const AddListingStep3 = ({ route }) => {
     } catch (error) {
       console.error("Error creating property:", error);
     }
+=======
+  // const finalDetails = {
+  //   ...route.params,
+  //   sellPrice,
+  //   rentPrice,
+  //   rentType,
+  //   bedrooms,
+  //   bathrooms,
+  //   carSpace,
+  //   totalRooms,
+  // };
+ 
+
+  const handleNext = () => {
+    const propertyObject = {
+      title: route.params?.listingTitle || "Sample Title",
+      location: route.params?.location || "Sample Location",
+      address: route.params?.address || "Sample Address",
+      construction_status: route.params?.constructionStatus || "Under Construction",
+      listing_type: route.params?.listingType || "rent",
+      property_category: route.params?.propertyCategory || "Residential",
+      property_size: route.params?.propertySize || "1200",
+      property_type: route.params?.propertyType || "Apartment",
+      selling_amount: sellPrice || "",
+      rent_amount: rentPrice || "",
+      rent_payable: rentType || "Monthly",
+      total_room_count: totalRooms || "2",
+      bedroom_count: bedrooms || "",
+      bathroom_count: bathrooms || "",
+      car_space_count: carSpace || ""
+    };
+    console.log(propertyObject)
+//  const userToken='53|DMi0lApx4oMzlh3oSlgWaW6antev0AYCdajzkmIg25425d8d'
+  // const { token } = useAuth();
+  const { userData } = token;
+  const userToken = userData?.token;
+
+  if (!propertyObject.address || !propertyObject.bathroom_count || !propertyObject.bedroom_count || !propertyObject.car_space_count) {
+    console.error("Please fill all the required fields.");
+    return;
+  }
+
+  // console.log(userToken)
+createProperties(propertyObject, userToken).then(res => {
+    console.log("CREATE PROPERTY [RES] ==> ", res)
+    if (res.success) {
+      setModalVisible(true);
+    } else {
+      console.error("Error creating property:", res.message);
+    }
+}).catch(err => {
+    console.log("CREATE PROPERTY [ERR] ==> ", err)
+})
+
+    
+>>>>>>> 005a42c (crud agent)
   };
   
   
@@ -65,7 +126,11 @@ const AddListingStep3 = ({ route }) => {
   const handleModalFinish = () => {
     navigation.navigate('BottomTabAgent', {
       screen: 'Search',
+<<<<<<< HEAD
       params: { finalDetails },
+=======
+      // params: { finalDetails },
+>>>>>>> 005a42c (crud agent)
     });
     setModalVisible(false);
   };
@@ -101,7 +166,11 @@ const AddListingStep3 = ({ route }) => {
       />
 
       <View style={styles.toggleContainer}>
+<<<<<<< HEAD
         {['Monthly', 'Yearly'].map(type => (
+=======
+        {['monthly', 'yearly'].map(type => (
+>>>>>>> 005a42c (crud agent)
           <TouchableOpacity
             key={type}
             style={[styles.toggleButton, rentType === type && styles.selectedToggleButton]}

@@ -1,10 +1,21 @@
+<<<<<<< HEAD
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+=======
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
+>>>>>>> 005a42c (crud agent)
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import SearchCards from '../../components/SearchCards';
 import colors from '../../styles/colors';
 import SearchBar from '../../components/SearchBar';
+<<<<<<< HEAD
+=======
+import { getProperties } from '../../utils/apiUtils'; // Import the API function
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+>>>>>>> 005a42c (crud agent)
 
 const { width, height } = Dimensions.get('window');
 
@@ -12,6 +23,7 @@ const UserSearchScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const { query } = route.params || {};
+<<<<<<< HEAD
 
   const propertyDetail = [
     { id: '1', category: "Apartment",Title:'Bungalow House', areaName: 'Westrn Bay , ', cityName: 'New Castle', country: 'USA', price: '2M', imageSource: require('../../../assets/images/role1.png') },
@@ -31,16 +43,73 @@ const UserSearchScreen = () => {
 
   const filteredProperties = query
     ? propertyDetail.filter(property =>
+=======
+  
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch properties when the component mounts
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token'); // Await for the token
+        console.log("Retrieved token:", token); // Debugging line to log the token
+
+        if (token) {
+          const res = await getProperties(token); // Call the API with the token
+          console.log("[RES - GET ALL PROPERTIES] ==> ", res);
+          setProperties(res?.data || []); // Assuming `res.data` contains the property list
+        } else {
+          console.log("Token not found"); // If no token is found in AsyncStorage
+        }
+      } catch (err) {
+        console.log("[RES - GET ALL PROPERTIES] ==> ", err);
+      }finally {
+        setLoading(false); // Set loading to false after the API call completes (success or error)
+      }
+    };
+
+    fetchProperties();
+  }, []);
+
+  // Filter properties based on the search query
+  const filteredProperties = query
+    ? properties.filter(property =>
+>>>>>>> 005a42c (crud agent)
         property.category.toLowerCase().includes(query.toLowerCase()) ||
         property.cityName.toLowerCase().includes(query.toLowerCase()) ||
         property.country.toLowerCase().includes(query.toLowerCase())
       )
+<<<<<<< HEAD
     : propertyDetail;
+=======
+    : properties;
+>>>>>>> 005a42c (crud agent)
 
   const renderSearchResult = ({ item }) => {
     return <SearchCards item={item} />;
   };
 
+<<<<<<< HEAD
+=======
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>{error}</Text>
+      </View>
+    );
+  }
+
+>>>>>>> 005a42c (crud agent)
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -52,6 +121,7 @@ const UserSearchScreen = () => {
       
       <SearchBar showFilterIcon={false} />
       
+<<<<<<< HEAD
       <Text style={styles.cardCount}>
         Found {filteredProperties.length} result{filteredProperties.length !== 1 ? 's' : ''} estates
       </Text>
@@ -60,6 +130,12 @@ const UserSearchScreen = () => {
         <FlatList
           data={filteredProperties}  // Use the filtered properties here
           keyExtractor={(item) => item.id}
+=======
+      {filteredProperties.length > 0 ? (
+        <FlatList
+          data={filteredProperties}
+          keyExtractor={(item) => item.id.toString()}
+>>>>>>> 005a42c (crud agent)
           renderItem={renderSearchResult}
           numColumns={2}
           contentContainerStyle={styles.listContainer}
@@ -92,11 +168,14 @@ const styles = StyleSheet.create({
     marginLeft: 70,
     color: colors.boldtextcolor,
   },
+<<<<<<< HEAD
   cardCount: {
     fontSize: 16,
     color: colors.black,
     marginVertical: 10,  // Adjust margin as needed
   },
+=======
+>>>>>>> 005a42c (crud agent)
   listContainer: {
     paddingVertical: 10,
   },
@@ -126,6 +205,23 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: 20,
   },
+<<<<<<< HEAD
+=======
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    fontSize: 18,
+    color: 'red',
+  },
+>>>>>>> 005a42c (crud agent)
 });
 
 export default UserSearchScreen;

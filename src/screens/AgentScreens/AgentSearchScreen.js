@@ -88,6 +88,10 @@ const AgentSearchScreen = () => {
     <TouchableOpacity>
       <PropertyCardForAgent
       id={item.id}
+<<<<<<< HEAD
+=======
+      title={item.title}
+>>>>>>> 005a42c (crud agent)
         bathrooms={item.bathroomCount} 
         bedrooms={item.bedroomCount}   
         carSpace={item.carSpaceCount}   
@@ -97,7 +101,11 @@ const AgentSearchScreen = () => {
         propertyType={item.propertyType}
         rentPrice={item.rentPrice}
         rentType={item.rentPayable}
+<<<<<<< HEAD
         sellPrice={item.sellingPrice}
+=======
+        sellPrice={item.sellPrice}
+>>>>>>> 005a42c (crud agent)
         images={item.images}
   //       token={userToken}   // Ensure token is passed
   // onRefresh={refreshPropertiesList}

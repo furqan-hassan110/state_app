@@ -1,24 +1,45 @@
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+=======
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions , ScrollView} from 'react-native';
+>>>>>>> 005a42c (crud agent)
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SearchBar from '../../components/SearchBar';
 import colors from '../../styles/colors';
 import { useNavigation } from '@react-navigation/native';
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 005a42c (crud agent)
 const { width, height } = Dimensions.get('window');
 
 const AddListingScreen = () => {
   const navigation = useNavigation();
   
   const [listingType, setListingType] = useState(null);
+<<<<<<< HEAD
   const [propertyCategory, setPropertyCategory] = useState(null);
   const [propertyType, setPropertyType] = useState(null);
+=======
+  const [constructionStatus, setConstructionStatus] = useState(null);
+  const [propertyCategory, setPropertyCategory] = useState(null);
+  const [propertyType, setPropertyType] = useState(null);
+  const [listingTitle, setListingTitle] = useState();
+>>>>>>> 005a42c (crud agent)
 
   const handleSelection = (type, value) => {
     switch(type) {
       case 'listingType':
         setListingType(value);
         break;
+<<<<<<< HEAD
+=======
+      case 'constructionStatus':
+        setConstructionStatus(value);
+        break;
+>>>>>>> 005a42c (crud agent)
       case 'propertyCategory':
         setPropertyCategory(value);
         break;
@@ -29,9 +50,15 @@ const AddListingScreen = () => {
   };
 
   const handleNext = () => {
+<<<<<<< HEAD
     // Navigate to AddListingStep2 and pass the data
     navigation.navigate('AddListingScreen2', {
       // listingTitle,
+=======
+    navigation.navigate('AddListingScreen2', {
+      constructionStatus,
+      listingTitle,
+>>>>>>> 005a42c (crud agent)
       listingType,
       propertyCategory,
       propertyType,
@@ -39,7 +66,11 @@ const AddListingScreen = () => {
   };
 
   return (
+<<<<<<< HEAD
     <View style={styles.container}>
+=======
+    <ScrollView style={styles.container}>
+>>>>>>> 005a42c (crud agent)
         <View style={{flexDirection:'row',alignItems:'center'}}>
         <TouchableOpacity style={styles.backbutton} onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={24} color={colors.primary} />
@@ -58,11 +89,42 @@ const AddListingScreen = () => {
         <Ionicons name="home-outline" size={24} color="#000" style={styles.homeIcon} />
       </View> */}
       <SearchBar style={{marginBottom:10}}/>
+<<<<<<< HEAD
+=======
+      <View>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Enter Listing Title"
+          placeholderTextColor={colors.textinputplaceholdercolor}
+          value={listingTitle}
+          onChangeText={setListingTitle} 
+        />
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Construction status</Text>
+        <View style={styles.optionsContainer}>
+          {['new', 'used'].map(status => (
+            <TouchableOpacity
+              key={status}
+              style={[styles.optionButton, constructionStatus === status && styles.selectedOption]}
+              onPress={() => handleSelection('constructionStatus', status)}
+            >
+              <Text style={[styles.optionText, constructionStatus === status && styles.selectedOptionText]}>{status}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+>>>>>>> 005a42c (crud agent)
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Listing type</Text>
         <View style={styles.optionsContainer}>
+<<<<<<< HEAD
           {['Rent', 'Sell'].map(type => (
+=======
+          {['rent', 'sell'].map(type => (
+>>>>>>> 005a42c (crud agent)
             <TouchableOpacity
               key={type}
               style={[styles.optionButton, listingType === type && styles.selectedOption]}
@@ -77,7 +139,11 @@ const AddListingScreen = () => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Property category</Text>
         <View style={styles.optionsContainer}>
+<<<<<<< HEAD
           {['House', 'Apartment', 'Villa'].map(category => (
+=======
+          {['house', 'apartment'].map(category => (
+>>>>>>> 005a42c (crud agent)
             <TouchableOpacity
               key={category}
               style={[styles.optionButton, propertyCategory === category && styles.selectedOption]}
@@ -92,7 +158,11 @@ const AddListingScreen = () => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Property Type</Text>
         <View style={styles.optionsContainer}>
+<<<<<<< HEAD
           {['Commercial', 'Industrial', 'Land'].map(type => (
+=======
+          {['commercial', 'industrial', 'land'].map(type => (
+>>>>>>> 005a42c (crud agent)
             <TouchableOpacity
               key={type}
               style={[styles.optionButton, propertyType === type && styles.selectedOption]}
@@ -107,7 +177,11 @@ const AddListingScreen = () => {
       <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
         <Text style={styles.nextButtonText}>Next</Text>
       </TouchableOpacity>
+<<<<<<< HEAD
     </View>
+=======
+    </ScrollView>
+>>>>>>> 005a42c (crud agent)
   );
 };
 
@@ -160,6 +234,17 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     backgroundColor: '#F7F7F7',
   },
+<<<<<<< HEAD
+=======
+  textInput: {
+    color:colors.black,
+    width: width * 0.9,
+    backgroundColor: colors.textinputfill,
+    padding: 10,
+    marginBottom: 20,
+    borderRadius: 10,
+  },
+>>>>>>> 005a42c (crud agent)
   input: {
     flex: 1,
     color: '#333',
@@ -212,6 +297,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     marginTop: 'auto',
+<<<<<<< HEAD
+=======
+    marginBottom:50
+>>>>>>> 005a42c (crud agent)
   },
   nextButtonText: {
     color: '#fff',
