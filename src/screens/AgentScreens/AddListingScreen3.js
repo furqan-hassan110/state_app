@@ -4,11 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import colors from '../../styles/colors';
-<<<<<<< HEAD
-import { createCategories } from '../../utils/apiUtils';
-=======
 import { createProperties } from '../../utils/apiUtils';
->>>>>>> 005a42c (crud agent)
 import { useAuth } from '../../contexts/AuthContext';
 
 const { width, height } = Dimensions.get('window');
@@ -27,43 +23,6 @@ const AddListingStep3 = ({ route }) => {
 
   const [isModalVisible, setModalVisible] = useState(false);
 
-<<<<<<< HEAD
-  const finalDetails = {
-    ...route.params,
-    sellPrice,
-    rentPrice,
-    rentType,
-    bedrooms,
-    bathrooms,
-    carSpace,
-    totalRooms,
-  };
-
-  const handleNext = async () => {
-    try {
-      // Get the token from the context
-      // const { token } = useAuth(); // Make sure the token is correctly accessed
-      const { userData } = token;
-      const userToken = userData?.token;
-      console.log(userToken)
-      if (!token) {
-        console.error("No token found");
-        return;
-      }
-  
-      // Post property details to the API
-      const response = await createCategories(finalDetails, userToken);
-  
-      // If successful, show the modal
-      if (response && response.success) {
-        setModalVisible(true);
-      } else {
-        console.error("Error creating property:", response.message);
-      }
-    } catch (error) {
-      console.error("Error creating property:", error);
-    }
-=======
   // const finalDetails = {
   //   ...route.params,
   //   sellPrice,
@@ -118,7 +77,6 @@ createProperties(propertyObject, userToken).then(res => {
 })
 
     
->>>>>>> 005a42c (crud agent)
   };
   
   
@@ -126,11 +84,7 @@ createProperties(propertyObject, userToken).then(res => {
   const handleModalFinish = () => {
     navigation.navigate('BottomTabAgent', {
       screen: 'Search',
-<<<<<<< HEAD
-      params: { finalDetails },
-=======
       // params: { finalDetails },
->>>>>>> 005a42c (crud agent)
     });
     setModalVisible(false);
   };
@@ -166,11 +120,7 @@ createProperties(propertyObject, userToken).then(res => {
       />
 
       <View style={styles.toggleContainer}>
-<<<<<<< HEAD
-        {['Monthly', 'Yearly'].map(type => (
-=======
         {['monthly', 'yearly'].map(type => (
->>>>>>> 005a42c (crud agent)
           <TouchableOpacity
             key={type}
             style={[styles.toggleButton, rentType === type && styles.selectedToggleButton]}

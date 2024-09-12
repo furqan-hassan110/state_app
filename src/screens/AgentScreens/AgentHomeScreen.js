@@ -1,9 +1,5 @@
 // UserHomeScreen.js
-<<<<<<< HEAD
-import React, { useState } from 'react';
-=======
 import React, { useState, useEffect } from 'react';
->>>>>>> 005a42c (crud agent)
 import { View, Text, Image, StyleSheet, Dimensions, FlatList, ScrollView, TouchableOpacity } from 'react-native';
 import { LovedProvider } from '../../contexts/LovedContext';
 import logo from '../../../assets/images/logo.png';
@@ -13,13 +9,9 @@ import Category from '../../components/Category';
 import PropertyCard from '../../components/PropertyCard';
 import colors from '../../styles/colors';
 import Homecards from '../../components/Homecards';
-<<<<<<< HEAD
-import { useRoute, useNavigation } from '@react-navigation/native';
-=======
 import { getProperties } from '../../utils/apiUtils';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
->>>>>>> 005a42c (crud agent)
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const { width, height } = Dimensions.get('window');
@@ -35,11 +27,6 @@ const propertyDetail = [
 const AgentHomeScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-<<<<<<< HEAD
-
-  const navigation = useNavigation();
-
-=======
   const [properties, setProperties] = useState([]);
   const navigation = useNavigation();
 
@@ -65,18 +52,13 @@ const AgentHomeScreen = () => {
 
   
 
->>>>>>> 005a42c (crud agent)
   const filterResults = (category) => {
     setSelectedCategory(category);
   };
 
   const handlePropertyClick = (item) => {
     
-<<<<<<< HEAD
-    navigation.navigate('PropertyDetail', { property: item });
-=======
     // navigation.navigate('PropertyDetail', { property: item });
->>>>>>> 005a42c (crud agent)
     // console.log("go")
   };
 
@@ -142,22 +124,6 @@ const AgentHomeScreen = () => {
             <Text style={styles.featuredtext}>View all</Text>
           </View>
           <FlatList
-<<<<<<< HEAD
-            data={propertyDetail}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => handlePropertyClick(item)}>
-              <PropertyCard
-                id={item.id}
-                imageSource={item.imageSource}
-                areaName={item.areaName}
-                cityName={item.cityName}
-                country={item.country}
-                price={item.price}
-              />
-=======
             data={properties} // Use fetched properties
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -172,7 +138,6 @@ const AgentHomeScreen = () => {
                   country={item.location}
                   price={item.sellingPrice}
                 />
->>>>>>> 005a42c (crud agent)
               </TouchableOpacity>
             )}
             contentContainerStyle={styles.listContainer}

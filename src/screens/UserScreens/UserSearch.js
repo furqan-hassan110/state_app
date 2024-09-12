@@ -83,15 +83,9 @@ const UserSearch = () => {
       </View>
       <SearchBar showFilterIcon={false} ></SearchBar>
 
-<<<<<<< HEAD
-      <Text style={styles.cardCount}>
-        Found {filteredResults.length} result{filteredResults.length !== 1 ? 's' : ''} estates
-      </Text>
-=======
       {/* <Text style={styles.cardCount}>
         Found {filteredResults.length} result{filteredResults.length !== 1 ? 's' : ''} estates
       </Text> */}
->>>>>>> 005a42c (crud agent)
       {/* Search Results */}
       <FlatList
         data={filteredResults}

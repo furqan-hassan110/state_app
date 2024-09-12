@@ -4,22 +4,15 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import colors from '../styles/colors';
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import { deleteCategory } from '../utils/apiUtils';
-<<<<<<< HEAD
-// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-=======
 import { useAuth } from '../contexts/AuthContext';
  import { useNavigation } from '@react-navigation/native';
->>>>>>> 005a42c (crud agent)
 
 const { width, height } = Dimensions.get('window');
 
 const PropertyCardForAgent = ({ 
   id, 
   images, 
-<<<<<<< HEAD
-=======
   title,
->>>>>>> 005a42c (crud agent)
   propertyCategory, 
   propertyType, 
   listingType, 
@@ -30,45 +23,6 @@ const PropertyCardForAgent = ({
   bathrooms, 
   carSpace, 
   totalRooms,
-<<<<<<< HEAD
-  token, // pass the token for authentication
-  onRefresh  // Callback for deleting the property
-}) => {
-
-  const handleDelete = () => {
-    console.log(id)
-    Alert.alert(
-      'Delete Property',
-      'Are you sure you want to delete this property category?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          
-          onPress: async () => {
-            try {
-              await deleteCategory(id,token); // Call the delete API
-              onRefresh(); // Refresh the property list after deletion
-              Alert.alert('Success', 'Property category deleted successfully');
-            } catch (error) {
-              Alert.alert('Error', 'Failed to delete property category');
-            }
-          },
-        },
-      ],
-      { cancelable: true }
-    );
-  };
-  return (
-    <View style={styles.cardContainer}>
-      <View style={styles.imageContainer}>
-        {/* Assuming images is an array, display the first image as the main one */}
-        {/* <Image source={images[0]} style={styles.image} /> */}
-      </View>
-     
-      <View style={styles.detailsContainer}>
-=======
   onRefresh  
 }) => {
   const token= useAuth();
@@ -106,16 +60,11 @@ navigation.navigate('EditListingScreen',{id:id})
      
       <View style={styles.detailsContainer}>
         <Text style={styles.propertyCategory}>{title}</Text>
->>>>>>> 005a42c (crud agent)
         <Text style={styles.propertyCategory}>{propertyCategory}</Text>
         <Text style={styles.propertyType}>{propertyType}</Text>
         <Text style={styles.listingType}>{listingType}</Text>
         <View style={styles.priceContainer}>
-<<<<<<< HEAD
-          {sellPrice && <Text style={styles.price}>Sell: ${sellPrice}</Text>}
-=======
           <Text style={styles.price}>Sell: ${sellPrice}</Text>
->>>>>>> 005a42c (crud agent)
           {rentPrice && <Text style={styles.price}>Rent: ${rentPrice} {rentType}</Text>}
         </View>
         <View style={styles.featuresContainer}>
@@ -135,11 +84,7 @@ navigation.navigate('EditListingScreen',{id:id})
         <MenuOptions>
         
             <TouchableOpacity>
-<<<<<<< HEAD
-            <MenuOption >
-=======
             <MenuOption onSelect={handleUpdate}>
->>>>>>> 005a42c (crud agent)
             <Text style={styles.menuText}>Update</Text>
             </MenuOption>
             </TouchableOpacity>

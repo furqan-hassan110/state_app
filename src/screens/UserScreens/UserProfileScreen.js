@@ -100,11 +100,7 @@ const UserProfileScreen = () => {
               <Feather name='phone' size={18} color={colors.black} style={{ padding: 10 }} />
               <TextInput
                 style={styles.infoText}
-<<<<<<< HEAD
-                value={userData.phoneNo}
-=======
                 value={userData.phone_no}
->>>>>>> 005a42c (crud agent)
                 editable={isEditing}
                 onChangeText={(value) => handleTextChange('phoneNo', value)}
               />
