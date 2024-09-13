@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 const { width, height } = Dimensions.get('window');
 
 const UserFilter = () => {
-  const [selectedCategory, setSelectedCategory] = useState('House');
+  const [selectedCategory, setSelectedCategory] = useState();
   const [selectedPrice, setSelectedPrice] = useState(1000);
   const [selectedBedrooms, setSelectedBedrooms] = useState(0);
   const [selectedBathrooms, setSelectedBathrooms] = useState(0);

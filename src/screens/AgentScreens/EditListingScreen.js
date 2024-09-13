@@ -1,30 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, Button, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, TextInput, Button, Text, ScrollView, StyleSheet, TouchableOpacity, Image,Dimensions } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { getPropertiesById, updateCategory } from '../../utils/apiUtils'; // Function to fetch property by ID
 import colors from '../../styles/colors';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Modal from 'react-native-modal';
+import { useNavigation } from '@react-navigation/native';
 
+
+const { width, height } = Dimensions.get('window');
 
 const EditListingScreen = () => {
   const route = useRoute();
   const { id } = route.params; // Retrieve property ID from route params
+  const navigation = useNavigation();
+  
+
 
   // const [propertyData, setPropertyData] = useState(null);
+  const [listingType, setListingType] = useState(null);
+  const [constructionStatus, setConstructionStatus] = useState(null);
+  const [propertyCategory, setPropertyCategory] = useState(null);
+  const [propertyType, setPropertyType] = useState(null);
+  const [listingTitle, setListingTitle] = useState();
+  const [listingAddress, setListingAddress] = useState();
+  const [listingLocation, setListingLocation] = useState();
+  const [sellPrice, setSellPrice] = useState('');
+  const [rentPrice, setRentPrice] = useState('');
+  const [rentType, setRentType] = useState('Monthly');
+  const [bedrooms, setBedrooms] = useState(3);
+  const [bathrooms, setBathrooms] = useState(2);
+  const [carSpace, setCarSpace] = useState(2);
+  const [totalRooms, setTotalRooms] = useState('<4');
+  const [isModalVisible, setModalVisible] = useState(false);
+
   const [propertyData, setPropertyData] = useState({
-    title: '',
-    constructionStatus: '',
-    listingType: '',
-    propertyCategory: '',
-    propertyType: '',
-    sellPrice: '',
-    rentPrice: '',
-    rentType: '',
-    bedrooms: 1,
-    bathroom_count: 1,
-    carSpace: 1,
-    totalRooms: '',
-    images: [], // Assuming images are included
+      title:'',
+      location:  "",
+      address:  "",
+      construction_status: '',
+      listing_type: '',
+      property_category: '',
+      property_size: "1200",
+      property_type: '',
+      selling_amount: '',
+      rent_amount: '',
+      rent_payable: '',
+      bedroom_count: '',
+      bathroom_count: '',
+      car_space_count: '',
+      total_room_count: '',
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -33,6 +59,7 @@ const EditListingScreen = () => {
       try {
         const token = await AsyncStorage.getItem('token');
         const res = await getPropertiesById(id, token); // Fetch property details by ID
+        console.log(res)
         setPropertyData(res.data);
         setIsLoading(false);
       } catch (error) {
@@ -43,33 +70,47 @@ const EditListingScreen = () => {
     fetchProperties();
   }, [id]);
   const handleSave = async () => {
+    const updatedPropertyData = {
+      title: listingTitle || propertyData.title,
+  location: listingLocation || propertyData.location,
+  property_size: '100',
+  address: listingAddress || propertyData.address,
+  construction_status: constructionStatus || propertyData.construction_status,
+  listing_type: listingType || propertyData.listing_type,
+  property_category: propertyCategory || propertyData.property_category,
+  property_type: propertyType || propertyData.property_type,
+  selling_amount: sellPrice || propertyData.selling_amount,
+  rent_amount: rentPrice || propertyData.rent_amount,
+  rent_payable: rentType || propertyData.rent_payable,
+  bedroom_count: bedrooms || propertyData.bedroom_count,
+  bathroom_count: bathrooms || propertyData.bathroom_count,
+  car_space_count: carSpace || propertyData.car_space_count,
+  total_room_count: totalRooms || propertyData.total_room_count,
+      // images: images // Assuming the image data is in correct format
+    };
     console.log(id)
     const token = await AsyncStorage.getItem('token');
     console.log(token)
-    updateCategory(id, propertyData,token).then(res=>{
+    updateCategory(id, updatedPropertyData,token).then(res=>{
       if(res.success){
         console.log("update")
+        setModalVisible(true);
       } else{
         console.log('error')
       }
     }).catch(err=>{
       console.log('err', err)
-    }) // Update property details by ID
-    //   console.log("Updated property data:", res);
-    // } catch (error) {
-    //   console.error("Error updating property:", error);
-    // }
+    }) 
+  };
+  const handleModalFinish = () => {
+    navigation.navigate('BottomTabAgent', {
+      screen: 'Search',
+      // params: { finalDetails },
+    });
+    setModalVisible(false);
   };
 
-  const handleIncrement = (field) => {
-    setPropertyData({ ...propertyData, [field]: propertyData[field] + 1 });
-  };
 
-  const handleDecrement = (field) => {
-    if (propertyData[field] > 1) {
-      setPropertyData({ ...propertyData, [field]: propertyData[field] - 1 });
-    }
-  };
 
   if (isLoading) {
     return <Text>Loading...</Text>;
@@ -78,159 +119,241 @@ const EditListingScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity>
-          <Text style={styles.backButton}>{'<'}</Text>
+        <TouchableOpacity style={styles.backbutton} onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back" size={24} color={colors.primary} />
         </TouchableOpacity>
-        <Text style={styles.title}>Edit Listing</Text>
+        <Text style={styles.headerText}>Edit Listing</Text>
       </View>
+      
 
       <View style={styles.imageContainer}>
         {/* <Image source={{ uri: propertyData.images ? require('../../../assets/images/role1.png') :require('../../../assets/images/role1.png') }} style={styles.image} /> */}
-        <View style={styles.imageDetails}>
+        {/* <View style={styles.imageDetails}>
           <Text style={styles.propertyName}>{propertyData.title}</Text>
           {/* <Text style={styles.propertyLocation}>Newcastle, Australia</Text> */}
-        </View>
+        {/* </View>  */}
       </View>
 
       {/* Listing Title */}
-      <TextInput
-        style={styles.input}
-        value={propertyData?.title}
-        onChangeText={(text) => setPropertyData({ ...propertyData, title: text })}
-        placeholder="Listing Title"
-      />
-
-      {/* Listing Type */}
-      <View style={styles.toggleContainer}>
-        <TouchableOpacity
-          style={[styles.toggleButton, propertyData.listingType === 'Rent' && styles.activeButton]}
-          onPress={() => setPropertyData({ ...propertyData, listingType: 'Rent' })}
-        >
-          <Text style={styles.toggleButtonText}>Rent</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.toggleButton, propertyData.listingType === 'Sell' && styles.activeButton]}
-          onPress={() => setPropertyData({ ...propertyData, listingType: 'Sell' })}
-        >
-          <Text style={styles.toggleButtonText}>Sell</Text>
-        </TouchableOpacity>
+      <View>
+      <Text style={styles.label}>Title</Text>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Enter Listing Title"
+          placeholderTextColor={colors.textinputplaceholdercolor}
+          value={listingTitle || propertyData?.title}
+          onChangeText={setListingTitle} 
+        />
       </View>
-
-      {/* Property Category */}
-      <View style={styles.toggleContainer}>
-        <TouchableOpacity
-          style={[styles.toggleButton, propertyData.propertyCategory === 'House' && styles.activeButton]}
-          onPress={() => setPropertyData({ ...propertyData, propertyCategory: 'House' })}
-        >
-          <Text style={styles.toggleButtonText}>House</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.toggleButton, propertyData.propertyCategory === 'Apartment' && styles.activeButton]}
-          onPress={() => setPropertyData({ ...propertyData, propertyCategory: 'Apartment' })}
-        >
-          <Text style={styles.toggleButtonText}>Apartment</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.toggleButton, propertyData.propertyCategory === 'Villa' && styles.activeButton]}
-          onPress={() => setPropertyData({ ...propertyData, propertyCategory: 'Villa' })}
-        >
-          <Text style={styles.toggleButtonText}>Villa</Text>
-        </TouchableOpacity>
+      <View>
+      <Text style={styles.label}>Address</Text>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Enter Listing Title"
+          placeholderTextColor={colors.textinputplaceholdercolor}
+          value={listingAddress || propertyData?.listingAddress}
+          onChangeText={setListingAddress} 
+        />
       </View>
-
-      {/* Listing Photos */}
-      {/* <View style={styles.photoSection}>
-        {propertyData.images.map((image, index) => (
-          <View key={index} style={styles.photoContainer}>
-            <Image source={{ uri: image }} style={styles.listingImage} />
-            <TouchableOpacity style={styles.removePhoto}>
-              <Text style={styles.removePhotoText}>X</Text>
+      <View>
+      <Text style={styles.label}>Location</Text>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Enter Listing Title"
+          placeholderTextColor={colors.textinputplaceholdercolor}
+          value={propertyData?.listingLocation}
+          onChangeText={setListingLocation} 
+        />
+      </View>
+       <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Construction status</Text>
+        <View style={styles.optionsContainer}>
+          {['new', 'used'].map(status => (
+            <TouchableOpacity
+              key={status}
+              style={[styles.optionButton, constructionStatus === status && styles.selectedOption]}
+              onPress={() => setConstructionStatus(status)}
+            >
+              <Text style={[styles.optionText, constructionStatus === status && styles.selectedOptionText]}>{status}</Text>
             </TouchableOpacity>
-          </View>
+          ))}
+        </View>
+      </View>
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Listing type</Text>
+        <View style={styles.optionsContainer}>
+          {['rent', 'sell'].map(type => (
+            <TouchableOpacity
+              key={type}
+              style={[styles.optionButton, listingType === type && styles.selectedOption]}
+              onPress={() => setListingType(type)}
+            >
+              <Text style={[styles.optionText, listingType === type && styles.selectedOptionText]}>{type}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Property category</Text>
+        <View style={styles.optionsContainer}>
+          {['house', 'apartment'].map(category => (
+            <TouchableOpacity
+              key={category}
+              style={[styles.optionButton, propertyCategory === category && styles.selectedOption]}
+              onPress={() => setPropertyCategory(category)}
+            >
+              <Text style={[styles.optionText, propertyCategory === category && styles.selectedOptionText]}>{category}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Property Type</Text>
+        <View style={styles.optionsContainer}>
+          {['commercial', 'industrial', 'land'].map(type => (
+            <TouchableOpacity
+              key={type}
+              style={[styles.optionButton, propertyType === type && styles.selectedOption]}
+              onPress={() => setPropertyType(type)}
+            >
+              <Text style={[styles.optionText, propertyType === type && styles.selectedOptionText]}>{type}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+      <Text style={styles.label}>Sell Price</Text>
+      <TextInput
+        style={styles.textInput}
+        value={sellPrice}
+        onChangeText={setSellPrice}
+        keyboardType="numeric"
+        placeholder="$ 180,000"
+        placeholderTextColor={colors.textinputplaceholdercolor}
+      />
+
+      <Text style={styles.label}>Rent Price</Text>
+      <TextInput
+        style={styles.textInput}
+        value={rentPrice}
+        onChangeText={setRentPrice}
+        keyboardType="numeric"
+        placeholder="$ 315 /month"
+        placeholderTextColor={colors.textinputplaceholdercolor}
+      />
+
+      <View style={styles.optionsContainer}>
+        {['monthly', 'yearly'].map(type => (
+          <TouchableOpacity
+            key={type}
+            style={[styles.optionButton, rentType === type && styles.selectedOption]}
+            onPress={() => setRentType(type)}
+          >
+            <Text style={[styles.optionText,rentType === type && styles.selectedOptionText]}>{type}</Text>
+          </TouchableOpacity>
         ))}
-        <TouchableOpacity style={styles.addPhoto}>
-          <Text style={styles.addPhotoText}>+</Text>
-        </TouchableOpacity>
-      </View> */}
-
-      {/* Sell Price */}
-      <TextInput
-        style={styles.input}
-        value={propertyData.sellPrice}
-        onChangeText={(text) => setPropertyData({ ...propertyData, sellPrice: text })}
-        placeholder="Sell Price"
-        keyboardType="numeric"
-      />
-
-      {/* Rent Price */}
-      <TextInput
-        style={styles.input}
-        value={propertyData.rentPrice}
-        onChangeText={(text) => setPropertyData({ ...propertyData, rentPrice: text })}
-        placeholder="Rent Price"
-        keyboardType="numeric"
-      />
-
-      {/* Rent Type */}
-      <View style={styles.toggleContainer}>
-        <TouchableOpacity
-          style={[styles.toggleButton, propertyData.rentType === 'Monthly' && styles.activeButton]}
-          onPress={() => setPropertyData({ ...propertyData, rentType: 'Monthly' })}
-        >
-          <Text style={styles.toggleButtonText}>Monthly</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.toggleButton, propertyData.rentType === 'Yearly' && styles.activeButton]}
-          onPress={() => setPropertyData({ ...propertyData, rentType: 'Yearly' })}
-        >
-          <Text style={styles.toggleButtonText}>Yearly</Text>
-        </TouchableOpacity>
       </View>
 
-      {/* Bedrooms, Bathrooms, Car Space */}
-      <View style={styles.counterContainer}>
-        <Text>Bedrooms</Text>
-        <View style={styles.counter}>
-          <TouchableOpacity onPress={() => handleDecrement('bedrooms')}>
-            <Text style={styles.counterButton}>-</Text>
+      <Text style={styles.label}>Property Features</Text>
+      <View style={styles.featureContainer}>
+        <Text style={styles.featureLabel}>Bedroom</Text>
+        <View style={styles.counterContainer}>
+          <TouchableOpacity
+            style={styles.counterButton}
+            onPress={() => setBedrooms(prev => Math.max(prev - 1, 0))}
+          >
+            <Text style={styles.counterText}>-</Text>
           </TouchableOpacity>
-          <Text>{propertyData.bedrooms}</Text>
-          <TouchableOpacity onPress={() => handleIncrement('bedrooms')}>
-            <Text style={styles.counterButton}>+</Text>
+          <Text style={styles.counterValue}>{bedrooms}</Text>
+          <TouchableOpacity
+            style={styles.counterButton}
+            onPress={() => setBedrooms(prev => prev + 1)}
+          >
+            <Text style={styles.counterText}>+</Text>
           </TouchableOpacity>
         </View>
       </View>
 
-      <View style={styles.counterContainer}>
-        <Text>Bathrooms</Text>
-        <View style={styles.counter}>
-          <TouchableOpacity onPress={() => handleDecrement('bathrooms')}>
-            <Text style={styles.counterButton}>-</Text>
+      <View style={styles.featureContainer}>
+        <Text style={styles.featureLabel}>Bathroom</Text>
+        <View style={styles.counterContainer}>
+          <TouchableOpacity
+            style={styles.counterButton}
+            onPress={() => setBathrooms(prev => Math.max(prev - 1, 0))}
+          >
+            <Text style={styles.counterText}>-</Text>
           </TouchableOpacity>
-          <Text>{propertyData.bathrooms}</Text>
-          <TouchableOpacity onPress={() => handleIncrement('bathrooms')}>
-            <Text style={styles.counterButton}>+</Text>
+          <Text style={styles.counterValue}>{bathrooms}</Text>
+          <TouchableOpacity
+            style={styles.counterButton}
+            onPress={() => setBathrooms(prev => prev + 1)}
+          >
+            <Text style={styles.counterText}>+</Text>
           </TouchableOpacity>
         </View>
       </View>
 
-      <View style={styles.counterContainer}>
-        <Text>Car Space</Text>
-        <View style={styles.counter}>
-          <TouchableOpacity onPress={() => handleDecrement('carSpace')}>
-            <Text style={styles.counterButton}>-</Text>
+      <View style={styles.featureContainer}>
+        <Text style={styles.featureLabel}>Car Space</Text>
+        <View style={styles.counterContainer}>
+          <TouchableOpacity
+            style={styles.counterButton}
+            onPress={() => setCarSpace(prev => Math.max(prev - 1, 0))}
+          >
+            <Text style={styles.counterText}>-</Text>
           </TouchableOpacity>
-          <Text>{propertyData.carSpace}</Text>
-          <TouchableOpacity onPress={() => handleIncrement('carSpace')}>
-            <Text style={styles.counterButton}>+</Text>
+          <Text style={styles.counterValue}>{carSpace}</Text>
+          <TouchableOpacity
+            style={styles.counterButton}
+            onPress={() => setCarSpace(prev => prev + 1)}
+          >
+            <Text style={styles.counterText}>+</Text>
           </TouchableOpacity>
         </View>
+      </View>
+
+      <Text style={styles.label}>Total Rooms</Text>
+      <View style={styles.roomOptionsContainer}>
+        {['<4', '4', '6', '>6'].map(option => (
+          <TouchableOpacity
+            key={option}
+            style={[styles.roomOption, totalRooms === option && styles.selectedRoomOption]}
+            onPress={() => setTotalRooms(option)}
+          >
+            <Text style={[styles.roomOptionText, totalRooms === option && styles.selectedoption]}>{option}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
 
       {/* Update Button */}
       <TouchableOpacity style={styles.updateButton} onPress={handleSave}>
         <Text style={styles.updateButtonText}>Update</Text>
       </TouchableOpacity>
+      <Modal
+        isVisible={isModalVisible}
+        onBackdropPress={() => setModalVisible(false)}
+        onSwipeComplete={() => setModalVisible(false)}
+        swipeDirection="down"
+        style={styles.modal}
+      >
+        <View style={styles.modalContent}>
+          <View style={styles.checkIconContainer}>
+            <Ionicons name="checkmark-circle" size={70} color="#6DC94E" />
+          </View>
+          <Text style={styles.publishedText}>
+            Your listing is <Text style={styles.boldText}>updated</Text>
+          </Text>
+          <View style={styles.bottomButtonsContainer}>
+            <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(false)}>
+              <Text style={styles.buttonText}>Add More</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.finishButtonModal} onPress={handleModalFinish}>
+              <Text style={styles.buttonText}>Finish</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -248,9 +371,145 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginRight: 10,
   },
+  header: {
+    flexDirection: 'row',
+  },
+  headerText: {
+    fontSize: 20,
+    fontFamily: 'Lato-Bold',
+    alignSelf: 'center',
+    marginLeft: 70,
+    color: colors.boldtextcolor,
+  },
+backbutton: {
+    backgroundColor: colors.textinputfill,
+    width: width / 7,
+    height: height / 15,
+    borderRadius: 45,
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+  },
+  section: {
+    // marginBottom: 20,
+    marginTop:20
+
+  },
+  textInput: {
+    color:colors.black,
+    width: width * 0.9,
+    backgroundColor: colors.textinputfill,
+    padding: 10,
+    marginBottom: 20,
+    borderRadius: 10,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    // color: '#333',
+    color:colors.primary,
+    marginBottom: 10,
+    // marginTop:10
+  },
+  optionsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  optionButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+    // borderWidth: 1,
+    // borderColor: '#EAEAEA',
+    backgroundColor: colors.textinputfill,
+    marginRight: 10,
+    marginBottom: 10,
+
+  },
+  label: {
+    fontSize: 18,
+    fontFamily: 'Lato-Bold',
+    color: colors.boldtextcolor,
+    marginTop: 20,
+  },
+  featureContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 10,
+    backgroundColor:colors.textinputfill,
+    height:height/12,
+    borderRadius:15,
+    padding:10
+  },
+  featureLabel: {
+    fontSize: 16,
+    color: colors.boldtextcolor,
+  },
+  counterContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  counterText: {
+    fontSize: 20,
+    color: colors.boldtextcolor,
+  },
+  counterValue: {
+    marginHorizontal: 10,
+    fontSize: 18,
+    color:colors.black
+  },
+  selectedOption: {
+    backgroundColor: colors.primary, 
+    borderColor: '#0047AB',
+  },
+  optionText: {
+    fontSize: 14,
+    color: '#333',
+  },
+  selectedOptionText: {
+    color: '#fff',
+  },
+  label: {
+    fontSize: 18,
+    fontFamily: 'Lato-Bold',
+    color: colors.boldtextcolor,
+    marginTop: 20,
+  },
+  input: {
+    borderColor: '#EAEAEA',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 10,
+    fontSize: 16,
+    backgroundColor: '#F7F7F7',
+  },
+  toggleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 20,
+  },
+  toggleButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    backgroundColor: colors.textinputfill,
+  },
+  selectedToggleButton: {
+    backgroundColor: colors.primary,
+  },
+  toggleText: {
+    color: colors.boldtextcolor,
+    fontSize: 14,
+    fontFamily:'Lato-Medium'
+  },
+  selectedtext:{
+    color:colors.white
   },
   imageContainer: {
     flexDirection: 'row',
@@ -338,11 +597,27 @@ const styles = StyleSheet.create({
   addPhotoText: {
     fontSize: 30,
   },
-  counterContainer: {
+  roomOptionsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginVertical: 20,
+  },
+  roomOption: {
+    padding: 10,
+    borderRadius: 15,
+    backgroundColor: colors.textinputfill,
+    width: width / 6,
     alignItems: 'center',
-    marginVertical: 10,
+  },
+  selectedRoomOption: {
+    backgroundColor: colors.primary,
+  },
+  roomOptionText: {
+    color: colors.boldtextcolor,
+    fontSize: 16,
+  },
+  selectedoption:{
+    color:colors.white
   },
   counter: {
     flexDirection: 'row',
@@ -353,15 +628,70 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   updateButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: colors.buttons,
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
     marginTop: 20,
+    marginBottom:30
   },
   updateButtonText: {
     color: '#fff',
     fontSize: 18,
+    fontWeight: 'bold',
+  },
+  modal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    alignItems: 'center',
+    paddingBottom: 50,
+  },
+  checkIconContainer: {
+    backgroundColor: '#EAF7EA',
+    borderRadius: 50,
+    padding: 20,
+    marginBottom: 20,
+  },
+  publishedText: {
+    fontSize: 20,
+    color: colors.boldtextcolor,
+    fontFamily: 'Lato-Regular',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  boldText: {
+    fontFamily: 'Lato-Bold',
+    color: colors.primary,
+  },
+  bottomButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  addButton: {
+    backgroundColor: colors.buttons,
+    paddingVertical: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 10,
+  },
+  finishButtonModal: {
+    backgroundColor: '#6DC94E',
+    paddingVertical: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    flex: 1,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });
