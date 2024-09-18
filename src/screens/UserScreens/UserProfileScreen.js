@@ -1,48 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, TextInput, KeyboardAvoidingView, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  TextInput,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+} from 'react-native';
+import {useNavigation, CommonActions} from '@react-navigation/native';
 import colors from '../../styles/colors';
 import Button from '../../components/Button';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import profile from '../../../assets/images/profile.png';
 import Feather from 'react-native-vector-icons/Feather';
-import { useAuth } from '../../contexts/AuthContext';
+import {useAuth} from '../../contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useLoved } from '../../contexts/LovedContext';
-import {logout,subscribeUser} from '../../utils/apiUtils'
+import {useLoved} from '../../contexts/LovedContext';
+import {logout, subscribeUser} from '../../utils/apiUtils';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const UserProfileScreen = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const navigation = useNavigation();
-  const { userData, handleSubscribe } = useAuth(); // Use handleSubscribe from AuthContext
-  const { addSubscribedUser } = useLoved();
+  const {userData, handleSubscribe, contextLogout} = useAuth(); // Use handleSubscribe from AuthContext
+  const {addSubscribedUser} = useLoved();
 
   const userToken = userData?.token;
-  const userId= userData?.id;
+  const userId = userData?.id;
   // console.log(userId)
 
-// console.log(userData)
+  // console.log(userData)
 
   const handleLogout = () => {
     // Log userToken from userData
     console.log(userToken);
-  
+
     // Use the token directly if it's available
     if (userToken) {
+      // navigation.dispatch(state => {
+      //   console.log('NAV STATE ==> ', state);
+      // });
       logout(userToken)
-        .then(() => {
-          // Clear AsyncStorage data if needed
-          return AsyncStorage.clear();
-        })
-        .then(() => {
-          // Reset navigation to the desired screen
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'SelectRoleScreen' }],
-          });
+        .then(async () => {
+          await contextLogout();
         })
         .catch(error => {
           console.error('Logout failed:', error);
@@ -51,7 +57,6 @@ const UserProfileScreen = () => {
       console.error('No token found in userData');
     }
   };
-  
 
   useEffect(() => {
     const checkSubscriptionStatus = async () => {
@@ -66,25 +71,31 @@ const UserProfileScreen = () => {
 
   const handleUserSubscribe = () => {
     if (userToken) {
-      subscribeUser(userId,userToken) // Call the API to handle the subscription
+      subscribeUser(userId, userToken) // Call the API to handle the subscription
         .then(() => {
           handleSubscribe() // Call handleSubscribe from AuthContext
             .then(() => {
               setIsSubscribed(true);
               addSubscribedUser(userData); // Add user to subscribed users
-              Alert.alert("Success", "Your application has been submitted. Please wait for your approval.");
+              Alert.alert(
+                'Success',
+                'Your application has been submitted. Please wait for your approval.',
+              );
             })
-            .catch((error) => {
+            .catch(error => {
               console.error('Error during handleSubscribe:', error);
-              Alert.alert("Error", "Failed to complete the subscription process.");
+              Alert.alert(
+                'Error',
+                'Failed to complete the subscription process.',
+              );
             });
         })
-        .catch((error) => {
+        .catch(error => {
           console.error('Subscription failed:', error);
-          Alert.alert("Error", "Failed to subscribe. Please try again later.");
+          Alert.alert('Error', 'Failed to subscribe. Please try again later.');
         });
     } else {
-      Alert.alert("Error", "No user token found for subscription.");
+      Alert.alert('Error', 'No user token found for subscription.');
     }
   };
 
@@ -111,14 +122,19 @@ const UserProfileScreen = () => {
     <KeyboardAvoidingView style={styles.container}>
       <ScrollView>
         <View style={styles.profileContainer}>
-          <View style={{ width: '100%', flexDirection: 'row', justifyContent: "space-between" }}>
-            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backbutton}>
+          <View
+            style={{
+              width: '100%',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.backbutton}>
               <Ionicons name="chevron-back" size={18} color="black" />
             </TouchableOpacity>
-            <View style={{ alignSelf: 'center', marginRight: 140 }}>
-              <Text style={styles.header}>
-                Profile
-              </Text>
+            <View style={{alignSelf: 'center', marginRight: 140}}>
+              <Text style={styles.header}>Profile</Text>
             </View>
           </View>
           <View>
@@ -128,34 +144,49 @@ const UserProfileScreen = () => {
           </View>
           <View style={styles.infoContainer}>
             <View style={styles.username}>
-              <Feather name='user' size={18} color={colors.black} style={{ padding: 10 }} />
+              <Feather
+                name="user"
+                size={18}
+                color={colors.black}
+                style={{padding: 10}}
+              />
               <TextInput
                 style={styles.infoText}
                 value={userData.name}
                 editable={isEditing}
-                onChangeText={(value) => handleTextChange('name', value)}
+                onChangeText={value => handleTextChange('name', value)}
               />
             </View>
           </View>
           <View style={styles.infoContainer}>
             <View style={styles.username}>
-              <Feather name='phone' size={18} color={colors.black} style={{ padding: 10 }} />
+              <Feather
+                name="phone"
+                size={18}
+                color={colors.black}
+                style={{padding: 10}}
+              />
               <TextInput
                 style={styles.infoText}
                 value={userData.phone_no}
                 editable={isEditing}
-                onChangeText={(value) => handleTextChange('phoneNo', value)}
+                onChangeText={value => handleTextChange('phoneNo', value)}
               />
             </View>
           </View>
           <View style={styles.infoContainer}>
             <View style={styles.username}>
-              <Feather name='mail' size={18} color={colors.black} style={{ padding: 10 }} />
+              <Feather
+                name="mail"
+                size={18}
+                color={colors.black}
+                style={{padding: 10}}
+              />
               <TextInput
                 style={styles.infoText}
                 value={userData.email}
                 editable={isEditing}
-                onChangeText={(value) => handleTextChange('email', value)}
+                onChangeText={value => handleTextChange('email', value)}
               />
             </View>
           </View>
@@ -225,7 +256,7 @@ const styles = StyleSheet.create({
     color: colors.boldtextcolor,
     marginBottom: 16,
     fontSize: 15,
-    fontFamily: "Lato-Bold",
+    fontFamily: 'Lato-Bold',
   },
   subscribeButton: {
     backgroundColor: '#2196F3',
@@ -260,7 +291,7 @@ const styles = StyleSheet.create({
   },
   header: {
     color: colors.boldtextcolor,
-    fontFamily: "Lato-Bold",
+    fontFamily: 'Lato-Bold',
     fontSize: 20,
     alignSelf: 'center',
   },
@@ -319,7 +350,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: '10%',
-    justifyContent: "space-evenly",
+    justifyContent: 'space-evenly',
     alignContent: 'center',
     width: '100%',
     alignItems: 'center',

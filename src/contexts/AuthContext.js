@@ -1,10 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, {createContext, useContext, useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({children}) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null); // Start with null to handle loading state
   const [role, setRole] = useState(null); // 'user' or 'agent'
   const [isLoading, setIsLoading] = useState(true); // Loading state
@@ -45,27 +45,29 @@ export const AuthProvider = ({ children }) => {
     loadAuthState();
   }, []);
 
-  const selectRole = (selectedRole) => {
+  const selectRole = selectedRole => {
     setRole(selectedRole);
     // Redirect user to UserProfileScreen if they select 'user' role
-    if (selectedRole === 'user') {
-      navigation.navigate('UserProfileScreen');
-    }
+    // if (selectedRole === 'user') {
+    //   navigation.navigate('UserBottomTabs', {screen: 'UserProfileScreen'});
+    // }
   };
 
-  const login = async (data) => {
-    const {name, token, user_type} = data
+  const login = async data => {
+    const {token, user_type} = data;
     try {
       if (token) {
         await AsyncStorage.setItem('token', token); // Store the token
-        console.log("Token stored in AsyncStorage:", token); // Debugging to confirm token is stored
-      } else {
-        console.log("Token is undefined or null"); // Debugging if token is not found in data
+        console.log('Token stored in AsyncStorage:', token); // Debugging to confirm token is stored
       }
       await AsyncStorage.setItem('userRole', user_type);
       await AsyncStorage.setItem('userData', JSON.stringify(data));
       setUserData(data);
       setIsAuthenticated(true);
+      // if (role === 'user') {
+      //   console.log('REDIRECTING TO PROFILE SCRREN.');
+      //   navigation.navigate('UserBottomTabs', {screen: 'UserProfileScreen'});
+      // }
     } catch (e) {
       console.error('Failed to login:', e);
     }
@@ -76,7 +78,9 @@ export const AuthProvider = ({ children }) => {
       // Perform any necessary operations for subscription (API calls, etc.)
       setIsSubscribed(true);
       await AsyncStorage.setItem('isSubscribed', 'true');
-      alert("Your application has been submitted. Please wait for your approval.");
+      alert(
+        'Your application has been submitted. Please wait for your approval.',
+      );
     } catch (e) {
       console.error('Subscription failed:', e);
     }
@@ -103,7 +107,7 @@ export const AuthProvider = ({ children }) => {
       // Reset navigation stack and redirect to login screen
       navigation.reset({
         index: 0,
-        routes: [{ name: 'LoginScreen' }], // Adjust according to your actual screen name
+        routes: [{name: 'SelectRoleScreen'}], // Adjust according to your actual screen name
       });
     } catch (error) {
       console.error('Logout failed:', error);
@@ -118,7 +122,7 @@ export const AuthProvider = ({ children }) => {
     isSubscribed,
     selectRole,
     login,
-    logout,
+    contextLogout: logout,
     setUserData,
     handleSubscribe, // Add handleSubscribe to context
   };

@@ -1,17 +1,27 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity, Image, Dimensions, TextInput, KeyboardAvoidingView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  TextInput,
+  KeyboardAvoidingView,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import colors from '../../styles/colors';
 import Button from '../../components/Button';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import profile from '../../../assets/images/profile.png';
 import Feather from 'react-native-vector-icons/Feather';
-import { useAuth } from '../../contexts/AuthContext';
-import { ScrollView } from 'react-native-gesture-handler';
+import {useAuth} from '../../contexts/AuthContext';
+import {ScrollView} from 'react-native-gesture-handler';
 import {logout} from '../../utils/apiUtils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const AgentProfileScreen = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -19,30 +29,21 @@ const AgentProfileScreen = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   const navigation = useNavigation();
-  const { userData, setUserData } = useAuth();
-
+  const {userData, setUserData, contextLogout} = useAuth();
 
   const userToken = userData?.token;
   const userName = userData?.name;
-  console.log(userName)
+  console.log(userName);
 
   const handleLogout = () => {
     // Log userToken from userData
     console.log(userToken);
-  
+
     // Use the token directly if it's available
     if (userToken) {
       logout(userToken)
-        .then(() => {
-          // Clear AsyncStorage data if needed
-          return AsyncStorage.clear();
-        })
-        .then(() => {
-          // Reset navigation to the desired screen
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'SelectRoleScreen' }],
-          });
+        .then(async () => {
+          await contextLogout();
         })
         .catch(error => {
           console.error('Logout failed:', error);
@@ -70,7 +71,7 @@ const AgentProfileScreen = () => {
   };
   // const handleLogout = async () => {
   //   try {
-  //     await logout(); 
+  //     await logout();
   //     navigation.reset({
   //       index: 0,
   //       routes: [{ name: 'SelectRoleScreen' }],
@@ -83,75 +84,95 @@ const AgentProfileScreen = () => {
   return (
     <KeyboardAvoidingView style={styles.container}>
       <ScrollView>
-      <View style={styles.profileContainer}>
-        <View style={{ width: '100%', flexDirection: 'row', justifyContent: "space-between" }}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backbutton}>
-            <Ionicons name="chevron-back" size={18} color="black" />
-          </TouchableOpacity>
-          <View style={{ alignSelf: 'center', marginRight: 140 }}>
-            <Text style={styles.header}>
-              Profile
-            </Text>
+        <View style={styles.profileContainer}>
+          <View
+            style={{
+              width: '100%',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.backbutton}>
+              <Ionicons name="chevron-back" size={18} color="black" />
+            </TouchableOpacity>
+            <View style={{alignSelf: 'center', marginRight: 140}}>
+              <Text style={styles.header}>Profile</Text>
+            </View>
+          </View>
+          <View>
+            <View style={styles.profileImageContainer}>
+              <Image source={profile} style={styles.profile} />
+            </View>
+          </View>
+          <View style={styles.infoContainer}>
+            <View style={styles.username}>
+              <Feather
+                name="user"
+                size={18}
+                color={colors.black}
+                style={{padding: 10}}
+              />
+              <TextInput
+                style={styles.infoText}
+                value={userData.name}
+                editable={isEditing}
+                onChangeText={value => handleTextChange('name', value)}
+              />
+            </View>
+          </View>
+          <View style={styles.infoContainer}>
+            <View style={styles.username}>
+              <Feather
+                name="phone"
+                size={18}
+                color={colors.black}
+                style={{padding: 10}}
+              />
+              <TextInput
+                style={styles.infoText}
+                value={userData.phone_no}
+                editable={isEditing}
+                onChangeText={value => handleTextChange('phoneNo', value)}
+              />
+            </View>
+          </View>
+          <View style={styles.infoContainer}>
+            <View style={styles.username}>
+              <Feather
+                name="mail"
+                size={18}
+                color={colors.black}
+                style={{padding: 10}}
+              />
+              <TextInput
+                style={styles.infoText}
+                value={userData.email}
+                editable={isEditing}
+                onChangeText={value => handleTextChange('email', value)}
+              />
+            </View>
           </View>
         </View>
-        <View>
-          <View style={styles.profileImageContainer}>
-            <Image source={profile} style={styles.profile} />
-          </View>
-        </View>
-        <View style={styles.infoContainer}>
-          <View style={styles.username}>
-            <Feather name='user' size={18} color={colors.black} style={{ padding: 10 }} />
-            <TextInput
-              style={styles.infoText}
-              value={userData.name}
-              editable={isEditing}
-              onChangeText={(value) => handleTextChange('name', value)}
-            />
-          </View>
-        </View>
-        <View style={styles.infoContainer}>
-          <View style={styles.username}>
-            <Feather name='phone' size={18} color={colors.black} style={{ padding: 10 }} />
-            <TextInput
-              style={styles.infoText}
-              value={userData.phone_no}
-              editable={isEditing}
-              onChangeText={(value) => handleTextChange('phoneNo', value)}
-            />
-          </View>
-        </View>
-        <View style={styles.infoContainer}>
-          <View style={styles.username}>
-            <Feather name='mail' size={18} color={colors.black} style={{ padding: 10 }} />
-            <TextInput
-              style={styles.infoText}
-              value={userData.email}
-              editable={isEditing}
-              onChangeText={(value) => handleTextChange('email', value)}
-            />
-          </View>
-        </View>
-      </View>
-      <View style={styles.buttonContainer}>
-        {/* <Button
+        <View style={styles.buttonContainer}>
+          {/* <Button
           onPress={handleSubscribe}
           title="Subscribe"
           style={styles.subscribeButton}
         /> */}
-        <View style={styles.buttonGroup}>
-          <Button
-            onPress={handleEditProfile}
-            title="Edit Profile"
-            style={styles.editProfileButton}
-          />
-          <Button
-            title="Log Out"
-            style={styles.button}
-            onPress={handleLogout}
-          />
+          <View style={styles.buttonGroup}>
+            <Button
+              onPress={handleEditProfile}
+              title="Edit Profile"
+              style={styles.editProfileButton}
+            />
+            <Button
+              title="Log Out"
+              style={styles.button}
+              onPress={handleLogout}
+            />
+          </View>
         </View>
-      </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -196,7 +217,7 @@ const styles = StyleSheet.create({
     color: colors.boldtextcolor,
     marginBottom: 16,
     fontSize: 15,
-    fontFamily: "Lato-Bold",
+    fontFamily: 'Lato-Bold',
   },
   subscribeButton: {
     backgroundColor: '#2196F3',
@@ -231,7 +252,7 @@ const styles = StyleSheet.create({
   },
   header: {
     color: colors.boldtextcolor,
-    fontFamily: "Lato-Bold",
+    fontFamily: 'Lato-Bold',
     fontSize: 20,
     alignSelf: 'center',
   },
@@ -290,11 +311,11 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: '10%',
-    justifyContent: "space-evenly",
+    justifyContent: 'space-evenly',
     alignContent: 'center',
     width: '100%',
     alignItems: 'center',
-    marginBottom:'auto',
+    marginBottom: 'auto',
   },
   buttonGroup: {
     flexDirection: 'row',

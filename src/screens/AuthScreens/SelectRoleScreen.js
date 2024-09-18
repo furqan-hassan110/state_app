@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 // Images
 import img1 from '../../../assets/images/role1.png';
 import img2 from '../../../assets/images/role2.png';
@@ -17,18 +17,18 @@ import img4 from '../../../assets/images/role4.png';
 // Styles
 import colors from '../../styles/colors';
 // Contexts
-import { useAuth } from '../../contexts/AuthContext';
+import {useAuth} from '../../contexts/AuthContext';
 // Components
 import Button from '../../components/Button';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 const SelectRoleScreen = () => {
-  const { selectRole } = useAuth();
+  const {selectRole} = useAuth();
   const navigation = useNavigation();
 
-  const handleRoleSelection = (selectedRole) => {
+  const handleRoleSelection = selectedRole => {
     selectRole(selectedRole);
-    navigation.navigate('Register'); // Navigate to Register screen after selecting role
+    navigation.navigate('Login'); // Navigate to Register screen after selecting role
   };
 
   return (
@@ -41,13 +41,13 @@ const SelectRoleScreen = () => {
         <Image source={img3} style={styles.image} />
         <Image source={img4} style={styles.image} />
       </View>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{flexDirection: 'row'}}>
         <Text style={styles.findtext}>Find</Text>
         <Text style={styles.findtextbold}> perfect choice </Text>
         <Text style={styles.findtext}>for</Text>
       </View>
       <Text style={styles.futuretext}>your future house</Text>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{flexDirection: 'row'}}>
         <Text style={styles.findtext}>Ready to</Text>
         <Text style={styles.findtextbold}> explore ?</Text>
       </View>
@@ -57,22 +57,20 @@ const SelectRoleScreen = () => {
           width: '100%',
           alignContent: 'center',
           alignItems: 'center',
-        }}
-      >
+        }}>
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-around',
             width: '100%',
-          }}
-        >
+          }}>
           <Button
             style={styles.button}
             onPress={() => handleRoleSelection('agent')}
             title="Agent"
             backgroundColor={colors.buttons}
             textColor="#fff"
-            width={width * 0.30}
+            width={width * 0.3}
             height={height * 0.07}
             borderRadius={10}
             fontFamily="Lato-Bold"
@@ -83,13 +81,13 @@ const SelectRoleScreen = () => {
             title="User"
             backgroundColor={colors.buttons}
             textColor="#fff"
-            width={width * 0.30}
+            width={width * 0.3}
             height={height * 0.07}
             borderRadius={10}
             fontFamily="Lato-Bold"
           />
         </View>
-        <View style={{ flexDirection: 'row', marginTop: 'auto' }}>
+        <View style={{flexDirection: 'row', marginTop: 'auto'}}>
           <Text style={styles.alreadytext}>
             If you already have an account ?
           </Text>
@@ -111,7 +109,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingBottom: 20,
-
   },
   image: {
     width: width * 0.463,
