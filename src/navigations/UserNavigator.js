@@ -8,6 +8,7 @@ import PropertyDetail from '../screens/UserScreens/PropertyDetail';
 import ImageSlider from '../components/ImageSlider';
 import UserSearchScreen from '../screens/UserScreens/UserSearchScreen';
 import UserProfileScreen from '../screens/UserScreens/UserProfileScreen';
+import SelectRoleScreen from "../screens/AuthScreens/SelectRoleScreen"
 
 
 const Stack = createStackNavigator();
@@ -22,6 +23,7 @@ const UserNatigator = () => {
       <Stack.Screen name="ImageSlider" component={ImageSlider} options={{ headerShown: false }} />
       <Stack.Screen name="UserSearchScreen" component={UserSearchScreen} options={{ headerShown: false }} />
       <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="SelectRoleScreen" component={SelectRoleScreen} options={{ headerShown: false }}/>
       {/* <Stack.Screen name="ImageSliderScreen" component={ImageSliderScreen} /> */}
     </Stack.Navigator>
   );

@@ -28,17 +28,17 @@ const EditListingScreen = () => {
   const [listingLocation, setListingLocation] = useState();
   const [sellPrice, setSellPrice] = useState('');
   const [rentPrice, setRentPrice] = useState('');
-  const [rentType, setRentType] = useState('Monthly');
-  const [bedrooms, setBedrooms] = useState(3);
-  const [bathrooms, setBathrooms] = useState(2);
-  const [carSpace, setCarSpace] = useState(2);
-  const [totalRooms, setTotalRooms] = useState('<4');
+  const [rentType, setRentType] = useState('');
+  const [bedrooms, setBedrooms] = useState(0);
+  const [bathrooms, setBathrooms] = useState('');
+  const [carSpace, setCarSpace] = useState('');
+  const [totalRooms, setTotalRooms] = useState('');
   const [isModalVisible, setModalVisible] = useState(false);
 
   const [propertyData, setPropertyData] = useState({
       title:'',
-      location:  "",
-      address:  "",
+      address:  '',
+      location:  '',
       construction_status: '',
       listing_type: '',
       property_category: '',
@@ -47,7 +47,7 @@ const EditListingScreen = () => {
       selling_amount: '',
       rent_amount: '',
       rent_payable: '',
-      bedroom_count: '',
+      bedroomCount: 0,
       bathroom_count: '',
       car_space_count: '',
       total_room_count: '',
@@ -59,8 +59,39 @@ const EditListingScreen = () => {
       try {
         const token = await AsyncStorage.getItem('token');
         const res = await getPropertiesById(id, token); // Fetch property details by ID
-        console.log(res)
-        setPropertyData(res.data);
+        // console.log(propertyData.location)
+        const {title, address, location, constructionStatus,
+          listingType,
+          propertyCategory,
+          propertySize,
+          propertyType,
+          sellingPrice,
+          rentPrice,
+          rentPayable,
+          bedroomCount,
+          bathroomCount,
+          carSpaceCount,
+          totalRoomCount} = res.data
+        const propertyObj = {
+          title:title,
+          address:  address,
+          location:  location,
+          construction_status: constructionStatus,
+          listing_type: listingType,
+          property_category: propertyCategory,
+          property_size: propertySize,
+          property_type: propertyType,
+          selling_amount: sellingPrice,
+          rent_amount: rentPrice,
+          rent_payable: rentPayable,
+          bedroomCount: bedroomCount,
+          bathroom_count: bathroomCount,
+          car_space_count: carSpaceCount,
+          total_room_count: totalRoomCount,
+        }
+        console.log(res.data.bedroomCount)
+
+        setPropertyData(propertyObj);
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching property details: ", error);
@@ -71,10 +102,10 @@ const EditListingScreen = () => {
   }, [id]);
   const handleSave = async () => {
     const updatedPropertyData = {
-      title: listingTitle || propertyData.title,
-  location: listingLocation || propertyData.location,
+  title: listingTitle || propertyData.title,
+  listingLocation: listingLocation || propertyData.location,
   property_size: '100',
-  address: listingAddress || propertyData.address,
+  listingAddress: listingAddress || propertyData.address,
   construction_status: constructionStatus || propertyData.construction_status,
   listing_type: listingType || propertyData.listing_type,
   property_category: propertyCategory || propertyData.property_category,
@@ -82,7 +113,7 @@ const EditListingScreen = () => {
   selling_amount: sellPrice || propertyData.selling_amount,
   rent_amount: rentPrice || propertyData.rent_amount,
   rent_payable: rentType || propertyData.rent_payable,
-  bedroom_count: bedrooms || propertyData.bedroom_count,
+  bedroomCount: bedrooms || propertyData.bedroomCount,
   bathroom_count: bathrooms || propertyData.bathroom_count,
   car_space_count: carSpace || propertyData.car_space_count,
   total_room_count: totalRooms || propertyData.total_room_count,
@@ -149,9 +180,9 @@ const EditListingScreen = () => {
       <Text style={styles.label}>Address</Text>
         <TextInput
           style={styles.textInput}
-          placeholder="Enter Listing Title"
+          placeholder="Enter Listing Address"
           placeholderTextColor={colors.textinputplaceholdercolor}
-          value={listingAddress || propertyData?.listingAddress}
+          value={listingAddress || propertyData?.address}
           onChangeText={setListingAddress} 
         />
       </View>
@@ -159,25 +190,25 @@ const EditListingScreen = () => {
       <Text style={styles.label}>Location</Text>
         <TextInput
           style={styles.textInput}
-          placeholder="Enter Listing Title"
+          placeholder="Enter Listing Location"
           placeholderTextColor={colors.textinputplaceholdercolor}
-          value={propertyData?.listingLocation}
+          value={listingLocation || propertyData?.location}
           onChangeText={setListingLocation} 
         />
       </View>
        <View style={styles.section}>
         <Text style={styles.sectionTitle}>Construction status</Text>
         <View style={styles.optionsContainer}>
-          {['new', 'used'].map(status => (
-            <TouchableOpacity
-              key={status}
-              style={[styles.optionButton, constructionStatus === status && styles.selectedOption]}
-              onPress={() => setConstructionStatus(status)}
-            >
-              <Text style={[styles.optionText, constructionStatus === status && styles.selectedOptionText]}>{status}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+  {['new', 'used'].map(status => (
+    <TouchableOpacity
+      key={status}
+      style={[styles.optionButton, propertyData.construction_status === status && styles.selectedOption]}
+      onPress={() => setConstructionStatus(status)}
+    >
+      <Text style={[styles.optionText, propertyData.construction_status === status && styles.selectedOptionText]}>{status}</Text>
+    </TouchableOpacity>
+  ))}
+</View>
       </View>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Listing type</Text>
@@ -226,7 +257,7 @@ const EditListingScreen = () => {
       <Text style={styles.label}>Sell Price</Text>
       <TextInput
         style={styles.textInput}
-        value={sellPrice}
+        value={propertyData?.selling_amount}
         onChangeText={setSellPrice}
         keyboardType="numeric"
         placeholder="$ 180,000"
@@ -236,7 +267,7 @@ const EditListingScreen = () => {
       <Text style={styles.label}>Rent Price</Text>
       <TextInput
         style={styles.textInput}
-        value={rentPrice}
+        value={propertyData?.rent_amount}
         onChangeText={setRentPrice}
         keyboardType="numeric"
         placeholder="$ 315 /month"
@@ -257,23 +288,24 @@ const EditListingScreen = () => {
 
       <Text style={styles.label}>Property Features</Text>
       <View style={styles.featureContainer}>
-        <Text style={styles.featureLabel}>Bedroom</Text>
-        <View style={styles.counterContainer}>
-          <TouchableOpacity
-            style={styles.counterButton}
-            onPress={() => setBedrooms(prev => Math.max(prev - 1, 0))}
-          >
-            <Text style={styles.counterText}>-</Text>
-          </TouchableOpacity>
-          <Text style={styles.counterValue}>{bedrooms}</Text>
-          <TouchableOpacity
-            style={styles.counterButton}
-            onPress={() => setBedrooms(prev => prev + 1)}
-          >
-            <Text style={styles.counterText}>+</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+  <Text style={styles.featureLabel}>Bedroom</Text>
+  <View style={styles.counterContainer}>
+  <TouchableOpacity
+    style={styles.counterButton}
+    onPress={() => setBedrooms(prev => Math.max((prev ?? propertyData?.bedroomCount ?? 0) - 1, 0))}
+  >
+    <Text style={styles.counterText}>-</Text>
+  </TouchableOpacity>
+  <Text style={styles.counterValue}>{bedrooms ?? propertyData?.bedroomCount ?? 0}</Text>
+  <TouchableOpacity
+    style={styles.counterButton}
+    onPress={() => setBedrooms(prev => (prev ?? propertyData?.bedroomCount ?? 0) + 1)}
+  >
+    <Text style={styles.counterText}>+</Text>
+  </TouchableOpacity>
+</View>
+
+</View>
 
       <View style={styles.featureContainer}>
         <Text style={styles.featureLabel}>Bathroom</Text>
@@ -284,7 +316,7 @@ const EditListingScreen = () => {
           >
             <Text style={styles.counterText}>-</Text>
           </TouchableOpacity>
-          <Text style={styles.counterValue}>{bathrooms}</Text>
+          <Text style={styles.counterValue}>{bathrooms||propertyData?.bathroom_count}</Text>
           <TouchableOpacity
             style={styles.counterButton}
             onPress={() => setBathrooms(prev => prev + 1)}

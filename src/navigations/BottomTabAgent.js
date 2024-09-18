@@ -7,7 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from '../screens/AgentScreens/AgentHomeScreen';
 import SearchScreen from '../screens/AgentScreens/AgentSearchScreen';
 import LovedScreen from '../screens/AgentScreens/AgentLovedScreen';
-import ProfileScreen from '../screens/AgentScreens/AgentProfileScreen';
+import AgentProfileScreen from '../screens/AgentScreens/AgentProfileScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -40,7 +40,7 @@ const AgentBottomTabs = () => {
         <Tab.Screen name="Home" component={HomeScreen} options={{headerShown:false}}/>
         <Tab.Screen name="Search" component={SearchScreen} options={{headerShown:false}}/>
         <Tab.Screen name="Loved" component={LovedScreen} options={{headerShown:false}}/>
-        <Tab.Screen name="Profile" component={ProfileScreen}  options={{headerShown:false}}/>
+        <Tab.Screen name="Profile" component={AgentProfileScreen}  options={{headerShown:false}}/>
       </Tab.Navigator>
   
   );

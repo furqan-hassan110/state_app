@@ -11,7 +11,8 @@ import LoginScreen from '../screens/AuthScreens/LoginScreen';
 import RegisterScreen from '../screens/AuthScreens/RegisterScreen';
 import UserNavigator from './UserNavigator';
 import AgentNavigator from './AgentNavigator';
-import UserProfileScreen from '../screens/UserScreens/UserProfileScreen'
+import UserProfileScreen from '../screens/UserScreens/UserProfileScreen';
+import AgentProfileScreen from '../screens/AgentScreens/AgentProfileScreen';
 
 const Stack = createStackNavigator();
 
@@ -39,10 +40,11 @@ const RootNavigator = () => {
       ) : (
         // If not authenticated, show authentication flow
         <>
-          <Stack.Screen name="SelectRole" component={SelectRoleScreen} />
+          <Stack.Screen name="SelectRoleScreen" component={SelectRoleScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
+          <Stack.Screen name="AgentProfileScreen" component={AgentProfileScreen} />
         </>
       )}
     </Stack.Navigator>

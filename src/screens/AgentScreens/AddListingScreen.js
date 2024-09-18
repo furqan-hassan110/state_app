@@ -15,6 +15,9 @@ const AddListingScreen = () => {
   const [propertyCategory, setPropertyCategory] = useState(null);
   const [propertyType, setPropertyType] = useState(null);
   const [listingTitle, setListingTitle] = useState();
+  const [listingAddress, setListingAddress] = useState();
+  const [listingLocation, setListingLocation] = useState();
+
 
   const handleSelection = (type, value) => {
     switch(type) {
@@ -37,6 +40,8 @@ const AddListingScreen = () => {
     navigation.navigate('AddListingScreen2', {
       constructionStatus,
       listingTitle,
+      listingAddress,
+      listingLocation,
       listingType,
       propertyCategory,
       propertyType,
@@ -64,12 +69,33 @@ const AddListingScreen = () => {
       </View> */}
       <SearchBar style={{marginBottom:10}}/>
       <View>
+      <Text style={styles.sectionTitle}>Title</Text>
         <TextInput
           style={styles.textInput}
           placeholder="Enter Listing Title"
           placeholderTextColor={colors.textinputplaceholdercolor}
           value={listingTitle}
           onChangeText={setListingTitle} 
+        />
+      </View>
+      <View>
+      <Text style={styles.sectionTitle}>Address</Text>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Enter Listing Title"
+          placeholderTextColor={colors.textinputplaceholdercolor}
+          value={listingAddress}
+          onChangeText={setListingAddress} 
+        />
+      </View>
+      <View>
+      <Text style={styles.sectionTitle}>Location</Text>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Enter Listing Title"
+          placeholderTextColor={colors.textinputplaceholdercolor}
+          value={listingLocation}
+          onChangeText={setListingLocation} 
         />
       </View>
 
@@ -191,7 +217,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     color:colors.black,
-    width: width * 0.9,
+    width: width * 0.88,
     backgroundColor: colors.textinputfill,
     padding: 10,
     marginBottom: 20,

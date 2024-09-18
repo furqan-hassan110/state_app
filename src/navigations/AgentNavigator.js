@@ -7,6 +7,8 @@ import AddListingScreen2 from '../screens/AgentScreens/AddListingScreen2';
 import AddListingSscreen3 from '../screens/AgentScreens/AddListingScreen3';
 import AgentSearchScreen from '../screens/AgentScreens/AgentSearchScreen';
 import EditListingScreen from '../screens/AgentScreens/EditListingScreen'
+import AgentProfileScreen from '../screens/AgentScreens/AgentProfileScreen';
+import SelectRoleScreen from '../screens/AuthScreens/SelectRoleScreen';
 
 
 const Stack = createStackNavigator();
@@ -20,6 +22,8 @@ const AgentNavigator = () => {
       <Stack.Screen name="AddListingScreen2" component={AddListingScreen2} options={{ headerShown: false }}/>
       <Stack.Screen name="AddListingScreen3" component={AddListingSscreen3} options={{ headerShown: false }}/>
       <Stack.Screen name="EditListingScreen" component={EditListingScreen} options={{ headerShown: false }}/>
+      <Stack.Screen name="SelectRoleScreen" component={SelectRoleScreen} options={{ headerShown: false }}/>
+      
       {/* <Stack.Screen name="BottomTabAgent" component={AgentHomeScreen} options={{ headerShown: false }}/> */}
     </Stack.Navigator>
   );

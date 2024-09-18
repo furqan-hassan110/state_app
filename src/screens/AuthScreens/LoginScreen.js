@@ -37,11 +37,13 @@ const LoginScreen = () => {
   });
 
   const handleLogin = async (values) => {
+    
     apiLogin (
       values.email,
       values.password
     ).then(async (res)=>{
       console.log("[LOGIN RES] ==> ", res)
+      console.log(res.data.user_type)
       if(res.data.user_type === role){
         await login(res.data)
         console.log("OK to go..")

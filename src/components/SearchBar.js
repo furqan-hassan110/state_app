@@ -1,6 +1,5 @@
-// SearchBar.js
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { View, TextInput, StyleSheet, Dimensions, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../styles/colors';
@@ -10,13 +9,14 @@ const { width, height } = Dimensions.get('window');
 
 const SearchBar = ({ 
   placeholder, 
-  value, onChangeText = () => { }, 
+  value, 
+  onChangeText = () => { }, 
   customWidth = width * 0.93, // Default width 93% of the screen width
   customHeight = height * 0.07 
-}) => 
-  { // Default value for onChangeText
+}) => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState(value || '');
+  const [isFocused, setIsFocused] = useState(false); // Add state for focus
 
   const handleSearch = () => {
     navigation.navigate('UserStack', {
@@ -25,23 +25,49 @@ const SearchBar = ({
     });
   };
 
+  // Function to blur TextInput when tapping outside or closing keyboard
+  const dismissKeyboard = () => {
+    Keyboard.dismiss(); // Dismisses the keyboard
+    setIsFocused(false); // Updates focus state
+  };
+
   return (
-    <View style={[styles.container, { width: customWidth, height: customHeight }]}>
-      <Ionicons name="search" size={24} color="gray" style={styles.searchIcon} onPress={handleSearch} />
-      <TextInput
-        style={styles.input}
-        placeholder={placeholder}
-        placeholderTextColor={colors.textinputplaceholdercolor}
-        onChangeText={(text) => {
-          setSearchQuery(text);
-          onChangeText(text); // Call the passed onChangeText function
-        }}
-        value={searchQuery}
-      />
-      <TouchableOpacity style={styles.filterIconcon} onPress={() => navigation.navigate('UserStack', {screen: 'userFilter'})}>
-        <MaterialCommunityIcons name="tune-vertical-variant" size={20} color="white" style={styles.filterIcon} />
-      </TouchableOpacity>
-    </View>
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <View style={[styles.container, { width: customWidth, height: customHeight }]}>
+        <Ionicons 
+          name={'search'} 
+          size={24} 
+          color="gray" 
+          style={styles.searchIcon} 
+          // onPress={handleSearch} 
+        />
+        <TextInput
+          style={styles.input}
+          placeholder={placeholder}
+          placeholderTextColor={colors.textinputplaceholdercolor}
+          onChangeText={(text) => {
+            setSearchQuery(text);
+            onChangeText(text); // Call the passed onChangeText function
+          }}
+          value={searchQuery}
+          onFocus={() => setIsFocused(true)} // Set focus state to true
+          onBlur={() => {
+            if (searchQuery === '') {
+              setIsFocused(false); // Only set to false if searchQuery is empty
+            }
+          }} // Set focus state to false only if input is empty
+        />
+        {isFocused || searchQuery ? (
+          <TouchableOpacity style={styles.searchIconcon} onPress={handleSearch}>
+            <Ionicons name="search" size={20} color="white" style={styles.searchIcon} />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.filterIconcon} onPress={() => navigation.navigate('UserStack', {screen: 'userFilter'})}>
+            <MaterialCommunityIcons name="tune-vertical-variant" size={20} color="white" style={styles.filterIcon} />
+          </TouchableOpacity>
+        )}
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -56,7 +82,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   searchIcon: {
-    marginRight: 10,
+    // marginRight: 10,
+    alignSelf: 'center',
   },
   input: {
     flex: 1,
@@ -72,10 +99,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  searchIconcon: {
+    backgroundColor: colors.buttons,
+    width: width * 0.11,
+    height: height * 0.05,
+    borderRadius: 10,
+    alignContent: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   filterIcon: {
-    marginLeft: 10,
+    // marginLeft: 10,
     alignSelf: 'center',
-    marginRight: 10,
+    // marginRight: 10,
   },
 });
 

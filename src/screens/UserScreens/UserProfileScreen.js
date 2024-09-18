@@ -9,6 +9,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import { useAuth } from '../../contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLoved } from '../../contexts/LovedContext';
+import {logout,subscribeUser} from '../../utils/apiUtils'
 
 const { width, height } = Dimensions.get('window');
 
@@ -16,12 +17,41 @@ const UserProfileScreen = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const navigation = useNavigation();
-  const { userData, logout, handleSubscribe } = useAuth(); // Use handleSubscribe from AuthContext
+  const { userData, handleSubscribe } = useAuth(); // Use handleSubscribe from AuthContext
   const { addSubscribedUser } = useLoved();
 
-  const handleLogout = async () => {
-    await logout();
+  const userToken = userData?.token;
+  const userId= userData?.id;
+  // console.log(userId)
+
+// console.log(userData)
+
+  const handleLogout = () => {
+    // Log userToken from userData
+    console.log(userToken);
+  
+    // Use the token directly if it's available
+    if (userToken) {
+      logout(userToken)
+        .then(() => {
+          // Clear AsyncStorage data if needed
+          return AsyncStorage.clear();
+        })
+        .then(() => {
+          // Reset navigation to the desired screen
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'SelectRoleScreen' }],
+          });
+        })
+        .catch(error => {
+          console.error('Logout failed:', error);
+        });
+    } else {
+      console.error('No token found in userData');
+    }
   };
+  
 
   useEffect(() => {
     const checkSubscriptionStatus = async () => {
@@ -34,15 +64,27 @@ const UserProfileScreen = () => {
     checkSubscriptionStatus();
   }, []);
 
-  const handleUserSubscribe = async () => {
-    try {
-      await handleSubscribe(); // Call handleSubscribe from AuthContext
-      setIsSubscribed(true);
-      addSubscribedUser(userData); // Add user to subscribed users
-      Alert.alert("Success", "Your application has been submitted. Please wait for your approval.");
-      // Additional navigation or actions can be added here if needed
-    } catch (error) {
-      console.error('Subscription failed:', error);
+  const handleUserSubscribe = () => {
+    if (userToken) {
+      subscribeUser(userId,userToken) // Call the API to handle the subscription
+        .then(() => {
+          handleSubscribe() // Call handleSubscribe from AuthContext
+            .then(() => {
+              setIsSubscribed(true);
+              addSubscribedUser(userData); // Add user to subscribed users
+              Alert.alert("Success", "Your application has been submitted. Please wait for your approval.");
+            })
+            .catch((error) => {
+              console.error('Error during handleSubscribe:', error);
+              Alert.alert("Error", "Failed to complete the subscription process.");
+            });
+        })
+        .catch((error) => {
+          console.error('Subscription failed:', error);
+          Alert.alert("Error", "Failed to subscribe. Please try again later.");
+        });
+    } else {
+      Alert.alert("Error", "No user token found for subscription.");
     }
   };
 

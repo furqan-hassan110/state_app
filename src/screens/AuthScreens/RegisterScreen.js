@@ -57,7 +57,7 @@ const RegisterScreen = () => {
         console.log("Registration successful. Token received:", res.data.token);
         
         // Navigate to the profile screen or any screen after registration
-        navigation.navigate('UserProfileScreen');
+        navigation.navigate('AgentProfileScreen');
       } else {
         console.log("Registration failed: No token received.");
       }

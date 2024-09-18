@@ -20,7 +20,7 @@ export const LovedProvider = ({ children }) => {
 
     // Load loved properties and subscribed users from AsyncStorage when the component mounts
     useEffect(() => {
-        const loadLovedProperties = async () => {
+        const loadData = async () => {
             try {
                 const savedLovedProperties = await AsyncStorage.getItem('lovedProperties');
                 const savedSubscribedUsers = await AsyncStorage.getItem('subscribedUsers');
@@ -37,7 +37,7 @@ export const LovedProvider = ({ children }) => {
             }
         };
 
-        loadLovedProperties();
+        loadData();
     }, []);
 
     // Save loved properties and subscribed users to AsyncStorage whenever they change
@@ -46,7 +46,6 @@ export const LovedProvider = ({ children }) => {
             try {
                 await AsyncStorage.setItem('lovedProperties', JSON.stringify(lovedProperties));
                 await AsyncStorage.setItem('subscribedUsers', JSON.stringify(subscribedUsers));
-                console.log('Saved Loved Properties to AsyncStorage:', lovedProperties);
             } catch (error) {
                 console.error('Failed to save data to storage:', error);
             }
@@ -59,7 +58,6 @@ export const LovedProvider = ({ children }) => {
     const addLovedProperty = (property) => {
         setLovedProperties((prevProperties) => {
             const updatedProperties = [...prevProperties, property];
-            console.log('Updated Loved Properties State:', updatedProperties); // Debugging log
             return updatedProperties;
         });
     };
@@ -70,7 +68,7 @@ export const LovedProvider = ({ children }) => {
     };
 
     return (
-        <LovedContext.Provider value={{ lovedProperties, setLovedProperties, addLovedProperty, subscribedUsers, addSubscribedUser }}>
+        <LovedContext.Provider value={{ lovedProperties, setLovedProperties, addLovedProperty, subscribedUsers, setSubscribedUsers, addSubscribedUser }}>
             {children}
         </LovedContext.Provider>
     );

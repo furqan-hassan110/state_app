@@ -3,11 +3,14 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'rea
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../styles/colors';
 import img1 from '../../assets/images/role1.png'; 
+import { useLoved } from '../contexts/LovedContext';
 
 const { width, height } = Dimensions.get('window');
 
-const SearchResultCard = ({ item }) => {
+const SearchResultCard = ({ item, isLoved }) => {
   const [isFavorite, setIsFavorite] = useState(false);
+  const { lovedProperties, setLovedProperties } = useLoved();
+  // const isLoved = lovedProperties.some((p) => p.id === id);
 
 
   const toggleFavorite = () => {
@@ -23,13 +26,13 @@ const SearchResultCard = ({ item }) => {
         
         
         <TouchableOpacity
-          style={[styles.heartIcon, { backgroundColor: isFavorite ? colors.buttons : colors.textinputfill }]}
-          onPress={toggleFavorite}
+          style={[styles.heartIcon, { backgroundColor: isLoved ? colors.buttons : 'transparent' }]}
+          // onPress={handleToggleLoved}
         >
           <MaterialCommunityIcons
-            name={isFavorite ? "cards-heart" : "cards-heart-outline"}
+            name={isLoved ? 'cards-heart-outline' : 'cards-heart'}
             size={15}
-            color={isFavorite ? 'white' : 'red'}
+            color='white'
           />
         </TouchableOpacity>
         

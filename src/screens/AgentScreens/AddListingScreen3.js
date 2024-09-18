@@ -16,9 +16,9 @@ const AddListingStep3 = ({ route }) => {
   const [sellPrice, setSellPrice] = useState('');
   const [rentPrice, setRentPrice] = useState('');
   const [rentType, setRentType] = useState('Monthly');
-  const [bedrooms, setBedrooms] = useState(3);
-  const [bathrooms, setBathrooms] = useState(2);
-  const [carSpace, setCarSpace] = useState(2);
+  const [bedrooms, setBedrooms] = useState();
+  const [bathrooms, setBathrooms] = useState('');
+  const [carSpace, setCarSpace] = useState('');
   const [totalRooms, setTotalRooms] = useState('<4');
 
   const [isModalVisible, setModalVisible] = useState(false);
@@ -38,8 +38,8 @@ const AddListingStep3 = ({ route }) => {
   const handleNext = () => {
     const propertyObject = {
       title: route.params?.listingTitle || "Sample Title",
-      location: route.params?.location || "Sample Location",
-      address: route.params?.address || "Sample Address",
+      location: route.params?.listingLocation || "Sample Location",
+      address: route.params?.listingAddress || "Sample Address",
       construction_status: route.params?.constructionStatus || "Under Construction",
       listing_type: route.params?.listingType || "rent",
       property_category: route.params?.propertyCategory || "Residential",
@@ -49,7 +49,7 @@ const AddListingStep3 = ({ route }) => {
       rent_amount: rentPrice || "",
       rent_payable: rentType || "Monthly",
       total_room_count: totalRooms || "2",
-      bedroom_count: bedrooms || "",
+      bedroom_count: bedrooms ,
       bathroom_count: bathrooms || "",
       car_space_count: carSpace || ""
     };

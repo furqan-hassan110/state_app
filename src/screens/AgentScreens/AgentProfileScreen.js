@@ -8,16 +8,49 @@ import profile from '../../../assets/images/profile.png';
 import Feather from 'react-native-vector-icons/Feather';
 import { useAuth } from '../../contexts/AuthContext';
 import { ScrollView } from 'react-native-gesture-handler';
+import {logout} from '../../utils/apiUtils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
-const UserProfileScreen = () => {
+const AgentProfileScreen = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [modalVisible, setModalVisible] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
 
   const navigation = useNavigation();
-  const { userData, setUserData, logout } = useAuth();
+  const { userData, setUserData } = useAuth();
+
+
+  const userToken = userData?.token;
+  const userName = userData?.name;
+  console.log(userName)
+
+  const handleLogout = () => {
+    // Log userToken from userData
+    console.log(userToken);
+  
+    // Use the token directly if it's available
+    if (userToken) {
+      logout(userToken)
+        .then(() => {
+          // Clear AsyncStorage data if needed
+          return AsyncStorage.clear();
+        })
+        .then(() => {
+          // Reset navigation to the desired screen
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'SelectRoleScreen' }],
+          });
+        })
+        .catch(error => {
+          console.error('Logout failed:', error);
+        });
+    } else {
+      console.error('No token found in userData');
+    }
+  };
 
   const handleSubscribe = () => {
     setIsSubscribed(true);
@@ -35,17 +68,17 @@ const UserProfileScreen = () => {
       [field]: value,
     });
   };
-  const handleLogout = async () => {
-    try {
-      await logout(); 
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'SelectRoleScreen' }],
-      });
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     await logout(); 
+  //     navigation.reset({
+  //       index: 0,
+  //       routes: [{ name: 'SelectRoleScreen' }],
+  //     });
+  //   } catch (error) {
+  //     console.error('Logout failed:', error);
+  //   }
+  // };
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -270,4 +303,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UserProfileScreen;
+export default AgentProfileScreen;

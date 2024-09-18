@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://192.168.0.105:8000/api';
+const BASE_URL = 'http://192.168.0.104:8000/api';
 
 
 const errorResponse = (error) => {
@@ -142,10 +142,16 @@ export const login = (email, password) => {
   return postRequest({ url, data, token: null });
 };
 
+
 export const register = (name, email, password, phone_no) => {
   const url = `${BASE_URL}/register`;
   const data = { name, email, password,c_password: password, phone_no };
   return postRequest({ url, data, token: null });
+};
+
+export const logout = (token) => {
+  const url = `${BASE_URL}/logout`;
+  return postRequest({ url, token });
 };
 
 export const getProperties = (token, abortToken = null) => {
@@ -180,4 +186,30 @@ export const deleteCategory = async (id, token) => {
     console.log("Delete Error:", error);  // Log the error to see what's wrong
     throw error;
   }
+};
+export const addLovedProperty = (propertyId, token) => {
+  const url = `${BASE_URL}/add-loved-property`;
+  const data = { property_id: propertyId };
+
+  return postRequest({ url, data, token });
+};
+export const getLovedProperties = (token) => {
+  const url = `${BASE_URL}/user-loved-property`; // Replace with your actual API endpoint
+
+  return getRequest({ url, token });
+};
+export const removeLovedProperties = (propertyId,token) => {
+  const url = `${BASE_URL}/remove-loved-property`; // Replace with your actual API endpoint
+  const data = { property_id: propertyId };
+  return postRequest({ url,data, token });
+};
+export const subscribeUser = (userId,token) => {
+  const url = `${BASE_URL}/user-subscription`; 
+  const data= {user_id: userId}
+  return postRequest({ url,data, token });
+};
+export const fetchAllUser = (token) => {
+  const url = `${BASE_URL}/users`; 
+  
+  return getRequest({ url, token });
 };

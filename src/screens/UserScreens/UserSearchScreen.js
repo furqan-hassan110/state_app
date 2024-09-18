@@ -8,7 +8,6 @@ import SearchBar from '../../components/SearchBar';
 import { getProperties } from '../../utils/apiUtils'; // Import the API function
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 const { width, height } = Dimensions.get('window');
 
 const UserSearchScreen = () => {
@@ -36,7 +35,7 @@ const UserSearchScreen = () => {
         }
       } catch (err) {
         console.log("[RES - GET ALL PROPERTIES] ==> ", err);
-      }finally {
+      } finally {
         setLoading(false); // Set loading to false after the API call completes (success or error)
       }
     };
@@ -47,9 +46,7 @@ const UserSearchScreen = () => {
   // Filter properties based on the search query
   const filteredProperties = query
     ? properties.filter(property =>
-        property.category.toLowerCase().includes(query.toLowerCase()) ||
-        property.cityName.toLowerCase().includes(query.toLowerCase()) ||
-        property.country.toLowerCase().includes(query.toLowerCase())
+        property.title.toLowerCase().includes(query.toLowerCase()) // Filter by title
       )
     : properties;
 
@@ -82,7 +79,7 @@ const UserSearchScreen = () => {
         <Text style={styles.headerText}>Search results</Text>
       </View>
       
-      <SearchBar showFilterIcon={false} />
+      <SearchBar showFilterIcon={false} value={query} onChangeText={(text) => {}} />
       
       {filteredProperties.length > 0 ? (
         <FlatList
