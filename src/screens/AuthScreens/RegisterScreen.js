@@ -10,27 +10,25 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Formik } from 'formik';
+import {useNavigation} from '@react-navigation/native';
+import {Formik} from 'formik';
 import * as Yup from 'yup';
 // Styles
 import colors from '../../styles/colors';
 // Contexts
-import { useAuth } from '../../contexts/AuthContext';
+import {useAuth} from '../../contexts/AuthContext';
 // Components
 import Textinput from '../../components/Textinput';
 import Button from '../../components/Button';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { register as apiregister, register } from '../../utils/apiUtils'; // adjust the path if necessary
+import {register as apiregister, register} from '../../utils/apiUtils'; // adjust the path if necessary
 
-
-const { width, height } = Dimensions.get('window');
-
+const {width, height} = Dimensions.get('window');
 
 const RegisterScreen = () => {
-  const initialValues = { name: '', email: '', password: '', phoneNo: '' };
-  const { role, setUserData, login, selectRole } = useAuth();
+  const initialValues = {name: '', email: '', password: '', phoneNo: ''};
+  const {role, setUserData, login, selectRole} = useAuth();
   const navigation = useNavigation();
 
   const validationSchema = Yup.object({
@@ -41,32 +39,31 @@ const RegisterScreen = () => {
       .min(6, 'Password must be at least 6 characters')
       .required('Required'),
   });
-  const handleRegister = async (values) => {
+  const handleRegister = async values => {
     try {
       // Call the registration API with user details
       const res = await apiregister(
         values.name,
         values.email,
         values.password,
-        values.phoneNo
+        values.phoneNo,
       );
-      console.log("[REGISTER RES] ==> ", res);
-    
+      console.log('[REGISTER RES] ==> ', res);
+
       // Check if the token is received, meaning the registration was successful
       if (res.data.token) {
-        console.log("Registration successful. Token received:", res.data.token);
-        
+        console.log('Registration successful. Token received:', res.data.token);
+
         // Navigate to the profile screen or any screen after registration
         navigation.navigate('AgentProfileScreen');
       } else {
-        console.log("Registration failed: No token received.");
+        console.log('Registration failed: No token received.');
       }
     } catch (err) {
-      console.log("[REGISTER ERR] ==> ", err);
+      console.log('[REGISTER ERR] ==> ', err);
     }
   };
-  
-  
+
   // const handleRegister = async (values) => {
   //   try {
   //     const response = await postRequest({
@@ -78,14 +75,14 @@ const RegisterScreen = () => {
   //         phoneNo: values.phoneNo,
   //       },
   //     });
-  
+
   //     if (response) {
   //       console.log('Registration successful:', response);
-  
+
   //       setUserData(response); // store the user data, adjust if needed
-  
+
   //       await login(response); // log in the user, adjust if needed
-        
+
   //       if (role === 'user') {
   //         navigation.navigate('UserProfileScreen');
   //       } else {
@@ -101,17 +98,15 @@ const RegisterScreen = () => {
     <KeyboardAvoidingView
       style={styles.main}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}
-    >
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}>
       <ScrollView>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          style={styles.backbutton}
-        >
+          style={styles.backbutton}>
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
 
-        <View style={{ flexDirection: 'row', marginTop: 20, marginBottom: 60 }}>
+        <View style={{flexDirection: 'row', marginTop: 20, marginBottom: 60}}>
           <Text style={styles.creat}>Create your</Text>
           <Text style={styles.account}> account</Text>
         </View>
@@ -119,9 +114,8 @@ const RegisterScreen = () => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={handleRegister}
-        >
-          {({ handleSubmit }) => (
+          onSubmit={handleRegister}>
+          {({handleSubmit}) => (
             <>
               <View>
                 <Textinput
@@ -161,8 +155,7 @@ const RegisterScreen = () => {
                   alignContent: 'center',
                   width: '100%',
                   alignItems: 'center',
-                }}
-              >
+                }}>
                 <Button
                   title="Register"
                   onPress={handleSubmit}
@@ -174,8 +167,7 @@ const RegisterScreen = () => {
                   flexDirection: 'row',
                   alignSelf: 'center',
                   marginTop: 'auto',
-                }}
-              >
+                }}>
                 <Text style={styles.alreadyText}>
                   Already have an account ?
                 </Text>
@@ -199,14 +191,14 @@ const styles = StyleSheet.create({
   },
   name: {
     backgroundColor: colors.textinputfill,
-    color:colors.black,
+    color: colors.black,
     width: width * 0.8,
     height: height * 0.08,
     borderRadius: 10,
   },
   email: {
     backgroundColor: colors.textinputfill,
-    color:colors.black,
+    color: colors.black,
     width: width * 0.8,
     height: height * 0.08,
     alignSelf: 'center',
@@ -214,7 +206,7 @@ const styles = StyleSheet.create({
   },
   Phone: {
     backgroundColor: colors.textinputfill,
-    color:colors.black,
+    color: colors.black,
     width: width * 0.8,
     height: height * 0.08,
     alignSelf: 'center',
@@ -222,7 +214,7 @@ const styles = StyleSheet.create({
   },
   pass: {
     backgroundColor: colors.textinputfill,
-    color:colors.black,
+    color: colors.black,
     width: width * 0.72,
     height: height * 0.08,
     alignSelf: 'center',
@@ -251,7 +243,7 @@ const styles = StyleSheet.create({
     borderRadius: 45,
     alignContent: 'center',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   alreadyText: {
     color: colors.thintextcolo,
