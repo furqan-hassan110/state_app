@@ -69,7 +69,8 @@ const UserProfileScreen = () => {
       subscribeUser(userId,userToken) // Call the API to handle the subscription
         .then(() => {
           handleSubscribe() // Call handleSubscribe from AuthContext
-            .then(() => {
+            .then(async() => {
+              await AsyncStorage.setItem('isSubscribed', 'true');
               setIsSubscribed(true);
               addSubscribedUser(userData); // Add user to subscribed users
               Alert.alert("Success", "Your application has been submitted. Please wait for your approval.");

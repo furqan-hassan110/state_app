@@ -76,19 +76,30 @@ const UserSearchScreen = () => {
         <TouchableOpacity style={styles.backbutton} onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={24} color={colors.primary} />
         </TouchableOpacity>
-        <Text style={styles.headerText}>Search results</Text>
+        <Text style={styles.headerText}>Search</Text>
       </View>
       
       <SearchBar showFilterIcon={false} value={query} onChangeText={(text) => {}} />
       
       {filteredProperties.length > 0 ? (
-        <FlatList
-          data={filteredProperties}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderSearchResult}
-          numColumns={2}
-          contentContainerStyle={styles.listContainer}
-        />
+         <FlatList
+         data={properties}
+         horizontal
+         showsHorizontalScrollIndicator={false}
+         keyExtractor={(item) => item.id.toString()}
+         renderItem={({ item }) => (
+           <TouchableOpacity onPress={() => handlePropertyClick(item)}>
+             <SearchCards
+               id={item.id}
+               imageSource={item.image ? { uri: item.image } : require('../../../assets/images/role1.png')}
+               title={item.title}
+               country={item.location}
+               price={item.sellingPrice}
+             />
+           </TouchableOpacity>
+         )}
+         contentContainerStyle={styles.listContainer}
+       />
       ) : (
         <View style={styles.noResultsContainer}>
           <Text style={styles.noResultsText}>Search not found</Text>
@@ -114,7 +125,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'Lato-Bold',
     alignSelf: 'center',
-    marginLeft: 70,
+    marginLeft: 90,
     color: colors.boldtextcolor,
   },
   listContainer: {

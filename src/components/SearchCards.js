@@ -1,15 +1,45 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, ToastAndroid } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../styles/colors';
 import img1 from '../../assets/images/role1.png'; 
 import { useLoved } from '../contexts/LovedContext';
+import { useAuth } from '../contexts/AuthContext';
+import { addLovedProperty, removeLovedProperties } from '../utils/apiUtils';
+
 
 const { width, height } = Dimensions.get('window');
 
-const SearchResultCard = ({ item, isLoved }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
+const SearchResultCard = ({ id, imageSource, title,location, cityName, country, price }) => {
   const { lovedProperties, setLovedProperties } = useLoved();
+  const { userData } = useAuth();
+  const userToken = userData?.token;
+
+  const isLoved = lovedProperties.some((p) => p.id === id);
+
+  const handleToggleLoved = () => {
+    if (isLoved) {
+      // Remove property from loved list
+      removeLovedProperties(id, userToken)
+        .then(response => {
+          setLovedProperties(prev => prev.filter(p => p.id !== id));
+          ToastAndroid.show('Property removed from loved list', ToastAndroid.SHORT);
+          console.log("Loved Property Removed:", response);
+        })
+        .catch(error => console.log("Error Removing Loved Property:", error));
+    } else {
+      // Add property to loved list
+      addLovedProperty(id, userToken)
+        .then(response => {
+          setLovedProperties(prev => [...prev, { id, imageSource, title, cityName, country, price }]);
+          ToastAndroid.show('Property added to loved list', ToastAndroid.SHORT);
+          console.log("Loved Property Added:", response);
+        })
+        .catch(error => console.log("Error Adding Loved Property:", error));
+    }
+  };
+  const [isFavorite, setIsFavorite] = useState(false);
+  // const { lovedProperties, setLovedProperties } = useLoved();
   // const isLoved = lovedProperties.some((p) => p.id === id);
 
 
@@ -17,7 +47,7 @@ const SearchResultCard = ({ item, isLoved }) => {
     setIsFavorite(!isFavorite);
   };
 
-  const imageSource = item?.image && item.image !== '' ? { uri: item.image } : img1;
+  // const imageSource = item?.image && item.image !== '' ? { uri: item.image } : img1;
 
   return (
     <TouchableOpacity style={styles.cardContainer}>
@@ -27,7 +57,8 @@ const SearchResultCard = ({ item, isLoved }) => {
         
         <TouchableOpacity
           style={[styles.heartIcon, { backgroundColor: isLoved ? colors.buttons : 'transparent' }]}
-          // onPress={handleToggleLoved}
+          onPress={handleToggleLoved}
+          
         >
           <MaterialCommunityIcons
             name={isLoved ? 'cards-heart-outline' : 'cards-heart'}
@@ -37,16 +68,16 @@ const SearchResultCard = ({ item, isLoved }) => {
         </TouchableOpacity>
         
         
-        <Text style={styles.priceText}>${item?.sellingPrice || 'N/A'}</Text>
+        <Text style={styles.priceText}>${price || 'N/A'}</Text>
       </View>
 
       <View style={styles.textContainer}>
-        <Text style={styles.titleText}>{item?.title || 'No Title'}</Text>
+        <Text style={styles.titleText}>{title || 'No Title'}</Text>
       </View>
       
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <MaterialCommunityIcons name="map-marker" size={12} color={colors.boldtextcolor} />
-        <Text style={styles.locationText}>{item?.location || 'Unknown Location'}</Text>
+        <Text style={styles.locationText}>{location || 'Unknown Location'}</Text>
       </View>
     </TouchableOpacity>
   );

@@ -12,6 +12,7 @@ import Homecards from '../../components/Homecards';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { getProperties } from '../../utils/apiUtils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../../contexts/AuthContext';
 
 
 
@@ -29,39 +30,62 @@ const UserHomeScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [properties, setProperties] = useState([]);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [loading, setLoading] = useState(true);  // To manage loading state
 
   const navigation = useNavigation();
+  const token = useAuth();
+  const {userData} = useAuth();
+  console.log(userData)
+  const subscribed = userData?.is_subscribed;
+  // console.log(subscribed)
 
   useEffect(() => {
-    const fetchProperties = async () => {
+    const fetchPropertiesAndSubscriptionStatus = async () => {
       try {
-        const token = await AsyncStorage.getItem('token'); // Await for the token
-        console.log("Retrieved token:", token); // Debugging line to log the token
+        setLoading(true);
+        const token = await AsyncStorage.getItem('token'); // Retrieve token
+        const subscriptionStatus = await AsyncStorage.getItem('is_subscribed'); // Retrieve subscription status
 
-        if (token) {
-          const res = await getProperties(token); // Call the API with the token
-          console.log("[RES - GET ALL PROPERTIES] ==> ", res);
-          setProperties(res?.data || []); // Assuming `res.data` contains the property list
+        
+        // console.log("Retrieved subscription status:", subscriptionStatus);
+        // console.log("token", token)
+        // console.log("sub", userData?.is_subscribed)
+
+        if (subscriptionStatus === 'true') { // Check if subscribed
+          setIsSubscribed(true);
+          if (token) {
+            const res = await getProperties(token); // Fetch properties
+            setProperties(res?.data || []); // Set properties
+          }
         } else {
-          console.log("Token not found"); // If no token is found in AsyncStorage
+          setIsSubscribed(false); // Not subscribed
         }
       } catch (err) {
-        console.log("[RES - GET ALL PROPERTIES] ==> ", err);
+        console.log("[ERROR] ==> ", err);
+      } finally {
+        setLoading(false);  // Hide loading indicator
       }
     };
-    
-    fetchProperties();
+
+    fetchPropertiesAndSubscriptionStatus();
   }, []);
 
   const filterResults = (category) => {
     setSelectedCategory(category);
   };
 
-  const handlePropertyClick = (property) => {  // **Changed parameter to 'property'**
-    // navigation.navigate('UserStack', { screen: 'UserSearch' });
-
-    navigation.navigate('UserStack', {screen: 'PropertyDetail' , params:{property}});  // **Changed to pass 'property' object**
+  const handlePropertyClick = (property) => {
+    navigation.navigate('UserStack', { screen: 'PropertyDetail', params: { property } });
   };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <LovedProvider>
@@ -77,8 +101,8 @@ const UserHomeScreen = () => {
           <Text style={styles.nametext}>Cynthia!</Text>
         </View>
         <Text style={styles.text1}>Let's start exploring</Text>
-        <SearchBar 
-          placeholder="Search for properties" 
+        <SearchBar
+          placeholder="Search for properties"
           value={searchQuery}
           onChangeText={(text) => setSearchQuery(text)}
         />
@@ -111,29 +135,38 @@ const UserHomeScreen = () => {
               contentContainerStyle={styles.listContainer}
             />
           </View>
-          <View style={styles.featuredcard}>
-            <Text style={styles.featuredtext}>Featured Estates</Text>
-            <Text style={styles.featuredtext}>View all</Text>
-          </View>
-          <FlatList
-            data={properties} // Use fetched properties
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => item.id.toString()} // Ensure unique keys
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => handlePropertyClick(item)}>
-                <PropertyCard
-                  id={item.id}
-                  imageSource={item.image ? { uri: item.image } : require('../../../assets/images/role1.png')} // Ensure the image source is handled correctly
-                  title={item.title}
-                  // cityName={item.city_name}
-                  country={item.location}
-                  price={item.sellingPrice}
-                />
-              </TouchableOpacity>
-            )}
-            contentContainerStyle={styles.listContainer}
-          />
+
+          {/* Display featured properties only if user is subscribed */}
+          {isSubscribed ? (
+            <>
+              <View style={styles.featuredcard}>
+                <Text style={styles.featuredtext}>Featured Estates</Text>
+                <Text style={styles.featuredtext}>View all</Text>
+              </View>
+              <FlatList
+                data={properties}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => handlePropertyClick(item)}>
+                    <PropertyCard
+                      id={item.id}
+                      imageSource={item.image ? { uri: item.image } : require('../../../assets/images/role1.png')}
+                      title={item.title}
+                      country={item.location}
+                      price={item.sellingPrice}
+                    />
+                  </TouchableOpacity>
+                )}
+                contentContainerStyle={styles.listContainer}
+              />
+            </>
+          ) : (
+            <View style={styles.warningContainer}>
+              <Text style={styles.warningText}>You need to subscribe to view properties!</Text>
+            </View>
+          )}
         </ScrollView>
       </View>
     </LovedProvider>
@@ -197,6 +230,25 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     paddingVertical: 10,
+  },
+  warningContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 20,
+  },
+  warningText: {
+    color: colors.error,
+    fontSize: 18,
+    fontFamily: 'Lato-Bold',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 18,
+    color: colors.primary,
   },
 });
 

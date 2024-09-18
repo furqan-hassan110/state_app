@@ -5,7 +5,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { useAuth } from '../../contexts/AuthContext';
 import { getLovedProperties } from '../../utils/apiUtils';
 import colors from '../../styles/colors';
-import SearchResultCard from '../../components/SearchCards';
+import SearchCards from '../../components/SearchCards';
 
 const { width, height } = Dimensions.get('window');
 
@@ -47,14 +47,24 @@ const UserLovedScreen = () => {
        
       </View>
         {lovedProperties.length > 0 ? (
-            <FlatList
-            data={lovedProperties}
-            keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
-            numColumns={2}
-            renderItem={({ item }) => (
-                <SearchResultCard item={item} isLoved={true} />
-            )}
-        />
+              <FlatList
+              data={lovedProperties}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => handlePropertyClick(item)}>
+                  <SearchCards
+                    id={item.id}
+                    imageSource={item.image ? { uri: item.image } : require('../../../assets/images/role1.png')}
+                    title={item.title}
+                    country={item.location}
+                    price={item.sellingPrice}
+                  />
+                </TouchableOpacity>
+              )}
+              contentContainerStyle={styles.listContainer}
+            />
         
         ) : (
             <Text style={styles.noResultsText}>No loved properties found</Text>
