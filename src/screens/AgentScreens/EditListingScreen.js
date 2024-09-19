@@ -29,7 +29,7 @@ const EditListingScreen = () => {
   const [sellPrice, setSellPrice] = useState('');
   const [rentPrice, setRentPrice] = useState('');
   const [rentType, setRentType] = useState('');
-  const [bedrooms, setBedrooms] = useState(0);
+  const [bedrooms, setBedrooms] = useState('');
   const [bathrooms, setBathrooms] = useState('');
   const [carSpace, setCarSpace] = useState('');
   const [totalRooms, setTotalRooms] = useState('');
@@ -47,7 +47,7 @@ const EditListingScreen = () => {
       selling_amount: '',
       rent_amount: '',
       rent_payable: '',
-      bedroomCount: 0,
+      // bedroomCount: 0,
       bathroom_count: '',
       car_space_count: '',
       total_room_count: '',
@@ -216,10 +216,10 @@ const EditListingScreen = () => {
           {['rent', 'sell'].map(type => (
             <TouchableOpacity
               key={type}
-              style={[styles.optionButton, listingType === type && styles.selectedOption]}
+              style={[styles.optionButton, propertyData.listing_type === type && styles.selectedOption]}
               onPress={() => setListingType(type)}
             >
-              <Text style={[styles.optionText, listingType === type && styles.selectedOptionText]}>{type}</Text>
+              <Text style={[styles.optionText, propertyData.listing_type === type && styles.selectedOptionText]}>{type}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -231,10 +231,10 @@ const EditListingScreen = () => {
           {['house', 'apartment'].map(category => (
             <TouchableOpacity
               key={category}
-              style={[styles.optionButton, propertyCategory === category && styles.selectedOption]}
+              style={[styles.optionButton, propertyData.property_category === category && styles.selectedOption]}
               onPress={() => setPropertyCategory(category)}
             >
-              <Text style={[styles.optionText, propertyCategory === category && styles.selectedOptionText]}>{category}</Text>
+              <Text style={[styles.optionText, propertyData.property_category === category && styles.selectedOptionText]}>{category}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -246,10 +246,10 @@ const EditListingScreen = () => {
           {['commercial', 'industrial', 'land'].map(type => (
             <TouchableOpacity
               key={type}
-              style={[styles.optionButton, propertyType === type && styles.selectedOption]}
+              style={[styles.optionButton, propertyData.property_type === type && styles.selectedOption]}
               onPress={() => setPropertyType(type)}
             >
-              <Text style={[styles.optionText, propertyType === type && styles.selectedOptionText]}>{type}</Text>
+              <Text style={[styles.optionText, propertyData.property_type === type && styles.selectedOptionText]}>{type}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -278,71 +278,70 @@ const EditListingScreen = () => {
         {['monthly', 'yearly'].map(type => (
           <TouchableOpacity
             key={type}
-            style={[styles.optionButton, rentType === type && styles.selectedOption]}
+            style={[styles.optionButton, propertyData.rent_payable === type && styles.selectedOption]}
             onPress={() => setRentType(type)}
           >
-            <Text style={[styles.optionText,rentType === type && styles.selectedOptionText]}>{type}</Text>
+            <Text style={[styles.optionText,propertyData.rent_payable === type && styles.selectedOptionText]}>{type}</Text>
           </TouchableOpacity>
         ))}
       </View>
 
       <Text style={styles.label}>Property Features</Text>
-      <View style={styles.featureContainer}>
+<View style={styles.featureContainer}>
   <Text style={styles.featureLabel}>Bedroom</Text>
   <View style={styles.counterContainer}>
   <TouchableOpacity
     style={styles.counterButton}
-    onPress={() => setBedrooms(prev => Math.max((prev ?? propertyData?.bedroomCount ?? 0) - 1, 0))}
+    onPress={() => setBedrooms(prev => Math.max((Number(prev) ?? propertyData?.bedroomCount ?? 0) - 1, 0))}
   >
     <Text style={styles.counterText}>-</Text>
   </TouchableOpacity>
-  <Text style={styles.counterValue}>{bedrooms ?? propertyData?.bedroomCount ?? 0}</Text>
+  <Text style={styles.counterValue}>{bedrooms ?? propertyData?.bedroomCount }</Text>
   <TouchableOpacity
     style={styles.counterButton}
-    onPress={() => setBedrooms(prev => (prev ?? propertyData?.bedroomCount ?? 0) + 1)}
+    onPress={() => setBedrooms(prev => (Number(prev) ?? propertyData?.bedroomCount ?? 0) + 1)}
   >
     <Text style={styles.counterText}>+</Text>
   </TouchableOpacity>
 </View>
-
 </View>
 
       <View style={styles.featureContainer}>
         <Text style={styles.featureLabel}>Bathroom</Text>
         <View style={styles.counterContainer}>
-          <TouchableOpacity
-            style={styles.counterButton}
-            onPress={() => setBathrooms(prev => Math.max(prev - 1, 0))}
-          >
-            <Text style={styles.counterText}>-</Text>
-          </TouchableOpacity>
-          <Text style={styles.counterValue}>{bathrooms||propertyData?.bathroom_count}</Text>
-          <TouchableOpacity
-            style={styles.counterButton}
-            onPress={() => setBathrooms(prev => prev + 1)}
-          >
-            <Text style={styles.counterText}>+</Text>
-          </TouchableOpacity>
-        </View>
+  <TouchableOpacity
+    style={styles.counterButton}
+    onPress={() => setBathrooms(prev => Math.max((Number(prev) ?? propertyData?.bathroom_count ?? 0) - 1, 0))}
+  >
+    <Text style={styles.counterText}>-</Text>
+  </TouchableOpacity>
+  <Text style={styles.counterValue}>{bathrooms ?? propertyData?.bathroom_count }</Text>
+  <TouchableOpacity
+    style={styles.counterButton}
+    onPress={() => setBathrooms(prev => (Number(prev) ?? propertyData?.bathroom_count ?? 0) + 1)}
+  >
+    <Text style={styles.counterText}>+</Text>
+  </TouchableOpacity>
+</View>
       </View>
 
       <View style={styles.featureContainer}>
         <Text style={styles.featureLabel}>Car Space</Text>
         <View style={styles.counterContainer}>
-          <TouchableOpacity
-            style={styles.counterButton}
-            onPress={() => setCarSpace(prev => Math.max(prev - 1, 0))}
-          >
-            <Text style={styles.counterText}>-</Text>
-          </TouchableOpacity>
-          <Text style={styles.counterValue}>{carSpace}</Text>
-          <TouchableOpacity
-            style={styles.counterButton}
-            onPress={() => setCarSpace(prev => prev + 1)}
-          >
-            <Text style={styles.counterText}>+</Text>
-          </TouchableOpacity>
-        </View>
+  <TouchableOpacity
+    style={styles.counterButton}
+    onPress={() => setCarSpace(prev => Math.max((Number(prev) ?? propertyData?.car_space_count ?? 0) - 1, 0))}
+  >
+    <Text style={styles.counterText}>-</Text>
+  </TouchableOpacity>
+  <Text style={styles.counterValue}>{carSpace ?? propertyData?.car_space_count }</Text>
+  <TouchableOpacity
+    style={styles.counterButton}
+    onPress={() => setCarSpace(prev => (Number(prev) ?? propertyData?.car_space_count ?? 0) + 1)}
+  >
+    <Text style={styles.counterText}>+</Text>
+  </TouchableOpacity>
+</View>
       </View>
 
       <Text style={styles.label}>Total Rooms</Text>
@@ -350,10 +349,10 @@ const EditListingScreen = () => {
         {['<4', '4', '6', '>6'].map(option => (
           <TouchableOpacity
             key={option}
-            style={[styles.roomOption, totalRooms === option && styles.selectedRoomOption]}
+            style={[styles.roomOption, propertyData.total_room_count === option && styles.selectedRoomOption]}
             onPress={() => setTotalRooms(option)}
           >
-            <Text style={[styles.roomOptionText, totalRooms === option && styles.selectedoption]}>{option}</Text>
+            <Text style={[styles.roomOptionText, propertyData.total_room_count === option && styles.selectedoption]}>{option}</Text>
           </TouchableOpacity>
         ))}
       </View>

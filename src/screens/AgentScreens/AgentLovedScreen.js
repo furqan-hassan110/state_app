@@ -14,9 +14,12 @@ const AgentLovedScreen = ({ navigation }) => {
     const { userData } = useAuth();
     const userToken = userData?.token;
 
+    const [allUsers, setAllUsers] = useState([]); // Store all users
+    const [filter, setFilter] = useState('all'); // Add state to track filter
+
     useEffect(() => {
         fetchUser();
-    }, [userToken]); // Added userToken as a dependency
+    }, [userToken]);
 
     const fetchUser = () => {
         if (!userToken) {
@@ -27,7 +30,8 @@ const AgentLovedScreen = ({ navigation }) => {
         fetchAllUser(userToken)
             .then((response) => {
                 console.log('success fetched all users');
-                setSubscribedUsers(response.data);
+                setAllUsers(response.data); // Store fetched users
+                setSubscribedUsers(response.data.filter(user => user.isSubscribed)); // Filter for subscribers
             })
             .catch((err) => {
                 console.log(err);
@@ -43,6 +47,7 @@ const AgentLovedScreen = ({ navigation }) => {
         setApprovedUsers(prevApproved => prevApproved.filter(u => u !== user));
     };
 
+    // Updated renderUserItem to show only Cancel button in "Subscriber Request" filter
     const renderUserItem = ({ item }) => {
         const isApproved = approvedUsers.includes(item);
 
@@ -51,7 +56,15 @@ const AgentLovedScreen = ({ navigation }) => {
                 <Text style={styles.userName}>{item.name}</Text>
                 <Text style={styles.userDetails}>Phone: {item.phoneNo}</Text>
                 <Text style={styles.userDetails}>Email: {item.email}</Text>
-                {!isApproved ? (
+                {filter === 'subscribers' ? (
+                    // Only show the Cancel button for "Subscriber Request" filter
+                    <TouchableOpacity
+                        style={styles.cancelButton}
+                        onPress={() => handleCancel(item)}
+                    >
+                        <Text style={styles.cancelButtonText}>Cancel</Text>
+                    </TouchableOpacity>
+                ) : !isApproved ? (
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity
                             style={styles.approveButton}
@@ -73,6 +86,8 @@ const AgentLovedScreen = ({ navigation }) => {
         );
     };
 
+    const filteredUsers = filter === 'all' ? allUsers : subscribedUsers;
+
     return (
         <View style={styles.container}>
             <View style={{ width: '100%', flexDirection: 'row', justifyContent: "space-between" }}>
@@ -83,15 +98,32 @@ const AgentLovedScreen = ({ navigation }) => {
                     <Text style={styles.header}>Subscription List</Text>
                 </View>
             </View>
-            {subscribedUsers.length > 0 ? (
+
+            {/* Filter Buttons */}
+            <View style={styles.filterContainer}>
+                <TouchableOpacity
+                    style={[styles.filterButton, filter === 'all' && styles.activeFilter]}
+                    onPress={() => setFilter('all')}
+                >
+                    <Text style={[styles.filterText, filter === "all" && styles.activefiltertext]}>All users</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[styles.filterButton, filter === 'subscribers' && styles.activeFilter]}
+                    onPress={() => setFilter('subscribers')}
+                >
+                    <Text style={[styles.filterText, filter === "subscribers" && styles.activefiltertext]}>Subscriber Request</Text>
+                </TouchableOpacity>
+            </View>
+
+            {filteredUsers.length > 0 ? (
                 <FlatList
-                    data={subscribedUsers}
+                    data={filteredUsers}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={renderUserItem}
                     contentContainerStyle={styles.listContainer}
                 />
             ) : (
-                <Text style={styles.noSubscribers}>No subscribers yet.</Text>
+                <Text style={styles.noSubscribers}>No users found.</Text>
             )}
         </View>
     );
@@ -111,6 +143,27 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         paddingBottom: 20,
+    },
+    filterContainer: {
+        flexDirection: 'row',
+        marginVertical: 10,
+    },
+    filterButton: {
+        padding: 10,
+        marginHorizontal: 10,
+        borderRadius: 20,
+        backgroundColor: colors.textinputfill,
+    },
+    activeFilter: {
+        backgroundColor: colors.boldtextcolor,
+    },
+    filterText: {
+        color: colors.black,
+        fontFamily: 'Lato-Regular',
+    },
+    activefiltertext: {
+        color: colors.white,
+        fontFamily: 'Lato-Regular',
     },
     userCard: {
         backgroundColor: '#f9f9f9',

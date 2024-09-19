@@ -56,10 +56,16 @@ const AgentHomeScreen = () => {
     setSelectedCategory(category);
   };
 
-  const handlePropertyClick = (item) => {
+  const handlePropertyClick = (property) => {
     
+      navigation.navigate('AgentStack', { screen: 'PropertyDetail', params: { property } });
+  
     // navigation.navigate('PropertyDetail', { property: item });
     // console.log("go")
+  };
+  const handleCategoryClick = (category) => {
+    console.log("clicked")
+    navigation.navigate('AgentStack', {screen:'AgentSearchScreen', params:{propertyCategory: category} });
   };
 
   return (
@@ -67,9 +73,9 @@ const AgentHomeScreen = () => {
       <View style={styles.container}>
         <View style={styles.logoprofilecontainer}>
           <Image source={logo} style={styles.logo} />
-          <View style={styles.profilecontainer}>
+          <TouchableOpacity style={styles.profilecontainer} onPress={()=>navigation.navigate('AgentProfileScreen')}>
             <Image source={profile} style={styles.profile} />
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.namecontainer}>
           <Text style={styles.text}>Hey</Text>
@@ -107,14 +113,16 @@ const AgentHomeScreen = () => {
               style={styles.categoriesList}
             />
           </View>
-          <View style={{}}>
+          <View style={{}} >
             <FlatList
               data={propertyDetail}
               horizontal
               showsHorizontalScrollIndicator={false}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => handleCategoryClick(item.category)}>
                 <Homecards imageSource={item.imageSource} label={item.category} />
+                </TouchableOpacity>
               )}
               contentContainerStyle={styles.listContainer}
             />

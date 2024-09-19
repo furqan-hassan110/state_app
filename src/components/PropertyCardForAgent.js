@@ -16,7 +16,7 @@ const PropertyCardForAgent = ({
   propertyCategory, 
   propertyType, 
   listingType, 
-  sellPrice, 
+  sellingPrice, 
   rentPrice, 
   rentType, 
   bedrooms, 
@@ -54,24 +54,26 @@ navigation.navigate('EditListingScreen',{id:id})
   return (
     <View style={styles.cardContainer}>
       <View style={styles.imageContainer}>
-      
         <Image source={images ? {uri:images}:require('../../assets/images/role1.png')} style={styles.image} />
+        <View style={styles.propertyinfocontainer}>
+        <Text style={styles.propertyinfo}>{propertyCategory}</Text>
+        <Text style={styles.propertyinfo}>{propertyType}</Text>
+        <Text style={styles.propertyinfo}>{listingType}</Text>
+        </View>
       </View>
      
       <View style={styles.detailsContainer}>
         <Text style={styles.propertyCategory}>{title}</Text>
-        <Text style={styles.propertyCategory}>{propertyCategory}</Text>
-        <Text style={styles.propertyType}>{propertyType}</Text>
-        <Text style={styles.listingType}>{listingType}</Text>
+        
         <View style={styles.priceContainer}>
-          <Text style={styles.price}>Sell: ${sellPrice}</Text>
-          {rentPrice && <Text style={styles.price}>Rent: ${rentPrice} {rentType}</Text>}
+        <Text style={styles.price}>Sell:$ {sellingPrice}</Text>
+          {rentPrice && <Text style={styles.price}>Rent: ${rentPrice} / {rentType}</Text>}
         </View>
         <View style={styles.featuresContainer}>
-          <Text style={styles.feature}>Bedrooms: {bedrooms}</Text>
+          {/* <Text style={styles.feature}>Bedrooms: {bedrooms}</Text>
           <Text style={styles.feature}>Bathrooms: {bathrooms}</Text>
           <Text style={styles.feature}>Car Space: {carSpace}</Text>
-          <Text style={styles.feature}>Total Rooms: {totalRooms}</Text>
+          <Text style={styles.feature}>Total Rooms: {totalRooms}</Text> */}
         </View>
       </View>
       {/* <TouchableOpacity style={{marginTop:10}}>
@@ -106,21 +108,47 @@ const styles = StyleSheet.create({
   cardContainer: {
     flexDirection: 'row',
     width: width * 0.9,
-    height: height * 0.28,
+    height: height * 0.19,
     marginRight: 10,
     borderRadius: 10,
     overflow: 'hidden',
     backgroundColor: '#f0f0f0',
     marginTop: 10,
+    padding:10
   },
   imageContainer: {
     flex: 1,
     position: 'relative',
   },
   image: {
-    borderRadius: 10,
     width: '100%',
-    height: '100%',
+    height: 120,
+    borderRadius: 15,
+  },
+  propertyinfocontainer:{
+    top:65,
+    left: 70,
+    width:width*0.15,
+    height:height*0.06,
+    backgroundColor:colors.boldtextcolor,
+    flexDirection:'column',
+    position: 'absolute',
+    justifyContent:'center',
+    alignItems:'center',
+    borderRadius: 8,
+    
+  },
+  propertyinfo:{
+    // position: 'absolute',
+    // bottom: 100,
+    // right: 5,
+    fontSize: 10,
+    fontFamily:'Lato-Regular',
+    // fontWeight: 'bold',
+    color: colors.white,
+    // backgroundColor: colors.text,
+    // padding: 5,
+    // borderRadius: 8,
   },
   detailsContainer: {
     width:width*1,

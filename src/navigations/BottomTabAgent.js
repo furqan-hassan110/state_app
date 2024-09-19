@@ -22,7 +22,7 @@ const AgentBottomTabs = () => {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'Search') {
             iconName = focused ? 'search' : 'search-outline';
-          } else if (route.name === 'Loved') {
+          } else if (route.name === 'Subscribers') {
             iconName = focused ? 'add-circle' : 'add-circle-outline';
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
@@ -46,7 +46,7 @@ const AgentBottomTabs = () => {
         options={{headerShown: false}}
       />
       <Tab.Screen
-        name="Loved"
+        name="Subscribers"
         component={LovedScreen}
         options={{headerShown: false}}
       />

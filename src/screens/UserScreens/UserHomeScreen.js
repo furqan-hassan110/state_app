@@ -92,9 +92,9 @@ const UserHomeScreen = () => {
       <View style={styles.container}>
         <View style={styles.logoprofilecontainer}>
           <Image source={logo} style={styles.logo} />
-          <View style={styles.profilecontainer}>
+          <TouchableOpacity style={styles.profilecontainer} onPress={()=>navigation.navigate('UserProfileScreen')}>
             <Image source={profile} style={styles.profile} />
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.namecontainer}>
           <Text style={styles.text}>Hey</Text>

@@ -13,64 +13,44 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const { width, height } = Dimensions.get('window');
 
 const AgentSearchScreen = () => {
-  // const token = useAuth();
   const navigation = useNavigation();
   const route = useRoute();
-  
-  const token = AsyncStorage.getItem('token');
   const [propertyList, setPropertyList] = useState([]);
+  const [filteredProperties, setFilteredProperties] = useState([]);
+
+  // Extract the propertyCategory passed from AgentHomeScreen
+  const { propertyCategory } = route.params || {};
 
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        const token = await AsyncStorage.getItem('token'); // Await for the token
-        console.log("Retrieved token:", token); // Debugging line to log the token
-
+        const token = await AsyncStorage.getItem('token'); 
         if (token) {
-          const res = await getProperties(token); // Call the API with the token
-          console.log("[RES - GET ALL PROPERTIES] ==> ", res);
-          setPropertyList(res?.data || []); // Assuming `res.data` contains the property list
-        } else {
-          console.log("Token not found"); // If no token is found in AsyncStorage
+          const res = await getProperties(token); 
+          setPropertyList(res?.data || []); 
         }
       } catch (err) {
-        console.log("[RES - GET ALL PROPERTIES] ==> ", err);
+        console.log("[Error - Fetching Properties]", err);
       }
     };
-
     fetchProperties();
   }, []);
 
-
+  // Filter properties based on the selected category
   useEffect(() => {
-    if (route.params?.finalDetails) {
-      setPropertyList(prevList => {
-        const existingIndex = prevList.findIndex(
-          property => property.id === route.params.finalDetails.id
-        );
-
-        if (existingIndex !== -1) {
-          // Update existing property
-          const updatedList = [...prevList];
-          updatedList[existingIndex] = route.params.finalDetails;
-          return updatedList;
-        } else {
-          // Add new property
-          return [...prevList, route.params.finalDetails];
-        }
-      });
+    if (propertyCategory) {
+      const filtered = propertyList.filter(
+        (property) => property.propertyCategory?.toLowerCase() === propertyCategory.toLowerCase()
+      );
+      setFilteredProperties(filtered);
+    } else {
+      setFilteredProperties(propertyList); // Show all properties if no category is selected
     }
-  }, [route.params?.finalDetails]);
+  }, [propertyList, propertyCategory]);
 
-  const handleAddListing = () => {
-    navigation.navigate('AddListingScreen'); 
+  const handlePropertyClick = (property) => {
+    navigation.navigate('AgentStack', { screen: 'PropertyDetail', params: { property } });
   };
-
-  const renderEmptyList = () => (
-    <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>No listings yet!</Text>
-    </View>
-  );
 
   return (
     <View style={styles.container}>
@@ -80,37 +60,41 @@ const AgentSearchScreen = () => {
         </TouchableOpacity>
         <Text style={styles.headerText}>Your Listing</Text>
       </View>
+
       <FlatList
-  data={propertyList}
-  showsHorizontalScrollIndicator={false}
-  keyExtractor={(item, index) => index.toString()}
-  renderItem={({ item }) => (
-    <TouchableOpacity>
-      <PropertyCardForAgent
-      id={item.id}
-      title={item.title}
-        bathrooms={item.bathroomCount} 
-        bedrooms={item.bedroomCount}   
-        carSpace={item.carSpaceCount}   
-        totalRooms={item.totalRoomCount} 
-        listingType={item.listingType}
-        propertyCategory={item.propertyCategory}
-        propertyType={item.propertyType}
-        rentPrice={item.rentPrice}
-        rentType={item.rentPayable}
-        sellPrice={item.sellPrice}
-        images={item.images}
-  //       token={userToken}   // Ensure token is passed
-  // onRefresh={refreshPropertiesList}
+        data={filteredProperties} // Use filtered properties
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => handlePropertyClick(item)}>
+            <PropertyCardForAgent
+              id={item.id}
+              title={item.title}
+              bathrooms={item.bathroomCount}
+              bedrooms={item.bedroomCount}
+              carSpace={item.carSpaceCount}
+              totalRooms={item.totalRoomCount}
+              listingType={item.listingType}
+              propertyCategory={item.propertyCategory}
+              propertyType={item.propertyType}
+              rentPrice={item.rentPrice}
+              rentType={item.rentPayable}
+              sellingPrice={item.sellingPrice}
+              images={item.images}
+            />
+          </TouchableOpacity>
+        )}
+        ListEmptyComponent={() => (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>No listings found for "{propertyCategory}"!</Text>
+          </View>
+        )}
+        contentContainerStyle={styles.listContainer}
       />
-    </TouchableOpacity>
-  )}
-  ListEmptyComponent={renderEmptyList}
-  contentContainerStyle={styles.listContainer}
-/>
+
       <FloatingAction
         color={colors.buttons}
-        onPressMain={handleAddListing}
+        onPressMain={() => navigation.navigate('AddListingScreen')}
         floatingIcon={<Ionicons name="add" size={24} color="white" />}
       />
     </View>
