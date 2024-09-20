@@ -18,25 +18,27 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import profile from '../../../assets/images/profile.png';
 import Feather from 'react-native-vector-icons/Feather';
 import { useAuth } from '../../contexts/AuthContext';
-import { logout, subscribeUser } from '../../utils/apiUtils';
+import { logout, subscribeUser, updateProfile } from '../../utils/apiUtils'; // Import the updateProfile function
 
 const { width, height } = Dimensions.get('window');
 
 const UserProfileScreen = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [userData, setUserData] = useState(null); // Initialize local userData
   const navigation = useNavigation();
-  const { userData, handleSubscribe, contextLogout } = useAuth();
+  const { userData: contextUserData, handleSubscribe, contextLogout } = useAuth();
 
-  const userToken = userData?.token;
-  const userId = userData?.id;
+  const userToken = contextUserData?.token;
+  const userId = contextUserData?.id;
 
-  // Set subscription status based on userData
+  // Set subscription status and user data based on context
   useEffect(() => {
-    if (userData?.is_subscribed) {
-      setIsSubscribed(userData.is_subscribed === 1);
+    if (contextUserData) {
+      setIsSubscribed(contextUserData.is_subscribed === 1);
+      setUserData(contextUserData); // Set local userData
     }
-  }, [userData]);
+  }, [contextUserData]);
 
   const handleLogout = () => {
     if (userToken) {
@@ -56,12 +58,9 @@ const UserProfileScreen = () => {
     if (userToken) {
       subscribeUser(userId, userToken)
         .then(async () => {
-          await handleSubscribe(); // Call handleSubscribe from AuthContext
+          await handleSubscribe();
           setIsSubscribed(true);
-          Alert.alert(
-            'Success',
-            'Your application has been submitted. Please wait for your approval.',
-          );
+          Alert.alert('Success', 'Your application has been submitted. Please wait for your approval.');
         })
         .catch(error => {
           console.error('Subscription failed:', error);
@@ -73,8 +72,28 @@ const UserProfileScreen = () => {
   };
 
   const handleEditProfile = () => {
+    if (isEditing) {
+      if (userData) {
+        const { name, email, phone_no } = userData;
+  
+        console.log('Updating Profile with:', { name, email, phone_no });
+  
+        // Pass the token and user data to the updateProfile function
+        updateProfile(userToken, { name, email, phone_no })
+          .then(() => {
+            Alert.alert('Success', 'Profile updated successfully.');
+          })
+          .catch(error => {
+            console.error('Profile update failed:', error);
+            Alert.alert('Error', 'Failed to update profile. Please try again later.');
+          });
+      } else {
+        Alert.alert('Error', 'No user data found.');
+      }
+    }
     setIsEditing(!isEditing);
   };
+  
 
   const handleTextChange = (field, value) => {
     setUserData(prevData => ({
@@ -122,7 +141,7 @@ const UserProfileScreen = () => {
                 style={styles.infoText}
                 value={userData.phone_no}
                 editable={isEditing}
-                onChangeText={value => handleTextChange('phoneNo', value)}
+                onChangeText={value => handleTextChange('phone_no', value)} // Ensure correct field name
               />
             </View>
           </View>
@@ -149,7 +168,7 @@ const UserProfileScreen = () => {
           <View style={styles.buttonGroup}>
             <Button
               onPress={handleEditProfile}
-              title="Edit Profile"
+              title={isEditing ? "Save Changes" : "Edit Profile"}
               style={styles.editProfileButton}
             />
             <Button

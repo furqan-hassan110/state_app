@@ -211,4 +211,8 @@ export const fetchAllUser = token => {
 
   return getRequest({url, token});
 };
-
+export const updateProfile = ( token, { name, email, phone_no }) => {
+  const data = {name, email, phone_no}
+  const url = `${BASE_URL}/update-profile`;
+  return postRequest({url, token, data});
+};
