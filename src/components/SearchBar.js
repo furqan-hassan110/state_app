@@ -39,7 +39,7 @@ const SearchBar = ({
           size={24} 
           color="gray" 
           style={styles.searchIcon} 
-          // onPress={handleSearch} 
+         
         />
         <TextInput
           style={styles.input}

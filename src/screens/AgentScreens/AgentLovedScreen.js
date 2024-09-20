@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Dimensions, Alert, ActivityIndicator } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useLoved } from '../../contexts/LovedContext';
 import colors from '../../styles/colors';
-import { fetchAllUser } from '../../utils/apiUtils'; // Import fetchAllUser function
+import { fetchAllUser } from '../../utils/apiUtils';
 import { useAuth } from '../../contexts/AuthContext';
 
 const { width, height } = Dimensions.get('window');
 
 const AgentLovedScreen = ({ navigation }) => {
-    const { subscribedUsers, setSubscribedUsers } = useLoved();
+    const { setSubscribedUsers } = useLoved();
     const [approvedUsers, setApprovedUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
     const { userData } = useAuth();
     const userToken = userData?.token;
 
-    const [allUsers, setAllUsers] = useState([]); // Store all users
-    const [filter, setFilter] = useState('all'); // Add state to track filter
+    const [allUsers, setAllUsers] = useState([]);
+    const [filter, setFilter] = useState('requested');
+    const [refreshing, setRefreshing] = useState(false); // State for pull-to-refresh
 
     useEffect(() => {
         fetchUser();
@@ -24,47 +26,56 @@ const AgentLovedScreen = ({ navigation }) => {
     const fetchUser = () => {
         if (!userToken) {
             console.error('User token is missing');
+            setLoading(false);
             return;
         }
 
         fetchAllUser(userToken)
             .then((response) => {
-                console.log('success fetched all users');
-                setAllUsers(response.data); // Store fetched users
-                setSubscribedUsers(response.data.filter(user => user.isSubscribed)); // Filter for subscribers
+                console.log('Success fetched all users', response.data);
+                setAllUsers(response.data);
+                setLoading(false);
             })
             .catch((err) => {
                 console.log(err);
                 Alert.alert("Error", "Failed to fetch users. Please try again later.");
+                setLoading(false);
             });
     };
 
+    // Function to refresh the list
+    const onRefresh = () => {
+        setRefreshing(true);
+        fetchUser(); // Fetch the users again
+        setRefreshing(false); // Reset refreshing state after fetch
+    };
+
+    if (loading) {
+        return <ActivityIndicator size="large" color="#0000ff" />;
+    }
+
     const handleApprove = (user) => {
-        setApprovedUsers(prevApproved => [...prevApproved, user]);
+        const updatedUsers = allUsers.map(u =>
+            u.id === user.id ? { ...u, subscriptionStauts: 'approved' } : u
+        );
+        setAllUsers(updatedUsers);
     };
 
     const handleCancel = (user) => {
-        setApprovedUsers(prevApproved => prevApproved.filter(u => u !== user));
+        const updatedUsers = allUsers.map(u =>
+            u.id === user.id ? { ...u, subscriptionStauts: 'rejected' } : u
+        );
+        setAllUsers(updatedUsers);
     };
 
-    // Updated renderUserItem to show only Cancel button in "Subscriber Request" filter
     const renderUserItem = ({ item }) => {
-        const isApproved = approvedUsers.includes(item);
-
         return (
             <View style={styles.userCard}>
                 <Text style={styles.userName}>{item.name}</Text>
                 <Text style={styles.userDetails}>Phone: {item.phoneNo}</Text>
                 <Text style={styles.userDetails}>Email: {item.email}</Text>
-                {filter === 'subscribers' ? (
-                    // Only show the Cancel button for "Subscriber Request" filter
-                    <TouchableOpacity
-                        style={styles.cancelButton}
-                        onPress={() => handleCancel(item)}
-                    >
-                        <Text style={styles.cancelButtonText}>Cancel</Text>
-                    </TouchableOpacity>
-                ) : !isApproved ? (
+
+                {item.subscriptionStauts === 'requested' ? (
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity
                             style={styles.approveButton}
@@ -76,17 +87,33 @@ const AgentLovedScreen = ({ navigation }) => {
                             style={styles.cancelButton}
                             onPress={() => handleCancel(item)}
                         >
-                            <Text style={styles.cancelButtonText}>Cancel</Text>
+                            <Text style={styles.cancelButtonText}>Reject</Text>
+                        </TouchableOpacity>
+                    </View>
+                ) : item.subscriptionStauts === 'approved' ? (
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity
+                            style={styles.cancelButton}
+                            onPress={() => handleCancel(item)}
+                        >
+                            <Text style={styles.cancelButtonText}>Reject</Text>
                         </TouchableOpacity>
                     </View>
                 ) : (
-                    <Text style={styles.approvedText}>Approved</Text>
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity
+                            style={styles.approveButton}
+                            onPress={() => handleApprove(item)}
+                        >
+                            <Text style={styles.approveButtonText}>Approve</Text>
+                        </TouchableOpacity>
+                    </View>
                 )}
             </View>
         );
     };
 
-    const filteredUsers = filter === 'all' ? allUsers : subscribedUsers;
+    const filteredUsers = allUsers.filter(user => user.subscriptionStauts === filter);
 
     return (
         <View style={styles.container}>
@@ -99,19 +126,24 @@ const AgentLovedScreen = ({ navigation }) => {
                 </View>
             </View>
 
-            {/* Filter Buttons */}
             <View style={styles.filterContainer}>
                 <TouchableOpacity
-                    style={[styles.filterButton, filter === 'all' && styles.activeFilter]}
-                    onPress={() => setFilter('all')}
+                    style={[styles.filterButton, filter === 'requested' && styles.activeFilter]}
+                    onPress={() => setFilter('requested')}
                 >
-                    <Text style={[styles.filterText, filter === "all" && styles.activefiltertext]}>All users</Text>
+                    <Text style={[styles.filterText, filter === "requested" && styles.activefiltertext]}>Requested</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[styles.filterButton, filter === 'subscribers' && styles.activeFilter]}
-                    onPress={() => setFilter('subscribers')}
+                    style={[styles.filterButton, filter === 'approved' && styles.activeFilter]}
+                    onPress={() => setFilter('approved')}
                 >
-                    <Text style={[styles.filterText, filter === "subscribers" && styles.activefiltertext]}>Subscriber Request</Text>
+                    <Text style={[styles.filterText, filter === "approved" && styles.activefiltertext]}>Approved</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[styles.filterButton, filter === 'rejected' && styles.activeFilter]}
+                    onPress={() => setFilter('rejected')}
+                >
+                    <Text style={[styles.filterText, filter === "rejected" && styles.activefiltertext]}>Canceled</Text>
                 </TouchableOpacity>
             </View>
 
@@ -121,6 +153,8 @@ const AgentLovedScreen = ({ navigation }) => {
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={renderUserItem}
                     contentContainerStyle={styles.listContainer}
+                    refreshing={refreshing} // Add refreshing state
+                    onRefresh={onRefresh} // Add onRefresh function
                 />
             ) : (
                 <Text style={styles.noSubscribers}>No users found.</Text>
@@ -150,9 +184,11 @@ const styles = StyleSheet.create({
     },
     filterButton: {
         padding: 10,
-        marginHorizontal: 10,
+        marginHorizontal: 5,
         borderRadius: 20,
         backgroundColor: colors.textinputfill,
+        flex: 1,
+        alignItems: 'center',
     },
     activeFilter: {
         backgroundColor: colors.boldtextcolor,
@@ -223,6 +259,12 @@ const styles = StyleSheet.create({
     approvedText: {
         marginTop: 10,
         color: colors.buttons,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    canceledText: {
+        marginTop: 10,
+        color: '#ff4d4d',
         fontWeight: 'bold',
         textAlign: 'center',
     },

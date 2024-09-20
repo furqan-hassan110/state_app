@@ -48,6 +48,10 @@ const AgentNavigator = () => {
       <Stack.Screen name="PropertyDetail" 
       component={PropertyDetail} 
       options={{ headerShown: false }} />
+
+      <Stack.Screen name="AgentSearchScreen" 
+      component={AgentSearchScreen} 
+      options={{ headerShown: false }} />
       {/* <Stack.Screen
         name="SelectRoleScreen"
         component={SelectRoleScreen}

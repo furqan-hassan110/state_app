@@ -4,54 +4,63 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import SearchCards from '../../components/SearchCards';
 import colors from '../../styles/colors';
-import SearchBar from '../../components/SearchBar';
-import { getProperties } from '../../utils/apiUtils'; // Import the API function
+import { getProperties } from '../../utils/apiUtils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../../contexts/AuthContext';
 
 const { width, height } = Dimensions.get('window');
 
 const UserSearchScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
+  const [refreshing, setRefreshing] = useState(false);
   const { query } = route.params || {};
   
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isSubscribed, setIsSubscribed] = useState(false); // Track subscription status
 
-  // Fetch properties when the component mounts
-  useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        const token = await AsyncStorage.getItem('token'); // Await for the token
-        console.log("Retrieved token:", token); // Debugging line to log the token
+  // Fetch properties and subscription status
+  const fetchProperties = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const userData = await AsyncStorage.getItem('userData'); // Assuming userData is stored in AsyncStorage
+      const subscriptionStatus = JSON.parse(userData)?.is_subscribed; // Adjust according to your user data structure
 
-        if (token) {
-          const res = await getProperties(token); // Call the API with the token
-          console.log("[RES - GET ALL PROPERTIES] ==> ", res);
-          setProperties(res?.data || []); // Assuming `res.data` contains the property list
-        } else {
-          console.log("Token not found"); // If no token is found in AsyncStorage
-        }
-      } catch (err) {
-        console.log("[RES - GET ALL PROPERTIES] ==> ", err);
-      } finally {
-        setLoading(false); // Set loading to false after the API call completes (success or error)
+      console.log("Retrieved token:", token);
+      console.log("User subscription status:", subscriptionStatus);
+
+      if (token && subscriptionStatus) {
+        setIsSubscribed(true); // User is subscribed
+        const res = await getProperties(token);
+        console.log("[RES - GET ALL PROPERTIES] ==> ", res);
+        setProperties(res?.data || []);
+      } else {
+        console.log("User is not subscribed or token not found");
+        setError('You must be subscribed to view properties.'); // Set error message
       }
-    };
+    } catch (err) {
+      console.log("[RES - GET ALL PROPERTIES] ==> ", err);
+      setError('Failed to fetch properties');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchProperties();
   }, []);
 
-  // Filter properties based on the search query
-  const filteredProperties = query
-    ? properties.filter(property =>
-        property.title.toLowerCase().includes(query.toLowerCase()) // Filter by title
-      )
-    : properties;
+  const handlePropertyClick = (property) => {
+    navigation.navigate('UserStack', { screen: 'PropertyDetail', params: { property } });
+  };
 
-  const renderSearchResult = ({ item }) => {
-    return <SearchCards item={item} />;
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchProperties().finally(() => setRefreshing(false));
   };
 
   if (loading) {
@@ -79,27 +88,27 @@ const UserSearchScreen = () => {
         <Text style={styles.headerText}>Search</Text>
       </View>
       
-      <SearchBar showFilterIcon={false} value={query} onChangeText={(text) => {}} />
-      
-      {filteredProperties.length > 0 ? (
-         <FlatList
-         data={properties}
-         horizontal
-         showsHorizontalScrollIndicator={false}
-         keyExtractor={(item) => item.id.toString()}
-         renderItem={({ item }) => (
-           <TouchableOpacity onPress={() => handlePropertyClick(item)}>
-             <SearchCards
-               id={item.id}
-               imageSource={item.image ? { uri: item.image } : require('../../../assets/images/role1.png')}
-               title={item.title}
-               country={item.location}
-               price={item.sellingPrice}
-             />
-           </TouchableOpacity>
-         )}
-         contentContainerStyle={styles.listContainer}
-       />
+      {properties.length > 0 ? (
+        <FlatList
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          data={properties}
+          numColumns={2}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => handlePropertyClick(item)}>
+              <SearchCards
+                id={item.id}
+                imageSource={item.image ? { uri: item.image } : require('../../../assets/images/role1.png')}
+                title={item.title}
+                location={item.location}
+                price={item.sellingPrice}
+              />
+            </TouchableOpacity>
+          )}
+          contentContainerStyle={styles.listContainer}
+        />
       ) : (
         <View style={styles.noResultsContainer}>
           <Text style={styles.noResultsText}>Search not found</Text>

@@ -1,36 +1,57 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Dimensions, ActivityIndicator, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useAuth } from '../../contexts/AuthContext';
-import { getLovedProperties } from '../../utils/apiUtils';
+import { getLovedProperties, removeLovedProperty } from '../../utils/apiUtils'; // Import remove function
 import colors from '../../styles/colors';
 import SearchCards from '../../components/SearchCards';
+import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
 const UserLovedScreen = () => {
     const [lovedProperties, setLovedProperties] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
+    const navigation = useNavigation();
+
+    const { userData } = useAuth();
+    const userToken = userData?.token;
 
     useEffect(() => {
         fetchLovedProperties();
     }, []);
 
-    const { userData } = useAuth();
-    const userToken = userData?.token;
-
     const fetchLovedProperties = () => {
+        setLoading(true);
         getLovedProperties(userToken)
             .then((response) => {
-                console.log('success loved properties get it ')
                 setLovedProperties(response.data);
                 setLoading(false);
+                setRefreshing(false);
             })
             .catch((err) => {
                 console.log(err);
                 setLoading(false);
+                setRefreshing(false);
             });
+    };
+
+    const onRefresh = () => {
+        setRefreshing(true);
+        fetchLovedProperties();
+    };
+
+    const handlePropertyClick = (property) => {
+        navigation.navigate('UserStack', { screen: 'PropertyDetail', params: { property } });
+    };
+
+    const handleRemoveLovedProperty = (propertyId) => {
+        removeLovedProperty(userToken, propertyId) // Add your API call to remove loved property
+            .then(() => {
+                setLovedProperties(prev => prev.filter(property => property.id !== propertyId));
+            })
+            .catch(err => console.log(err));
     };
 
     if (loading) {
@@ -39,37 +60,39 @@ const UserLovedScreen = () => {
 
     return (
         <View style={styles.container}>
-             <View style={styles.header}>
-        <TouchableOpacity style={styles.backbutton} onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={24} color={colors.primary} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Loved Properties</Text>
-       
-      </View>
-        {lovedProperties.length > 0 ? (
-              <FlatList
-              data={lovedProperties}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => handlePropertyClick(item)}>
-                  <SearchCards
-                    id={item.id}
-                    imageSource={item.image ? { uri: item.image } : require('../../../assets/images/role1.png')}
-                    title={item.title}
-                    country={item.location}
-                    price={item.sellingPrice}
-                  />
+            <View style={styles.header}>
+                <TouchableOpacity style={styles.backbutton} onPress={() => navigation.goBack()}>
+                    <Ionicons name="chevron-back" size={24} color={colors.primary} />
                 </TouchableOpacity>
-              )}
-              contentContainerStyle={styles.listContainer}
-            />
-        
-        ) : (
-            <Text style={styles.noResultsText}>No loved properties found</Text>
-        )}
-    </View>
+                <Text style={styles.headerTitle}>Loved Properties</Text>
+            </View>
+
+            {lovedProperties.length > 0 ? (
+                <FlatList
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    data={lovedProperties}
+                    numColumns={2}
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity onPress={() => handlePropertyClick(item)}>
+                            <SearchCards
+                                id={item.id}
+                                imageSource={item.image ? { uri: item.image } : require('../../../assets/images/role1.png')}
+                                title={item.title}
+                                location={item.location}
+                                price={item.sellingPrice}
+                                isLovedScreen={true}  // Indicate that this is the loved screen
+                            />
+                        </TouchableOpacity>
+                    )}
+                    contentContainerStyle={styles.listContainer}
+                />
+            ) : (
+                <Text style={styles.noResultsText}>No loved properties found</Text>
+            )}
+        </View>
     );
 };
 
@@ -82,7 +105,7 @@ const styles = StyleSheet.create({
     listContainer: {
         paddingVertical: 10,
     },
-    emptyText: {
+    noResultsText: {
         textAlign: 'center',
         color: colors.boldtextcolor,
         fontFamily: 'Lato-Bold',
@@ -96,18 +119,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingTop: 20,
         paddingBottom: 10,
-      },
-      headerTitle: {
+    },
+    headerTitle: {
         fontSize: 20,
         fontWeight: 'bold',
         color: colors.primary,
-        marginRight:60
-      },
-      filterIconContainer: {
-        backgroundColor: colors.buttons,
-        borderRadius: 10,
-        padding: 8,
-      },
+        marginRight: 60,
+    },
     backbutton: {
         backgroundColor: colors.textinputfill,
         width: width / 7,
@@ -116,7 +134,7 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         alignItems: 'center',
         justifyContent: 'center',
-      },
+    },
 });
 
 export default UserLovedScreen;

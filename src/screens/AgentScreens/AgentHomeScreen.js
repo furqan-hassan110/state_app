@@ -1,6 +1,6 @@
 // UserHomeScreen.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, FlatList, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, Dimensions, FlatList, ScrollView, TouchableOpacity,ActivityIndicator } from 'react-native';
 import { LovedProvider } from '../../contexts/LovedContext';
 import logo from '../../../assets/images/logo.png';
 import profile from '../../../assets/images/profile.png';
@@ -12,6 +12,7 @@ import Homecards from '../../components/Homecards';
 import { getProperties } from '../../utils/apiUtils';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useAuth} from '../../contexts/AuthContext';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const { width, height } = Dimensions.get('window');
@@ -29,6 +30,11 @@ const AgentHomeScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [properties, setProperties] = useState([]);
   const navigation = useNavigation();
+  const {userData} = useAuth();
+  const [loading, setLoading] = useState(true);
+
+  // const userToken = userData?.token;
+  const userName = userData?.name;
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -40,11 +46,14 @@ const AgentHomeScreen = () => {
           const res = await getProperties(token); 
           console.log("[RES - GET ALL PROPERTIES] ==> ", res);
           setProperties(res?.data || []); 
+          setLoading(false);
         } else {
           console.log("Token not found"); 
+          setLoading(false);
         }
       } catch (err) {
         console.log("[RES - GET ALL PROPERTIES] ==> ", err);
+        setLoading(false);
       }
     };
     fetchProperties();
@@ -63,10 +72,10 @@ const AgentHomeScreen = () => {
     // navigation.navigate('PropertyDetail', { property: item });
     // console.log("go")
   };
-  const handleCategoryClick = (category) => {
-    console.log("clicked")
-    navigation.navigate('AgentStack', {screen:'AgentSearchScreen', params:{propertyCategory: category} });
-  };
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+}
+
 
   return (
     <LovedProvider>
@@ -79,7 +88,7 @@ const AgentHomeScreen = () => {
         </View>
         <View style={styles.namecontainer}>
           <Text style={styles.text}>Hey</Text>
-          <Text style={styles.nametext}>Cynthia!</Text>
+          <Text style={styles.nametext}> {userName}</Text>
         </View>
         <Text style={styles.text1}>Let's start exploring</Text>
         <View style={{marginRight:80, flexDirection:'row', alignItems:'center'}}>

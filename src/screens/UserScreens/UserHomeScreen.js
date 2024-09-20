@@ -1,6 +1,6 @@
 // UserHomeScreen.js
 import React, { useState,useEffect  } from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, FlatList, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, Dimensions, FlatList, ScrollView, TouchableOpacity , ActivityIndicator} from 'react-native';
 import { LovedProvider } from '../../contexts/LovedContext';
 import logo from '../../../assets/images/logo.png';
 import profile from '../../../assets/images/profile.png';
@@ -36,40 +36,48 @@ const UserHomeScreen = () => {
   const navigation = useNavigation();
   const token = useAuth();
   const {userData} = useAuth();
-  console.log(userData)
-  const subscribed = userData?.is_subscribed;
+  const userName = userData?.name;
+  // console.log(userName)
+  // const subscribed = userData?.is_subscribed;
   // console.log(subscribed)
 
   useEffect(() => {
-    const fetchPropertiesAndSubscriptionStatus = async () => {
-      try {
-        setLoading(true);
-        const token = await AsyncStorage.getItem('token'); // Retrieve token
-        const subscriptionStatus = await AsyncStorage.getItem('is_subscribed'); // Retrieve subscription status
-
-        
-        // console.log("Retrieved subscription status:", subscriptionStatus);
-        // console.log("token", token)
-        // console.log("sub", userData?.is_subscribed)
-
-        if (subscriptionStatus === 'true') { // Check if subscribed
-          setIsSubscribed(true);
-          if (token) {
-            const res = await getProperties(token); // Fetch properties
-            setProperties(res?.data || []); // Set properties
+    const fetchPropertiesAndSubscriptionStatus = () => {
+      setLoading(true);
+  
+      AsyncStorage.getItem('token')  // Retrieve token
+        .then((token) => {
+          const subscriptionStatus = userData?.is_subscribed; // Retrieve subscription status
+          console.log("Subscription status:", subscriptionStatus);
+  
+          if (subscriptionStatus === 1) { // Check if subscribed
+            setIsSubscribed(true);
+  
+            if (token) {
+              // Fetch properties if subscribed
+              getProperties(token)
+                .then((res) => {
+                  setProperties(res?.data || []); // Set properties
+                })
+                .catch((error) => {
+                  console.log("[ERROR] Fetching properties: ", error);
+                });
+            }
+          } else {
+            setIsSubscribed(false); // Not subscribed
           }
-        } else {
-          setIsSubscribed(false); // Not subscribed
-        }
-      } catch (err) {
-        console.log("[ERROR] ==> ", err);
-      } finally {
-        setLoading(false);  // Hide loading indicator
-      }
+        })
+        .catch((error) => {
+          console.log("[ERROR] Retrieving token: ", error);
+        })
+        .finally(() => {
+          setLoading(false); // Hide loading indicator
+        });
     };
-
+  
     fetchPropertiesAndSubscriptionStatus();
-  }, []);
+  }, [userData]);
+  
 
   const filterResults = (category) => {
     setSelectedCategory(category);
@@ -80,11 +88,7 @@ const UserHomeScreen = () => {
   };
 
   if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Loading...</Text>
-      </View>
-    );
+    return  <ActivityIndicator size="large" color="#0000ff" />;
   }
 
   return (
@@ -98,7 +102,7 @@ const UserHomeScreen = () => {
         </View>
         <View style={styles.namecontainer}>
           <Text style={styles.text}>Hey</Text>
-          <Text style={styles.nametext}>Cynthia!</Text>
+          <Text style={styles.nametext}> {userName}</Text>
         </View>
         <Text style={styles.text1}>Let's start exploring</Text>
         <SearchBar
@@ -237,7 +241,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   warningText: {
-    color: colors.error,
+    color: colors.boldtextcolor,
     fontSize: 18,
     fontFamily: 'Lato-Bold',
   },

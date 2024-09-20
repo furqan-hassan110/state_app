@@ -16,7 +16,7 @@ const AddListingStep3 = ({ route }) => {
   const [sellPrice, setSellPrice] = useState('');
   const [rentPrice, setRentPrice] = useState('');
   const [rentType, setRentType] = useState('Monthly');
-  const [bedrooms, setBedrooms] = useState();
+  const [bedrooms, setBedrooms] = useState('');
   const [bathrooms, setBathrooms] = useState('');
   const [carSpace, setCarSpace] = useState('');
   const [totalRooms, setTotalRooms] = useState('<4');

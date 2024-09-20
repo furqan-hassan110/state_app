@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, FlatList, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, Dimensions, FlatList, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FloatingAction } from 'react-native-floating-action';
 import colors from '../../styles/colors';
 import PropertyCardForAgent from '../../components/PropertyCardForAgent';
 import { getProperties } from '../../utils/apiUtils';
-import { useAuth } from '../../contexts/AuthContext';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
@@ -17,23 +15,30 @@ const AgentSearchScreen = () => {
   const route = useRoute();
   const [propertyList, setPropertyList] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   // Extract the propertyCategory passed from AgentHomeScreen
   const { propertyCategory } = route.params || {};
 
-  useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        const token = await AsyncStorage.getItem('token'); 
-        if (token) {
-          const res = await getProperties(token); 
-          setPropertyList(res?.data || []); 
-        }
-      } catch (err) {
-        console.log("[Error - Fetching Properties]", err);
+  const fetchProperties = async () => {
+    setRefreshing(true); // Start refreshing animation
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        const res = await getProperties(token);
+        setPropertyList(res?.data || []);
       }
-    };
-    fetchProperties();
+    } catch (err) {
+      console.log("[Error - Fetching Properties]", err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false); // Stop refreshing animation
+    }
+  };
+
+  useEffect(() => {
+    fetchProperties(); // Fetch properties on mount
   }, []);
 
   // Filter properties based on the selected category
@@ -47,6 +52,10 @@ const AgentSearchScreen = () => {
       setFilteredProperties(propertyList); // Show all properties if no category is selected
     }
   }, [propertyList, propertyCategory]);
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
 
   const handlePropertyClick = (property) => {
     navigation.navigate('AgentStack', { screen: 'PropertyDetail', params: { property } });
@@ -90,6 +99,8 @@ const AgentSearchScreen = () => {
           </View>
         )}
         contentContainerStyle={styles.listContainer}
+        refreshing={refreshing} // Bind refreshing state to FlatList
+        onRefresh={fetchProperties} // Fetch properties again on refresh
       />
 
       <FloatingAction
