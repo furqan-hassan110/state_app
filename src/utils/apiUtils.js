@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://192.168.0.100:8000/api';
+const BASE_URL = 'http://192.168.2.179:8000/api';
 
 const errorResponse = error => {
   if ('response' in error) {
@@ -206,13 +206,17 @@ export const subscribeUser = (userId, token) => {
   const data = {user_id: userId};
   return postRequest({url, data, token});
 };
+export const requestSubscribtion = token => {
+  const url = `${BASE_URL}/request-subscription`;
+  return postRequest({url, token});
+};
 export const fetchAllUser = token => {
   const url = `${BASE_URL}/users`;
 
   return getRequest({url, token});
 };
-export const updateProfile = ( token, { name, email, phone_no }) => {
-  const data = {name, email, phone_no}
+export const updateProfile = (token, {name, email, phone_no}) => {
+  const data = {name, email, phone_no};
   const url = `${BASE_URL}/update-profile`;
   return postRequest({url, token, data});
 };
