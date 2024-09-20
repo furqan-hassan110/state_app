@@ -1,0 +1,18 @@
+1. UserSearchScreen ==>
+   Property Cards donot redirect to property details screen.
+
+2. UserLovedScreen ==>
+   Property Cards donot redirect to property details screen.
+
+3. UserProfileScreen ==>
+   Profile Heading Center,
+   User Profile Icon Center,
+   Fix Logout Button Style,
+   After Editing User Profile, Reset the context values.
+
+4. UserPropertyDetailsScreen ==>
+   Add $ Before Prices.
+   Render Agent ContactNo
+
+5. UserFiltersScreen
+   Filters not working.

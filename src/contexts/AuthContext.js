@@ -76,7 +76,7 @@ export const AuthProvider = ({children}) => {
   const handleSubscribe = async () => {
     try {
       // Perform any necessary operations for subscription (API calls, etc.)
-      setIsSubscribed(true);
+      // setIsSubscribed(true);
       await AsyncStorage.setItem('isSubscribed', 'true');
       alert(
         'Your application has been submitted. Please wait for your approval.',
