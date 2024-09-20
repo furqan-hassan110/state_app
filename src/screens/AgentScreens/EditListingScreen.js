@@ -84,8 +84,7 @@ const EditListingScreen = () => {
           selling_amount: sellingPrice,
           rent_amount: rentPrice,
           rent_payable: rentPayable,
-          bedroomCount: bedroomCount,
-          bathroom_count: bathroomCount,
+          bedroomCount, bathroom_count: bathroomCount,
           car_space_count: carSpaceCount,
           total_room_count: totalRoomCount,
         }
@@ -114,8 +113,8 @@ const EditListingScreen = () => {
   rent_amount: rentPrice || propertyData.rent_amount,
   rent_payable: rentType || propertyData.rent_payable,
   bedroomCount: bedrooms || propertyData.bedroomCount,
-  bathroom_count: bathrooms || propertyData.bathroom_count,
-  car_space_count: carSpace || propertyData.car_space_count,
+      bathroom_count: bathrooms || propertyData.bathroom_count,
+      car_space_count: carSpace || propertyData.car_space_count,
   total_room_count: totalRooms || propertyData.total_room_count,
       // images: images // Assuming the image data is in correct format
     };
@@ -296,7 +295,7 @@ const EditListingScreen = () => {
   >
     <Text style={styles.counterText}>-</Text>
   </TouchableOpacity>
-  <Text style={styles.counterValue}>{bedrooms ?? propertyData?.bedroomCount }</Text>
+  <Text style={styles.counterValue}>{bedrooms || propertyData?.bedroomCount}</Text>
   <TouchableOpacity
     style={styles.counterButton}
     onPress={() => setBedrooms(prev => (Number(prev) ?? propertyData?.bedroomCount ?? 0) + 1)}
@@ -315,7 +314,7 @@ const EditListingScreen = () => {
   >
     <Text style={styles.counterText}>-</Text>
   </TouchableOpacity>
-  <Text style={styles.counterValue}>{bathrooms ?? propertyData?.bathroom_count }</Text>
+  <Text style={styles.counterValue}>{bathrooms || propertyData?.bathroom_count}</Text>
   <TouchableOpacity
     style={styles.counterButton}
     onPress={() => setBathrooms(prev => (Number(prev) ?? propertyData?.bathroom_count ?? 0) + 1)}
@@ -334,7 +333,7 @@ const EditListingScreen = () => {
   >
     <Text style={styles.counterText}>-</Text>
   </TouchableOpacity>
-  <Text style={styles.counterValue}>{carSpace ?? propertyData?.car_space_count }</Text>
+  <Text style={styles.counterValue}>{carSpace || propertyData?.car_space_count }</Text>
   <TouchableOpacity
     style={styles.counterButton}
     onPress={() => setCarSpace(prev => (Number(prev) ?? propertyData?.car_space_count ?? 0) + 1)}

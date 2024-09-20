@@ -137,14 +137,14 @@ createProperties(propertyObject, userToken).then(res => {
         <View style={styles.counterContainer}>
           <TouchableOpacity
             style={styles.counterButton}
-            onPress={() => setBedrooms(prev => Math.max(prev - 1, 0))}
+            onPress={() => setBedrooms(prev => Math.max(Number(prev) - 1, 0))}
           >
             <Text style={styles.counterText}>-</Text>
           </TouchableOpacity>
           <Text style={styles.counterValue}>{bedrooms}</Text>
           <TouchableOpacity
             style={styles.counterButton}
-            onPress={() => setBedrooms(prev => prev + 1)}
+            onPress={() => setBedrooms(prev => Number(prev) + 1)}
           >
             <Text style={styles.counterText}>+</Text>
           </TouchableOpacity>
@@ -156,14 +156,14 @@ createProperties(propertyObject, userToken).then(res => {
         <View style={styles.counterContainer}>
           <TouchableOpacity
             style={styles.counterButton}
-            onPress={() => setBathrooms(prev => Math.max(prev - 1, 0))}
+            onPress={() => setBathrooms(prev => Math.max(Number(prev) - 1, 0))}
           >
             <Text style={styles.counterText}>-</Text>
           </TouchableOpacity>
           <Text style={styles.counterValue}>{bathrooms}</Text>
           <TouchableOpacity
             style={styles.counterButton}
-            onPress={() => setBathrooms(prev => prev + 1)}
+            onPress={() => setBathrooms(prev => Number(prev) + 1)}
           >
             <Text style={styles.counterText}>+</Text>
           </TouchableOpacity>
@@ -175,14 +175,14 @@ createProperties(propertyObject, userToken).then(res => {
         <View style={styles.counterContainer}>
           <TouchableOpacity
             style={styles.counterButton}
-            onPress={() => setCarSpace(prev => Math.max(prev - 1, 0))}
+            onPress={() => setCarSpace(prev => Math.max(Number(prev) - 1, 0))}
           >
             <Text style={styles.counterText}>-</Text>
           </TouchableOpacity>
           <Text style={styles.counterValue}>{carSpace}</Text>
           <TouchableOpacity
             style={styles.counterButton}
-            onPress={() => setCarSpace(prev => prev + 1)}
+            onPress={() => setCarSpace(prev => Number(prev) + 1)}
           >
             <Text style={styles.counterText}>+</Text>
           </TouchableOpacity>
