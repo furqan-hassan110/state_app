@@ -7,10 +7,9 @@ import { useLoved } from '../contexts/LovedContext';
 import { useAuth } from '../contexts/AuthContext';
 import { addLovedProperty, removeLovedProperties } from '../utils/apiUtils';
 
-
 const { width, height } = Dimensions.get('window');
 
-const SearchResultCard = ({ id, imageSource, title,location, cityName, country, price }) => {
+const SearchResultCard = ({ id, imageSource, title, location, cityName, country, price, isLovedScreen }) => {
   const { lovedProperties, setLovedProperties } = useLoved();
   const { userData } = useAuth();
   const userToken = userData?.token;
@@ -27,8 +26,8 @@ const SearchResultCard = ({ id, imageSource, title,location, cityName, country, 
           console.log("Loved Property Removed:", response);
         })
         .catch(error => console.log("Error Removing Loved Property:", error));
-    } else {
-      // Add property to loved list
+    } else if (!isLovedScreen) {
+      // Add property to loved list only if it's not the loved screen
       addLovedProperty(id, userToken)
         .then(response => {
           setLovedProperties(prev => [...prev, { id, imageSource, title, cityName, country, price }]);
@@ -38,35 +37,22 @@ const SearchResultCard = ({ id, imageSource, title,location, cityName, country, 
         .catch(error => console.log("Error Adding Loved Property:", error));
     }
   };
-  const [isFavorite, setIsFavorite] = useState(false);
-  // const { lovedProperties, setLovedProperties } = useLoved();
-  // const isLoved = lovedProperties.some((p) => p.id === id);
-
-
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
-  };
-
-  // const imageSource = item?.image && item.image !== '' ? { uri: item.image } : img1;
 
   return (
     <TouchableOpacity style={styles.cardContainer}>
       <View style={styles.imageWrapper}>
         <Image source={imageSource} style={styles.image} />
         
-        
         <TouchableOpacity
           style={[styles.heartIcon, { backgroundColor: isLoved ? colors.buttons : 'transparent' }]}
           onPress={handleToggleLoved}
-          
         >
           <MaterialCommunityIcons
-            name={isLoved ? 'cards-heart-outline' : 'cards-heart'}
+            name={isLoved ? 'cards-heart' : 'cards-heart-outline'}
             size={15}
             color='white'
           />
         </TouchableOpacity>
-        
         
         <Text style={styles.priceText}>${price || 'N/A'}</Text>
       </View>
