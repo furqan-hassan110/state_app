@@ -46,8 +46,8 @@ const UserSearch = () => {
   
     // Check if the property title matches the search query when coming from the home screen
     const matchesQuery = fromHomeScreen && property.propertyCategory && property.propertyCategory.toLowerCase() === searchQuery.toLowerCase();
-      console.log(property.propertyCategory)
-      console.log(searchQuery)
+      // console.log(property.propertyCategory)
+      // console.log(searchQuery)
     // Check if the property category matches the filter when not coming from the home screen
     const matchesCategory = !fromHomeScreen && filters?.category ? property.propertyCategory.toLowerCase() === filters.category.toLowerCase() : true;
   

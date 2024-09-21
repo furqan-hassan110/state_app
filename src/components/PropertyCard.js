@@ -59,7 +59,7 @@ const PropertyCard = ({ id, imageSource, title, cityName, country, price }) => {
           <MaterialCommunityIcons name='map-marker' size={15} color={colors.boldtextcolor} />
           <Text style={styles.country}>{country}</Text>
         </View>
-        <Text style={styles.price}>{price}</Text>
+        <Text style={styles.price}>$ {price}</Text>
       </View>
     </View>
   );
