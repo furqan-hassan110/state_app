@@ -3,12 +3,13 @@ import {
   View,
   Text,
   StyleSheet,
-  Modal,
-  TouchableOpacity,
   Image,
   Dimensions,
   TextInput,
   KeyboardAvoidingView,
+  TouchableOpacity,
+  ScrollView,
+  ToastAndroid
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
@@ -17,8 +18,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import profile from '../../../assets/images/profile.png';
 import Feather from 'react-native-vector-icons/Feather';
 import { useAuth } from '../../contexts/AuthContext';
-import { ScrollView } from 'react-native-gesture-handler';
-import { logout } from '../../utils/apiUtils';
+import { logout, updateProfile } from '../../utils/apiUtils'; // Import updateProfile and logout functions
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
@@ -26,7 +26,7 @@ const { width, height } = Dimensions.get('window');
 const AgentProfileScreen = () => {
   const [isEditing, setIsEditing] = useState(false);
   const navigation = useNavigation();
-  const { userData, setUserData, contextLogout } = useAuth();
+  const { userData, setUserData, contextLogout, updateUserContextData } = useAuth();
 
   const userToken = userData?.token;
 
@@ -45,6 +45,30 @@ const AgentProfileScreen = () => {
   };
 
   const handleEditProfile = () => {
+    if (isEditing) {
+      if (userData) {
+        const { name, email, phone_no } = userData;
+
+        // Call the updateProfile API
+        updateProfile(userToken, { name, email, phone_no })
+          .then(async () => {
+            ToastAndroid.show('Profile updated successfully', ToastAndroid.SHORT);
+
+            // Update the AuthContext with the new data
+            updateUserContextData({ name, email, phone_no });
+
+            // Update AsyncStorage
+            await AsyncStorage.setItem(
+              'userData',
+              JSON.stringify({ ...userData, name, email, phone_no })
+            );
+          })
+          .catch(error => {
+            console.error('Profile update failed:', error);
+            ToastAndroid.show('Failed to update profile', ToastAndroid.SHORT);
+          });
+      }
+    }
     setIsEditing(!isEditing);
   };
 
@@ -102,18 +126,20 @@ const AgentProfileScreen = () => {
             </View>
           </View>
         </View>
-        
+
         <View style={styles.buttonContainer}>
-          <Button
-            onPress={handleEditProfile}
-            title={isEditing ? "Save Changes" : "Edit Profile"}
-            style={styles.editProfileButton}
-          />
-          <Button
-            title="Log Out"
-            style={styles.button}
-            onPress={handleLogout}
-          />
+          <View style={styles.buttonGroup}>
+            <Button
+              onPress={handleEditProfile}
+              title={isEditing ? 'Save Changes' : 'Edit Profile'}
+              style={styles.editProfileButton}
+            />
+            <Button
+              title="Log Out"
+              style={styles.editProfileButton}
+              onPress={handleLogout}
+            />
+          </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -140,28 +166,31 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato-Bold',
     fontSize: 22,
     textAlign: 'center',
+    alignSelf: 'center',
+    marginRight: 130,
   },
   backbutton: {
     backgroundColor: colors.textinputfill,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
+    width: width / 6,
+    height: height / 13,
+    borderRadius: 45,
+    alignContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   profileImageContainer: {
     backgroundColor: colors.textinputfill,
-    width: width * 0.25,
-    height: height * 0.12,
-    borderRadius: 75,
+    width: width * 0.18,
+    height: height * 0.09,
+    borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 20,
+    marginTop: 30,
+    alignSelf: 'center',
   },
   profile: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 75,
+    width: width * 0.09,
+    height: height * 0.049,
   },
   infoContainer: {
     width: '100%',
