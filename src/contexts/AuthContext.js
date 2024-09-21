@@ -72,6 +72,13 @@ export const AuthProvider = ({children}) => {
       console.error('Failed to login:', e);
     }
   };
+  const updateUserContextData = newUserData => {
+    setUserData(prevData => ({
+      ...prevData,
+      ...newUserData,
+    }));
+  };
+  
 
   const handleSubscribe = async () => {
     try {
@@ -124,6 +131,7 @@ export const AuthProvider = ({children}) => {
     login,
     contextLogout: logout,
     setUserData,
+    updateUserContextData, // Add this here
     handleSubscribe, // Add handleSubscribe to context
   };
 

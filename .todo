@@ -5,14 +5,17 @@
    Property Cards donot redirect to property details screen.
 
 3. UserProfileScreen ==>
-   Profile Heading Center,
-   User Profile Icon Center,
-   Fix Logout Button Style,
-   After Editing User Profile, Reset the context values.
+   Profile Heading Center, Done
+   User Profile Icon Center, Done
+   Fix Logout Button Style, Done
+   After Editing User Profile, Reset the context values. Done
 
 4. UserPropertyDetailsScreen ==>
-   Add $ Before Prices.
-   Render Agent ContactNo
+   Add $ Before Prices. Done
+   Render Agent ContactNo. Done
 
-5. UserFiltersScreen
-   Filters not working.
+5. UserFiltersScreen ==>
+   Filters not working. Done (filtering on the basis of property category only)
+
+6. userhome screen ==>
+   redirect only not filter properties. 

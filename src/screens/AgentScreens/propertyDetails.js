@@ -8,11 +8,13 @@ import Modal from 'react-native-modal';
 
 import colors from '../../styles/colors';
 import Button from '../../components/Button';
+import { useAuth } from '../../contexts/AuthContext';
 
 const { width, height } = Dimensions.get('window');
 
 const PropertyDetail = ({ route, navigation }) => {
   const { property } = route.params;
+  const { userData } = useAuth();
   useEffect(() => {
     console.log('Property received in detail screen:', property);  // Check if the property is being received correctly
   }, []);
@@ -83,7 +85,7 @@ const PropertyDetail = ({ route, navigation }) => {
       <View style={styles.detailsContainer}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={styles.title}>{property.title}</Text>
-          <Text style={styles.price}>{property.sellingPrice}</Text>
+          <Text style={styles.price}>$ {property.sellingPrice}</Text>
         </View>
         <Text style={styles.location}>{property.location}</Text>
         <Button
@@ -133,7 +135,7 @@ const PropertyDetail = ({ route, navigation }) => {
               height: height * 0.06,
               backgroundColor: colors.textinputfill, borderRadius: 25, justifyContent: 'center', alignItems: 'center', marginBottom: 10
             }}>
-              <Text style={styles.priceText}>{property.sellingPrice}</Text>
+              <Text style={styles.priceText}>$ {property.sellingPrice}</Text>
             </View>
           </View>
 
@@ -148,7 +150,7 @@ const PropertyDetail = ({ route, navigation }) => {
      >
        <View style={styles.modalContent}>
         <View style={styles.noContainerModal}>
-         <Text style={styles.modalText}>+61xxxxxxxxxx</Text>
+        <Text style={styles.modalText}>{userData.phone_no}</Text>
          </View>
          <Button
            title="Cancel"

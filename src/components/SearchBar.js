@@ -19,9 +19,9 @@ const SearchBar = ({
   const [isFocused, setIsFocused] = useState(false); // Add state for focus
 
   const handleSearch = () => {
-    navigation.navigate('UserStack', {
-      screen: 'UserSearchScreen',
-      params: { query: searchQuery }  // Correctly passing the query as a param
+    navigation.navigate('UserStack', { 
+      screen: 'UserSearch', 
+      params: { query: searchQuery} // Pass any default filters if needed
     });
   };
 

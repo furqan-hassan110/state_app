@@ -23,7 +23,7 @@ const UserFilter = () => {
 
   const navigation = useNavigation();
 
-  const categories = ['House', 'Apartment'];
+  const categories = ['house', 'apartment'];
   const bedroomOptions = [1, 2, 3, 4, 5];
   const bathroomOptions = [1, 2, 3, 4, 5];
   const carSpaceOptions = [1, 2, 3, 4, 5];

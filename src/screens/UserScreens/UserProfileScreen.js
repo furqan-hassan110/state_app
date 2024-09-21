@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  ToastAndroid
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../../styles/colors';
@@ -25,6 +26,8 @@ import {
   updateProfile,
 } from '../../utils/apiUtils'; // Import the updateProfile function
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const {width, height} = Dimensions.get('window');
 
 const UserProfileScreen = () => {
@@ -32,7 +35,7 @@ const UserProfileScreen = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState(null); // Initialize local userData
   const navigation = useNavigation();
-  const {userData: contextUserData, handleSubscribe, contextLogout} = useAuth();
+  const {userData: contextUserData, handleSubscribe, contextLogout, updateUserContextData} = useAuth();
 
   const userToken = contextUserData?.token;
   const userId = contextUserData?.id;
@@ -83,23 +86,29 @@ const UserProfileScreen = () => {
     if (isEditing) {
       if (userData) {
         const {name, email, phone_no} = userData;
-
+  
         console.log('Updating Profile with:', {name, email, phone_no});
-
-        // Pass the token and user data to the updateProfile function
+  
         updateProfile(userToken, {name, email, phone_no})
-          .then(() => {
-            Alert.alert('Success', 'Profile updated successfully.');
+          .then(async () => {
+            ToastAndroid.show('Profile updated successfully', ToastAndroid.SHORT);
+  
+            // Update the AuthContext with the new data
+            updateUserContextData({
+              name,
+              email,
+              phone_no,
+            });
+  
+            await AsyncStorage.setItem(
+              'userData',
+              JSON.stringify({ ...userData, name, email, phone_no })
+            );
           })
           .catch(error => {
             console.error('Profile update failed:', error);
-            Alert.alert(
-              'Error',
-              'Failed to update profile. Please try again later.',
-            );
+            ToastAndroid.show('Failed to update profile', ToastAndroid.SHORT);
           });
-      } else {
-        Alert.alert('Error', 'No user data found.');
       }
     }
     setIsEditing(!isEditing);
@@ -200,7 +209,7 @@ const UserProfileScreen = () => {
             />
             <Button
               title="Log Out"
-              style={styles.button}
+              style={styles.editProfileButton}
               onPress={handleLogout}
             />
           </View>
@@ -224,6 +233,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 30,
+    alignSelf:'center'
   },
   headerContainer: {
     flexDirection: 'row',
@@ -235,6 +245,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato-Bold',
     fontSize: 20,
     alignSelf: 'center',
+    marginRight:140
   },
   backbutton: {
     backgroundColor: colors.textinputfill,
