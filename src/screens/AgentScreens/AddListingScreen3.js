@@ -1,17 +1,26 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import colors from '../../styles/colors';
-import { createProperties } from '../../utils/apiUtils';
-import { useAuth } from '../../contexts/AuthContext';
+import {createProperties} from '../../utils/apiUtils';
+import {useAuth} from '../../contexts/AuthContext';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
-const AddListingStep3 = ({ route }) => {
+const AddListingStep3 = ({route}) => {
+  const {images} = route.params;
   const token = useAuth();
-  console.log("Token:", token)
+  console.log('IAMGES ==> ', images);
   const navigation = useNavigation();
   const [sellPrice, setSellPrice] = useState('');
   const [rentPrice, setRentPrice] = useState('');
@@ -20,66 +29,69 @@ const AddListingStep3 = ({ route }) => {
   const [bathrooms, setBathrooms] = useState('');
   const [carSpace, setCarSpace] = useState('');
   const [totalRooms, setTotalRooms] = useState('<4');
-
   const [isModalVisible, setModalVisible] = useState(false);
-
-  // const finalDetails = {
-  //   ...route.params,
-  //   sellPrice,
-  //   rentPrice,
-  //   rentType,
-  //   bedrooms,
-  //   bathrooms,
-  //   carSpace,
-  //   totalRooms,
-  // };
- 
 
   const handleNext = () => {
     const propertyObject = {
-      title: route.params?.listingTitle || "Sample Title",
-      location: route.params?.listingLocation || "Sample Location",
-      address: route.params?.listingAddress || "Sample Address",
-      construction_status: route.params?.constructionStatus || "Under Construction",
-      listing_type: route.params?.listingType || "rent",
-      property_category: route.params?.propertyCategory || "Residential",
-      property_size: route.params?.propertySize || "1200",
-      property_type: route.params?.propertyType || "Apartment",
-      selling_amount: sellPrice || "",
-      rent_amount: rentPrice || "",
-      rent_payable: rentType || "Monthly",
-      total_room_count: totalRooms || "2",
-      bedroom_count: bedrooms ,
-      bathroom_count: bathrooms || "",
-      car_space_count: carSpace || ""
+      title: route.params?.listingTitle || 'Sample Title',
+      location: route.params?.listingLocation || 'Sample Location',
+      address: route.params?.listingAddress || 'Sample Address',
+      construction_status:
+        route.params?.constructionStatus || 'Under Construction',
+      listing_type: route.params?.listingType || 'rent',
+      property_category: route.params?.propertyCategory || 'Residential',
+      property_size: route.params?.propertySize || '1200',
+      property_type: route.params?.propertyType || 'Apartment',
+      selling_amount: sellPrice || '',
+      rent_amount: rentPrice || '',
+      rent_payable: rentType || 'Monthly',
+      total_room_count: totalRooms || '2',
+      bedroom_count: bedrooms,
+      bathroom_count: bathrooms || '',
+      car_space_count: carSpace || '',
+      images,
     };
-    console.log(propertyObject)
-//  const userToken='53|DMi0lApx4oMzlh3oSlgWaW6antev0AYCdajzkmIg25425d8d'
-  // const { token } = useAuth();
-  const { userData } = token;
-  const userToken = userData?.token;
 
-  if (!propertyObject.address || !propertyObject.bathroom_count || !propertyObject.bedroom_count || !propertyObject.car_space_count) {
-    console.error("Please fill all the required fields.");
-    return;
-  }
+    const formData = new FormData();
+    images.forEach((image, index) => {
+      formData.append('images[]', {
+        uri: image.uri,
+        name: image.name || `image_${index}.jpg`,
+        type: image.type || 'image/jpeg',
+      });
+    });
+    formData.append('title', propertyObject.title);
+    formData.append('location', propertyObject.location);
+    formData.append('address', propertyObject.address);
+    formData.append('construction_status', propertyObject.construction_status);
+    formData.append('listing_type', propertyObject.listing_type);
+    formData.append('property_category', propertyObject.property_category);
+    formData.append('property_size', propertyObject.property_size);
+    formData.append('property_type', propertyObject.property_type);
+    formData.append('selling_amount', propertyObject.selling_amount);
+    formData.append('rent_amount', propertyObject.rent_amount);
+    formData.append('rent_payable', propertyObject.rent_payable);
+    formData.append('total_room_count', propertyObject.total_room_count);
+    formData.append('bedroom_count', propertyObject.bedroom_count);
+    formData.append('bathroom_count', propertyObject.bathroom_count);
+    formData.append('car_space_count', propertyObject.car_space_count);
+    // console.log('FORM DATA ==> ', formData);
+    const {userData} = token;
+    const userToken = userData?.token;
 
-  // console.log(userToken)
-createProperties(propertyObject, userToken).then(res => {
-    console.log("CREATE PROPERTY [RES] ==> ", res)
-    if (res.success) {
-      setModalVisible(true);
-    } else {
-      console.error("Error creating property:", res.message);
-    }
-}).catch(err => {
-    console.log("CREATE PROPERTY [ERR] ==> ", err)
-})
-
-    
+    createProperties(formData, userToken)
+      .then(res => {
+        console.log('CREATE PROPERTY [RES] ==> ', res);
+        if (res.success) {
+          setModalVisible(true);
+        } else {
+          console.error('Error creating property:', res.message);
+        }
+      })
+      .catch(err => {
+        console.log('CREATE PROPERTY [ERR] ==> ', err);
+      });
   };
-  
-  
 
   const handleModalFinish = () => {
     navigation.navigate('BottomTabAgent', {
@@ -91,13 +103,18 @@ createProperties(propertyObject, userToken).then(res => {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={24} color={colors.primary} />
         </TouchableOpacity>
         <Text style={styles.title}>Add Listing</Text>
       </View>
-      <Text style={styles.subtitle}>Almost <Text style={styles.highlight}>finish</Text>, complete the listing</Text>
+      <Text style={styles.subtitle}>
+        Almost <Text style={styles.highlight}>finish</Text>, complete the
+        listing
+      </Text>
 
       <Text style={styles.label}>Sell Price</Text>
       <TextInput
@@ -123,10 +140,18 @@ createProperties(propertyObject, userToken).then(res => {
         {['monthly', 'yearly'].map(type => (
           <TouchableOpacity
             key={type}
-            style={[styles.toggleButton, rentType === type && styles.selectedToggleButton]}
-            onPress={() => setRentType(type)}
-          >
-            <Text style={[styles.toggleText,rentType === type && styles.selectedtext]}>{type}</Text>
+            style={[
+              styles.toggleButton,
+              rentType === type && styles.selectedToggleButton,
+            ]}
+            onPress={() => setRentType(type)}>
+            <Text
+              style={[
+                styles.toggleText,
+                rentType === type && styles.selectedtext,
+              ]}>
+              {type}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -137,15 +162,13 @@ createProperties(propertyObject, userToken).then(res => {
         <View style={styles.counterContainer}>
           <TouchableOpacity
             style={styles.counterButton}
-            onPress={() => setBedrooms(prev => Math.max(Number(prev) - 1, 0))}
-          >
+            onPress={() => setBedrooms(prev => Math.max(Number(prev) - 1, 0))}>
             <Text style={styles.counterText}>-</Text>
           </TouchableOpacity>
           <Text style={styles.counterValue}>{bedrooms}</Text>
           <TouchableOpacity
             style={styles.counterButton}
-            onPress={() => setBedrooms(prev => Number(prev) + 1)}
-          >
+            onPress={() => setBedrooms(prev => Number(prev) + 1)}>
             <Text style={styles.counterText}>+</Text>
           </TouchableOpacity>
         </View>
@@ -156,15 +179,13 @@ createProperties(propertyObject, userToken).then(res => {
         <View style={styles.counterContainer}>
           <TouchableOpacity
             style={styles.counterButton}
-            onPress={() => setBathrooms(prev => Math.max(Number(prev) - 1, 0))}
-          >
+            onPress={() => setBathrooms(prev => Math.max(Number(prev) - 1, 0))}>
             <Text style={styles.counterText}>-</Text>
           </TouchableOpacity>
           <Text style={styles.counterValue}>{bathrooms}</Text>
           <TouchableOpacity
             style={styles.counterButton}
-            onPress={() => setBathrooms(prev => Number(prev) + 1)}
-          >
+            onPress={() => setBathrooms(prev => Number(prev) + 1)}>
             <Text style={styles.counterText}>+</Text>
           </TouchableOpacity>
         </View>
@@ -175,15 +196,13 @@ createProperties(propertyObject, userToken).then(res => {
         <View style={styles.counterContainer}>
           <TouchableOpacity
             style={styles.counterButton}
-            onPress={() => setCarSpace(prev => Math.max(Number(prev) - 1, 0))}
-          >
+            onPress={() => setCarSpace(prev => Math.max(Number(prev) - 1, 0))}>
             <Text style={styles.counterText}>-</Text>
           </TouchableOpacity>
           <Text style={styles.counterValue}>{carSpace}</Text>
           <TouchableOpacity
             style={styles.counterButton}
-            onPress={() => setCarSpace(prev => Number(prev) + 1)}
-          >
+            onPress={() => setCarSpace(prev => Number(prev) + 1)}>
             <Text style={styles.counterText}>+</Text>
           </TouchableOpacity>
         </View>
@@ -194,10 +213,18 @@ createProperties(propertyObject, userToken).then(res => {
         {['<4', '4', '6', '>6'].map(option => (
           <TouchableOpacity
             key={option}
-            style={[styles.roomOption, totalRooms === option && styles.selectedRoomOption]}
-            onPress={() => setTotalRooms(option)}
-          >
-            <Text style={[styles.roomOptionText, totalRooms === option && styles.selectedoption]}>{option}</Text>
+            style={[
+              styles.roomOption,
+              totalRooms === option && styles.selectedRoomOption,
+            ]}
+            onPress={() => setTotalRooms(option)}>
+            <Text
+              style={[
+                styles.roomOptionText,
+                totalRooms === option && styles.selectedoption,
+              ]}>
+              {option}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -211,8 +238,7 @@ createProperties(propertyObject, userToken).then(res => {
         onBackdropPress={() => setModalVisible(false)}
         onSwipeComplete={() => setModalVisible(false)}
         swipeDirection="down"
-        style={styles.modal}
-      >
+        style={styles.modal}>
         <View style={styles.modalContent}>
           <View style={styles.checkIconContainer}>
             <Ionicons name="checkmark-circle" size={70} color="#6DC94E" />
@@ -221,10 +247,14 @@ createProperties(propertyObject, userToken).then(res => {
             Your listing is now <Text style={styles.boldText}>published</Text>
           </Text>
           <View style={styles.bottomButtonsContainer}>
-            <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(false)}>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => setModalVisible(false)}>
               <Text style={styles.buttonText}>Add More</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.finishButtonModal} onPress={handleModalFinish}>
+            <TouchableOpacity
+              style={styles.finishButtonModal}
+              onPress={handleModalFinish}>
               <Text style={styles.buttonText}>Finish</Text>
             </TouchableOpacity>
           </View>
@@ -296,20 +326,20 @@ const styles = StyleSheet.create({
   toggleText: {
     color: colors.boldtextcolor,
     fontSize: 14,
-    fontFamily:'Lato-Medium'
+    fontFamily: 'Lato-Medium',
   },
-  selectedtext:{
-    color:colors.white
+  selectedtext: {
+    color: colors.white,
   },
   featureContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: 10,
-    backgroundColor:colors.textinputfill,
-    height:height/12,
-    borderRadius:15,
-    padding:10
+    backgroundColor: colors.textinputfill,
+    height: height / 12,
+    borderRadius: 15,
+    padding: 10,
   },
   featureLabel: {
     fontSize: 16,
@@ -334,7 +364,7 @@ const styles = StyleSheet.create({
   counterValue: {
     marginHorizontal: 10,
     fontSize: 18,
-    color:colors.black
+    color: colors.black,
   },
   roomOptionsContainer: {
     flexDirection: 'row',
@@ -355,8 +385,8 @@ const styles = StyleSheet.create({
     color: colors.boldtextcolor,
     fontSize: 16,
   },
-  selectedoption:{
-    color:colors.white
+  selectedoption: {
+    color: colors.white,
   },
   finishButton: {
     backgroundColor: colors.buttons,
@@ -364,7 +394,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     marginTop: 'auto',
-    marginBottom:50,
+    marginBottom: 50,
   },
   finishButtonText: {
     color: '#fff',

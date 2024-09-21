@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-const BASE_URL = 'http://192.168.0.104:8000/api';
+export const DOMAIN = 'http://192.168.2.179:8000';
+export const BASE_URL = 'http://192.168.2.179:8000/api';
 
 const errorResponse = error => {
   if ('response' in error) {
@@ -39,7 +39,7 @@ export const getRequest = ({url, token = null, abortToken = null}) => {
   });
 };
 
-export const postRequest = ({url, data, token = null}) => {
+export const postRequest = ({url, data, token = null, type = ''}) => {
   return new Promise((resolve, reject) => {
     const headers = {
       headers: {
@@ -50,6 +50,10 @@ export const postRequest = ({url, data, token = null}) => {
     if (token) {
       headers.headers.Authorization = `Bearer ${token}`;
     }
+    if (type === 'formdata') {
+      headers.headers['Content-Type'] = 'multipart/form-data';
+    }
+
     console.log(url, data);
     axios
       .post(url, data, headers)
@@ -165,8 +169,9 @@ export const getPropertiesById = (id, token, abortToken = null) => {
 
 export const createProperties = (data, token) => {
   const url = `${BASE_URL}/properties`;
+  const type = 'formdata';
 
-  return postRequest({url, token, data});
+  return postRequest({url, token, data, type});
 };
 
 export const updateCategory = (id, data, token) => {
