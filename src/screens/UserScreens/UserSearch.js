@@ -12,11 +12,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const { width, height } = Dimensions.get('window');
 
 const UserSearch = () => {
-  const [properties, setProperties] = useState([]); // Initialize to an empty array
+  const [properties, setProperties] = useState([]);
   const route = useRoute();
   const navigation = useNavigation();
   const { filters } = route.params;
-  const { query } = route.params;
+  const { query, fromHome } = route.params || {}; // Destructure fromHome from params
   console.log(query)
 
   useEffect(() => {
@@ -41,21 +41,34 @@ const UserSearch = () => {
   }, []);
 
   const filteredResults = Array.isArray(properties) ? properties.filter((property) => {
-    const matchesCategory = filters?.category ? property.propertyCategory === filters.category : true; // Using optional chaining
-    const matchesQuery = property.title && property.title.toLowerCase().includes(query.toLowerCase());
-    return matchesCategory && matchesQuery;
+    const searchQuery = query ? query.toLowerCase() : ''; // Default to empty string if query is undefined
+    const fromHomeScreen = fromHome || false; // Default to false if fromHome is not provided
+  
+    // Check if the property title matches the search query when coming from the home screen
+    const matchesQuery = fromHomeScreen && property.propertyCategory && property.propertyCategory.toLowerCase() === searchQuery.toLowerCase();
+      console.log(property.propertyCategory)
+      console.log(searchQuery)
+    // Check if the property category matches the filter when not coming from the home screen
+    const matchesCategory = !fromHomeScreen && filters?.category ? property.propertyCategory.toLowerCase() === filters.category.toLowerCase() : true;
+  
+    // Filter by both query and category depending on where the search is initiated from
+    if (fromHomeScreen) {
+      return matchesQuery;
+    } else {
+      return matchesCategory;
+    }
   }) : [];
   
   
-  
+
   const renderSearchResult = ({ item }) => {
     return <SearchCards
-    id={item.id}
-    imageSource={item.image ? { uri: item.image } : require('../../../assets/images/role1.png')}
-    title={item.title}
-    location={item.location}
-    price={item.sellingPrice}
-   />;
+      id={item.id}
+      imageSource={item.image ? { uri: item.image } : require('../../../assets/images/role1.png')}
+      title={item.title}
+      location={item.location}
+      price={item.sellingPrice}
+    />;
   };
 
   return (

@@ -21,7 +21,8 @@ const SearchBar = ({
   const handleSearch = () => {
     navigation.navigate('UserStack', { 
       screen: 'UserSearch', 
-      params: { query: searchQuery} // Pass any default filters if needed
+      params: { query: searchQuery} ,
+      fromHome: true // Pass any default filters if needed
     });
   };
 
