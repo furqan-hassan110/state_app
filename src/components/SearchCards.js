@@ -39,7 +39,7 @@ const SearchResultCard = ({ id, imageSource, title, location, cityName, country,
   };
 
   return (
-    <TouchableOpacity style={styles.cardContainer}>
+    <View style={styles.cardContainer}>
       <View style={styles.imageWrapper}>
         <Image source={imageSource} style={styles.image} />
         
@@ -65,7 +65,7 @@ const SearchResultCard = ({ id, imageSource, title, location, cityName, country,
         <MaterialCommunityIcons name="map-marker" size={12} color={colors.boldtextcolor} />
         <Text style={styles.locationText}>{location || 'Unknown Location'}</Text>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
