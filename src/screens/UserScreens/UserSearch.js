@@ -17,7 +17,7 @@ const UserSearch = () => {
   const navigation = useNavigation();
   const { filters } = route.params;
   const { query, fromHome } = route.params || {}; // Destructure fromHome from params
-  console.log(query)
+  console.log(query);
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -43,32 +43,47 @@ const UserSearch = () => {
   const filteredResults = Array.isArray(properties) ? properties.filter((property) => {
     const searchQuery = query ? query.toLowerCase() : ''; // Default to empty string if query is undefined
     const fromHomeScreen = fromHome || false; // Default to false if fromHome is not provided
-  
+
     // Check if the property title matches the search query when coming from the home screen
     const matchesQuery = fromHomeScreen && property.propertyCategory && property.propertyCategory.toLowerCase() === searchQuery.toLowerCase();
-      // console.log(property.propertyCategory)
-      // console.log(searchQuery)
-    // Check if the property category matches the filter when not coming from the home screen
+    
+    // Check if the property matches the filters passed from UserFilter
     const matchesCategory = !fromHomeScreen && filters?.category ? property.propertyCategory.toLowerCase() === filters.category.toLowerCase() : true;
-  
-    // Filter by both query and category depending on where the search is initiated from
+    const matchesPrice = filters?.price ? property.sellingPrice <= filters.price : true;
+    const matchesBedrooms = filters?.bedrooms ? property.bedrooms === filters.bedrooms : true;
+    const matchesBathrooms = filters?.bathrooms ? property.bathrooms === filters.bathrooms : true;
+    const matchesCarSpaces = filters?.carSpaces ? property.carSpaces === filters.carSpaces : true;
+    const matchesConstructionStatus = filters?.constructionStatus ? property.constructionStatus?.toLowerCase() === filters.constructionStatus.toLowerCase() : true;
+    const matchesPropertyType = filters?.propertyType ? property.propertyType?.toLowerCase() === filters.propertyType.toLowerCase() : true;
+    const matchesLandSize = filters?.landSize ? property.landSize >= filters.landSize : true;
+
+    // Apply search query filter if coming from the home screen
     if (fromHomeScreen) {
       return matchesQuery;
     } else {
-      return matchesCategory;
+      return (
+        matchesCategory &&
+        matchesPrice &&
+        matchesBedrooms &&
+        matchesBathrooms &&
+        matchesCarSpaces &&
+        matchesConstructionStatus &&
+        matchesPropertyType &&
+        matchesLandSize
+      );
     }
   }) : [];
-  
-  
 
   const renderSearchResult = ({ item }) => {
-    return <SearchCards
-      id={item.id}
-      imageSource={item.image ? { uri: item.image } : require('../../../assets/images/role1.png')}
-      title={item.title}
-      location={item.location}
-      price={item.sellingPrice}
-    />;
+    return (
+      <SearchCards
+        id={item.id}
+        imageSource={item.image ? { uri: item.image } : require('../../../assets/images/role1.png')}
+        title={item.title}
+        location={item.location}
+        price={item.sellingPrice}
+      />
+    );
   };
 
   return (

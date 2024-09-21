@@ -16,9 +16,9 @@ const UserFilter = () => {
   const [selectedBedrooms, setSelectedBedrooms] = useState(0);
   const [selectedBathrooms, setSelectedBathrooms] = useState(0);
   const [selectedCarSpaces, setSelectedCarSpaces] = useState(0);
-  const [selectedConstructionStatus, setSelectedConstructionStatus] = useState('New');
-  const [selectedPropertyType, setSelectedPropertyType] = useState('Commercial');
-  const [selectedLandSize, setSelectedLandSize] = useState(600);
+  const [selectedConstructionStatus, setSelectedConstructionStatus] = useState('');
+  const [selectedPropertyType, setSelectedPropertyType] = useState('');
+  const [selectedLandSize, setSelectedLandSize] = useState();
   
 
   const navigation = useNavigation();
@@ -59,7 +59,16 @@ const UserFilter = () => {
     // console.log("Navigating to UserSearch with filters:", filters);
   navigation.navigate('UserStack', { screen: 'UserSearch', params: { filters } });
   };
-
+  const resetFilters = () => {
+    setSelectedCategory(null); // Reset category
+    setSelectedPrice(1000); // Reset price to initial value
+    setSelectedBedrooms(0); // Reset bedrooms
+    setSelectedBathrooms(0); // Reset bathrooms
+    setSelectedCarSpaces(0); // Reset car spaces
+    setSelectedConstructionStatus('New'); // Reset construction status
+    setSelectedPropertyType('Commercial'); // Reset property type
+    setSelectedLandSize(600); // Reset land size
+  };
   // console.log("UserFilter Component Rendered");
 
   return (
@@ -87,9 +96,9 @@ const UserFilter = () => {
         <View style={{ flex: 1, height: 40, width: '100%', }}>
         <Slider
         style={styles.slider}
-        minimumValue={0}
+        minimumValue={1000}
         maximumValue={5000}
-        step={6}
+        step={8}
         value={selectedPrice}
         onValueChange={value => setSelectedPrice(value)}
         minimumTrackTintColor={colors.buttons}
@@ -97,9 +106,9 @@ const UserFilter = () => {
         thumbTintColor={colors.buttons}
       />
         </View>
-        {/* <View style={styles.priceLabels}>
-          <Text style={styles.priceText}>${selectedPrice}</Text>
-        </View> */}
+        <View style={styles.priceLabels}>
+          <Text style={styles.priceText}>$ {selectedPrice}</Text>
+        </View>
       </View>
 
       {/* Bedrooms */}
@@ -140,7 +149,7 @@ const UserFilter = () => {
 
       {/* Buttons */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.resetButton}>
+        <TouchableOpacity style={styles.resetButton} onPress={resetFilters}>
           <Text style={styles.resetButtonText}>Reset Filter</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.applyButton} onPress={applyFilters}>
@@ -240,6 +249,8 @@ const styles = StyleSheet.create({
   },
   priceText: {
     fontSize: 14,
+    fontFamily:'Lato-Bold',
+    marginLeft:20,
     color: colors.primary,
   },
   buttonContainer: {
