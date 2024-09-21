@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { useNavigation } from '@react-navigation/native';
-import { launchImageLibrary } from 'react-native-image-picker';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useNavigation} from '@react-navigation/native';
+import {launchImageLibrary} from 'react-native-image-picker';
 import colors from '../../styles/colors';
 import Button from '../../components/Button';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
-const AddListingStep2 = ({ route }) => {
+const AddListingStep2 = ({route}) => {
   const navigation = useNavigation();
   const [images, setImages] = useState(route.params?.images || []);
 
@@ -19,17 +26,35 @@ const AddListingStep2 = ({ route }) => {
         maxWidth: 800,
         maxHeight: 600,
         quality: 1,
+        selectionLimit: 0,
       },
-      (response) => {
+      response => {
+        // if (response.didCancel) {
+        //   console.log('User cancelled image picker');
+        // } else if (response.error) {
+        //   console.log('ImagePicker Error: ', response.error);
+        // } else if (response.assets) {
+        //   const selectedImageUri = response.assets[0].uri;
+        //   setImages([...images, selectedImageUri]);
+        // }
         if (response.didCancel) {
           console.log('User cancelled image picker');
-        } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
-        } else if (response.assets) {
-          const selectedImageUri = response.assets[0].uri;
-          setImages([...images, selectedImageUri]);
+        } else if (response.errorCode) {
+          console.log('ImagePicker Error: ', response.errorMessage);
+          // Alert.alert('Error', 'Failed to select images');
+        } else {
+          const selectedImages = response.assets.map(
+            asset => ({
+              uri: asset.uri,
+              name: asset.fileName,
+              type: asset.type,
+            }),
+            // asset.uri,
+          );
+          console.log(selectedImages);
+          setImages(selectedImages);
         }
-      }
+      },
     );
   };
 
@@ -42,25 +67,26 @@ const AddListingStep2 = ({ route }) => {
 
   return (
     <View style={styles.container}>
-       <View style={{flexDirection:'row',alignItems:'center'}}>
-        <TouchableOpacity style={styles.backbutton} onPress={() => navigation.goBack()}>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <TouchableOpacity
+          style={styles.backbutton}
+          onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={24} color={colors.primary} />
         </TouchableOpacity>
-      <Text style={styles.title}>Add Listing</Text>
+        <Text style={styles.title}>Add Listing</Text>
       </View>
-      <View style={{flexDirection:'row', marginTop:100}}>
-      <Text style={styles.headerText}>Add </Text>
-<Text style={styles.headerTextBold}>Photos</Text>
-      <Text style={styles.headerText}> to Your Listing</Text>
+      <View style={{flexDirection: 'row', marginTop: 100}}>
+        <Text style={styles.headerText}>Add </Text>
+        <Text style={styles.headerTextBold}>Photos</Text>
+        <Text style={styles.headerText}> to Your Listing</Text>
       </View>
       <View style={styles.imageContainer}>
         {images.map((image, index) => (
           <View key={index} style={styles.imageWrapper}>
-            <Image source={{ uri: image }} style={styles.image} />
+            <Image source={{uri: image.uri}} style={styles.image} />
             <TouchableOpacity
               style={styles.removeButton}
-              onPress={() => setImages(images.filter((_, i) => i !== index))}
-            >
+              onPress={() => setImages(images.filter((_, i) => i !== index))}>
               <Text style={styles.removeText}>X</Text>
             </TouchableOpacity>
           </View>
@@ -69,11 +95,7 @@ const AddListingStep2 = ({ route }) => {
           <Text style={styles.addText}>+</Text>
         </TouchableOpacity>
       </View>
-      <Button
-                  title="Next"
-                  onPress={handleNext}
-                  style={styles.button}
-                />
+      <Button title="Next" onPress={handleNext} style={styles.button} />
       {/* <Button title="Next" onPress={handleNext} /> */}
     </View>
   );
@@ -99,26 +121,26 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     // fontWeight: 'bold',
-    fontFamily:'Lato-Bold',
-    color:colors.boldtextcolor,
+    fontFamily: 'Lato-Bold',
+    color: colors.boldtextcolor,
     // marginLeft:
     // alignSelf:''
-    marginLeft:60
+    marginLeft: 60,
     // color: '#333',
   },
   headerText: {
     fontSize: 25,
-    fontFamily:'Lato-Medium',
+    fontFamily: 'Lato-Medium',
     marginBottom: 16,
     // fontWeight: 'bold',
-    color:colors.boldtextcolor
+    color: colors.boldtextcolor,
   },
-  headerTextBold:{
+  headerTextBold: {
     fontSize: 25,
-    fontFamily:'Lato-Bold',
+    fontFamily: 'Lato-Bold',
     marginBottom: 16,
     // fontWeight: 'bold',
-    color:colors.boldtextcolor
+    color: colors.boldtextcolor,
   },
   imageContainer: {
     flexDirection: 'row',
@@ -167,7 +189,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 10,
     backgroundColor: colors.buttons,
-    marginTop:'auto'
+    marginTop: 'auto',
   },
 });
 

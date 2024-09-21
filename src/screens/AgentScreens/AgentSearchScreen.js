@@ -1,14 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, FlatList, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  FlatList,
+  TouchableOpacity,
+  Text,
+  ActivityIndicator,
+} from 'react-native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { FloatingAction } from 'react-native-floating-action';
+import {FloatingAction} from 'react-native-floating-action';
 import colors from '../../styles/colors';
 import PropertyCardForAgent from '../../components/PropertyCardForAgent';
-import { getProperties } from '../../utils/apiUtils';
+import {getProperties} from '../../utils/apiUtils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const AgentSearchScreen = () => {
   const navigation = useNavigation();
@@ -19,7 +27,7 @@ const AgentSearchScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   // Extract the propertyCategory passed from AgentHomeScreen
-  const { propertyCategory } = route.params || {};
+  const {propertyCategory} = route.params || {};
 
   const fetchProperties = async () => {
     setRefreshing(true); // Start refreshing animation
@@ -30,7 +38,7 @@ const AgentSearchScreen = () => {
         setPropertyList(res?.data || []);
       }
     } catch (err) {
-      console.log("[Error - Fetching Properties]", err);
+      console.log('[Error - Fetching Properties]', err);
     } finally {
       setLoading(false);
       setRefreshing(false); // Stop refreshing animation
@@ -45,7 +53,9 @@ const AgentSearchScreen = () => {
   useEffect(() => {
     if (propertyCategory) {
       const filtered = propertyList.filter(
-        (property) => property.propertyCategory?.toLowerCase() === propertyCategory.toLowerCase()
+        property =>
+          property.propertyCategory?.toLowerCase() ===
+          propertyCategory.toLowerCase(),
       );
       setFilteredProperties(filtered);
     } else {
@@ -57,14 +67,19 @@ const AgentSearchScreen = () => {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
-  const handlePropertyClick = (property) => {
-    navigation.navigate('AgentStack', { screen: 'PropertyDetail', params: { property } });
+  const handlePropertyClick = property => {
+    navigation.navigate('AgentStack', {
+      screen: 'PropertyDetail',
+      params: {property},
+    });
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backbutton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={styles.backbutton}
+          onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={24} color={colors.primary} />
         </TouchableOpacity>
         <Text style={styles.headerText}>Your Listing</Text>
@@ -74,8 +89,9 @@ const AgentSearchScreen = () => {
         data={filteredProperties} // Use filtered properties
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
+        renderItem={({item}) => (
           <TouchableOpacity onPress={() => handlePropertyClick(item)}>
+            {console.log('IAMGES ==> ', item)}
             <PropertyCardForAgent
               id={item.id}
               title={item.title}
@@ -95,7 +111,9 @@ const AgentSearchScreen = () => {
         )}
         ListEmptyComponent={() => (
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No listings found for "{propertyCategory}"!</Text>
+            <Text style={styles.emptyText}>
+              No listings found for "{propertyCategory}"!
+            </Text>
           </View>
         )}
         contentContainerStyle={styles.listContainer}
