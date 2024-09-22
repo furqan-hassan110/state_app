@@ -34,22 +34,13 @@ const AddListingStep3 = ({route}) => {
 
   const handleNext = () => {
     if (
-      !route.params?.listingTitle || 
-      !route.params?.location || 
-      !route.params?.address || 
-      !route.params?.construction_status || 
-      !route.params?.listing_type || 
-      !route.params?.property_category || 
-      !route.params?.property_size || 
-      !route.params?.property_type || // add missing fields here
       !sellPrice || 
       !rentPrice || 
       !rentType || 
       !totalRooms || 
       !bedrooms || 
       !bathrooms || 
-      !carSpace || 
-      !images
+      !carSpace 
     ) {
       ToastAndroid.show('Please fill all the fields', ToastAndroid.SHORT);
       return;
@@ -60,11 +51,11 @@ const AddListingStep3 = ({route}) => {
       title: route.params?.listingTitle,
       location: route.params?.location,
       address: route.params?.address,
-      construction_status: route.params?.construction_status,
-      listing_type: route.params?.listing_type,
-      property_category: route.params?.property_category,
-      property_size: route.params?.property_size,
-      property_type: route.params?.property_type,
+      construction_status: route.params?.constructionStatus,
+      listing_type: route.params?.listingType,
+      property_category: route.params?.propertyCategory,
+      property_size: '700',
+      property_type: route.params?.propertyType,
       selling_amount: sellPrice,
       rent_amount: rentPrice,
       rent_payable: rentType,

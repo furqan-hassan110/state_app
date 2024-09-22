@@ -1,6 +1,6 @@
 import axios from 'axios';
-export const DOMAIN = 'http://192.168.0.104:8000';
-export const BASE_URL = 'http://192.168.0.104:8000/api';
+export const DOMAIN = 'http://192.168.0.105:8000';
+export const BASE_URL = 'http://192.168.0.105:8000/api';
 
 const errorResponse = error => {
   if ('response' in error) {
@@ -151,7 +151,7 @@ export const register = (name, email, password, phone_no) => {
   return postRequest({url, data, token: null});
 };
 
-export const logout = token => {
+export const logout = (token) => {
   const url = `${BASE_URL}/logout`;
   return postRequest({url, token});
 };

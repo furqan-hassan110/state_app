@@ -9,10 +9,10 @@ const { width, height } = Dimensions.get('window');
 const AddListingScreen = () => {
   const navigation = useNavigation();
   
-  const [listingType, setListingType] = useState(null);
-  const [constructionStatus, setConstructionStatus] = useState(null);
-  const [propertyCategory, setPropertyCategory] = useState(null);
-  const [propertyType, setPropertyType] = useState(null);
+  const [listingType, setListingType] = useState('');
+  const [constructionStatus, setConstructionStatus] = useState('');
+  const [propertyCategory, setPropertyCategory] = useState('');
+  const [propertyType, setPropertyType] = useState('');
   const [listingTitle, setListingTitle] = useState('');
   const [listingAddress, setListingAddress] = useState('');
   const [listingLocation, setListingLocation] = useState('');

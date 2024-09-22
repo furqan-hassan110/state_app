@@ -82,14 +82,27 @@ export const AuthProvider = ({children}) => {
 
   const handleSubscribe = async () => {
     try {
-      // Perform any necessary operations for subscription (API calls, etc.)
-      // setIsSubscribed(true);
       await AsyncStorage.setItem('isSubscribed', 'true');
-      alert(
-        'Your application has been submitted. Please wait for your approval.',
-      );
+      setIsSubscribed(true); // Update context state
+      alert('Your application has been submitted. Please wait for your approval.');
     } catch (e) {
       console.error('Subscription failed:', e);
+    }
+  };
+
+  const refreshUserData = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        const response = await fetchUserData(token); // Implement this API call
+        if (response.ok) {
+          const updatedData = await response.json();
+          setUserData(updatedData);
+          await AsyncStorage.setItem('userData', JSON.stringify(updatedData));
+        }
+      }
+    } catch (e) {
+      console.error('Failed to refresh user data:', e);
     }
   };
 
