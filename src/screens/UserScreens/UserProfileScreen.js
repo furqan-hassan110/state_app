@@ -24,27 +24,22 @@ import {
   requestSubscribtion,
   subscribeUser,
   updateProfile,
-} from '../../utils/apiUtils'; // Import the updateProfile function
-
+} from '../../utils/apiUtils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
 const UserProfileScreen = () => {
-  const [isSubscribed, setIsSubscribed] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState(null); // Initialize local userData
+  const [userData, setUserData] = useState(null);
   const navigation = useNavigation();
   const { userData: contextUserData, handleSubscribe, contextLogout, updateUserContextData } = useAuth();
 
   const userToken = contextUserData?.token;
-  const userId = contextUserData?.id;
 
-  // Set subscription status and user data based on context
   useEffect(() => {
     if (contextUserData) {
-      setIsSubscribed(contextUserData.is_subscribed === 1);
-      setUserData(contextUserData); // Set local userData
+      setUserData(contextUserData);
     }
   }, [contextUserData]);
 
@@ -57,8 +52,6 @@ const UserProfileScreen = () => {
         .catch(error => {
           console.error('Logout failed:', error);
         });
-    } else {
-      console.error('No token found in userData');
     }
   };
 
@@ -66,12 +59,15 @@ const UserProfileScreen = () => {
     if (userToken) {
       requestSubscribtion(userToken)
         .then(async () => {
-          await handleSubscribe();
-          // setIsSubscribed(true);
           Alert.alert(
             'Success',
-            'Your application has been submitted. Please wait for your approval.',
+            'Your application has been submitted. Please wait for your approval.'
           );
+  
+          // Update context and local storage to indicate the request is pending
+          await handleSubscribe();
+          updateUserContextData({ is_subscribed: 0 }); // Set to 0 (requested)
+          await AsyncStorage.setItem('isSubscribed', 'false'); // Store as false
         })
         .catch(error => {
           console.error('Subscription failed:', error);
@@ -81,35 +77,22 @@ const UserProfileScreen = () => {
       Alert.alert('Error', 'No user token found for subscription.');
     }
   };
+  
 
   const handleEditProfile = () => {
-    if (isEditing) {
-      if (userData) {
-        const { name, email, phone_no } = userData;
+    if (isEditing && userData) {
+      const { name, email, phone_no } = userData;
 
-        console.log('Updating Profile with:', { name, email, phone_no });
-
-        updateProfile(userToken, { name, email, phone_no })
-          .then(async () => {
-            ToastAndroid.show('Profile updated successfully', ToastAndroid.SHORT);
-
-            // Update the AuthContext with the new data
-            updateUserContextData({
-              name,
-              email,
-              phone_no,
-            });
-
-            await AsyncStorage.setItem(
-              'userData',
-              JSON.stringify({ ...userData, name, email, phone_no })
-            );
-          })
-          .catch(error => {
-            console.error('Profile update failed:', error);
-            ToastAndroid.show('Failed to update profile', ToastAndroid.SHORT);
-          });
-      }
+      updateProfile(userToken, { name, email, phone_no })
+        .then(async () => {
+          ToastAndroid.show('Profile updated successfully', ToastAndroid.SHORT);
+          updateUserContextData({ name, email, phone_no });
+          await AsyncStorage.setItem('userData', JSON.stringify({ ...userData, name, email, phone_no }));
+        })
+        .catch(error => {
+          console.error('Profile update failed:', error);
+          ToastAndroid.show('Failed to update profile', ToastAndroid.SHORT);
+        });
     }
     setIsEditing(!isEditing);
   };
@@ -134,9 +117,7 @@ const UserProfileScreen = () => {
       <ScrollView>
         <View style={styles.profileContainer}>
           <View style={styles.headerContainer}>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.backbutton}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backbutton}>
               <Ionicons name="chevron-back" size={18} color="black" />
             </TouchableOpacity>
             <Text style={styles.header}>Profile</Text>
@@ -146,12 +127,7 @@ const UserProfileScreen = () => {
           </View>
           <View style={styles.infoContainer}>
             <View style={styles.username}>
-              <Feather
-                name="user"
-                size={18}
-                color={colors.black}
-                style={{ padding: 10 }}
-              />
+              <Feather name="user" size={18} color={colors.black} style={{ padding: 10 }} />
               <TextInput
                 style={styles.infoText}
                 value={userData.name}
@@ -162,56 +138,33 @@ const UserProfileScreen = () => {
           </View>
           <View style={styles.infoContainer}>
             <View style={styles.username}>
-              <Feather
-                name="phone"
-                size={18}
-                color={colors.black}
-                style={{ padding: 10 }}
-              />
+              <Feather name="phone" size={18} color={colors.black} style={{ padding: 10 }} />
               <TextInput
                 style={styles.infoText}
                 value={userData.phone_no}
                 editable={isEditing}
-                onChangeText={value => handleTextChange('phone_no', value)} // Ensure correct field name
+                onChangeText={value => handleTextChange('phone_no', value)}
               />
             </View>
           </View>
           <View style={styles.infoContainer}>
             <View style={styles.username}>
-              <Feather
-                name="mail"
-                size={18}
-                color={colors.black}
-                style={{ padding: 10 }}
-              />
+              <Feather name="mail" size={18} color={colors.black} style={{ padding: 10 }} />
               <TextInput
                 style={styles.infoText}
                 value={userData.email}
-                editable={false} // Email should always be non-editable
+                editable={false}
               />
-
             </View>
           </View>
         </View>
         <View style={styles.buttonContainer}>
-          {!isSubscribed && (
-            <Button
-              onPress={handleUserSubscribe}
-              title="Subscribe"
-              style={styles.subscribeButton}
-            />
+          {!userData.is_subscribed && (
+            <Button onPress={handleUserSubscribe} title="Subscribe" style={styles.subscribeButton} />
           )}
           <View style={styles.buttonGroup}>
-            <Button
-              onPress={handleEditProfile}
-              title={isEditing ? 'Save Changes' : 'Edit Profile'}
-              style={styles.editProfileButton}
-            />
-            <Button
-              title="Log Out"
-              style={styles.editProfileButton}
-              onPress={handleLogout}
-            />
+            <Button onPress={handleEditProfile} title={isEditing ? 'Save Changes' : 'Edit Profile'} style={styles.editProfileButton} />
+            <Button title="Log Out" style={styles.editProfileButton} onPress={handleLogout} />
           </View>
         </View>
       </ScrollView>
