@@ -43,23 +43,39 @@ const PropertyCardForAgent = ({
   const navigation = useNavigation();
 
   const handleDelete = () => {
-    const {userData} = token;
-    const userToken = userData?.token;
-
-    console.log(userToken);
-    deleteCategory(id, userToken)
-      .then(res => {
-        console.log('PROPERTY DELETED [RES] ==> ', res);
-        if (res.success) {
-          Alert.alert('Success', 'Property category deleted successfully');
-        } else {
-          Alert.alert('Error', 'Failed to delete property category');
-        }
-      })
-      .catch(err => {
-        console.log('PROPERTY DELETED [ERR] ==> ', err);
-      });
+    Alert.alert(
+      "Confirm Delete",
+      "Are you sure you want to delete this property?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => {
+            const { userData } = token;
+            const userToken = userData?.token;
+  
+            deleteCategory(id, userToken)
+              .then(res => {
+                if (res.success) {
+                  Alert.alert('Success', 'Property category deleted successfully');
+                  onRefresh(); // Call onRefresh to update the list if needed
+                } else {
+                  Alert.alert('Error', 'Failed to delete property category');
+                }
+              })
+              .catch(err => {
+                console.log('PROPERTY DELETED [ERR] ==> ', err);
+              });
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
+  
   const handleUpdate = () => {
     navigation.navigate('EditListingScreen', {id: id});
   };

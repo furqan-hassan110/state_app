@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,13 +12,13 @@ import {
   Alert,
   ToastAndroid
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
 import Button from '../../components/Button';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import profile from '../../../assets/images/profile.png';
 import Feather from 'react-native-vector-icons/Feather';
-import {useAuth} from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import {
   logout,
   requestSubscribtion,
@@ -28,14 +28,14 @@ import {
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const UserProfileScreen = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState(null); // Initialize local userData
   const navigation = useNavigation();
-  const {userData: contextUserData, handleSubscribe, contextLogout, updateUserContextData} = useAuth();
+  const { userData: contextUserData, handleSubscribe, contextLogout, updateUserContextData } = useAuth();
 
   const userToken = contextUserData?.token;
   const userId = contextUserData?.id;
@@ -85,21 +85,21 @@ const UserProfileScreen = () => {
   const handleEditProfile = () => {
     if (isEditing) {
       if (userData) {
-        const {name, email, phone_no} = userData;
-  
-        console.log('Updating Profile with:', {name, email, phone_no});
-  
-        updateProfile(userToken, {name, email, phone_no})
+        const { name, email, phone_no } = userData;
+
+        console.log('Updating Profile with:', { name, email, phone_no });
+
+        updateProfile(userToken, { name, email, phone_no })
           .then(async () => {
             ToastAndroid.show('Profile updated successfully', ToastAndroid.SHORT);
-  
+
             // Update the AuthContext with the new data
             updateUserContextData({
               name,
               email,
               phone_no,
             });
-  
+
             await AsyncStorage.setItem(
               'userData',
               JSON.stringify({ ...userData, name, email, phone_no })
@@ -150,7 +150,7 @@ const UserProfileScreen = () => {
                 name="user"
                 size={18}
                 color={colors.black}
-                style={{padding: 10}}
+                style={{ padding: 10 }}
               />
               <TextInput
                 style={styles.infoText}
@@ -166,7 +166,7 @@ const UserProfileScreen = () => {
                 name="phone"
                 size={18}
                 color={colors.black}
-                style={{padding: 10}}
+                style={{ padding: 10 }}
               />
               <TextInput
                 style={styles.infoText}
@@ -182,14 +182,14 @@ const UserProfileScreen = () => {
                 name="mail"
                 size={18}
                 color={colors.black}
-                style={{padding: 10}}
+                style={{ padding: 10 }}
               />
               <TextInput
                 style={styles.infoText}
                 value={userData.email}
-                editable={isEditing}
-                onChangeText={value => handleTextChange('email', value)}
+                editable={false} // Email should always be non-editable
               />
+
             </View>
           </View>
         </View>
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 30,
-    alignSelf:'center'
+    alignSelf: 'center'
   },
   headerContainer: {
     flexDirection: 'row',
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato-Bold',
     fontSize: 20,
     alignSelf: 'center',
-    marginRight:140
+    marginRight: 140
   },
   backbutton: {
     backgroundColor: colors.textinputfill,

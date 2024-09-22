@@ -100,7 +100,7 @@ const UserSearchScreen = () => {
             <TouchableOpacity onPress={() => handlePropertyClick(item)}>
               <SearchCards
                 id={item.id}
-                imageSource={item.image ? { uri: item.image } : require('../../../assets/images/role1.png')}
+                images={item.images}
                 title={item.title}
                 location={item.location}
                 price={item.sellingPrice}

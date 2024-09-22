@@ -47,7 +47,7 @@ const EditListingScreen = () => {
       selling_amount: '',
       rent_amount: '',
       rent_payable: '',
-      // bedroomCount: 0,
+      bedroom_count: '',
       bathroom_count: '',
       car_space_count: '',
       total_room_count: '',
@@ -84,7 +84,8 @@ const EditListingScreen = () => {
           selling_amount: sellingPrice,
           rent_amount: rentPrice,
           rent_payable: rentPayable,
-          bedroomCount, bathroom_count: bathroomCount,
+          bedroom_count: bedroomCount, 
+          bathroom_count: bathroomCount,
           car_space_count: carSpaceCount,
           total_room_count: totalRoomCount,
         }
@@ -102,9 +103,9 @@ const EditListingScreen = () => {
   const handleSave = async () => {
     const updatedPropertyData = {
   title: listingTitle || propertyData.title,
-  listingLocation: listingLocation || propertyData.location,
+  location: listingLocation || propertyData.location,
   property_size: '100',
-  listingAddress: listingAddress || propertyData.address,
+  address: listingAddress || propertyData.address,
   construction_status: constructionStatus || propertyData.construction_status,
   listing_type: listingType || propertyData.listing_type,
   property_category: propertyCategory || propertyData.property_category,
@@ -112,7 +113,7 @@ const EditListingScreen = () => {
   selling_amount: sellPrice || propertyData.selling_amount,
   rent_amount: rentPrice || propertyData.rent_amount,
   rent_payable: rentType || propertyData.rent_payable,
-  bedroomCount: bedrooms || propertyData.bedroomCount,
+  bedroom_count: bedrooms || propertyData.bedroom_count,
       bathroom_count: bathrooms || propertyData.bathroom_count,
       car_space_count: carSpace || propertyData.car_space_count,
   total_room_count: totalRooms || propertyData.total_room_count,
@@ -291,14 +292,14 @@ const EditListingScreen = () => {
   <View style={styles.counterContainer}>
   <TouchableOpacity
     style={styles.counterButton}
-    onPress={() => setBedrooms(prev => Math.max((Number(prev) ?? propertyData?.bedroomCount ?? 0) - 1, 0))}
+    onPress={() => setBedrooms(prev => Math.max((Number(prev) ?? propertyData?.bedroom_count ?? 0) - 1, 0))}
   >
     <Text style={styles.counterText}>-</Text>
   </TouchableOpacity>
-  <Text style={styles.counterValue}>{bedrooms || propertyData?.bedroomCount}</Text>
+  <Text style={styles.counterValue}>{bedrooms || propertyData?.bedroom_count}</Text>
   <TouchableOpacity
     style={styles.counterButton}
-    onPress={() => setBedrooms(prev => (Number(prev) ?? propertyData?.bedroomCount ?? 0) + 1)}
+    onPress={() => setBedrooms(prev => (Number(prev) ?? propertyData?.bedroom_count ?? 0) + 1)}
   >
     <Text style={styles.counterText}>+</Text>
   </TouchableOpacity>

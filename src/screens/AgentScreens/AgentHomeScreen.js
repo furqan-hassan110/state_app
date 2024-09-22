@@ -149,7 +149,7 @@ const AgentHomeScreen = () => {
               <TouchableOpacity onPress={() => handlePropertyClick(item)}>
                 <PropertyCard
                   id={item.id}
-                  imageSource={item.image ? { uri: item.image } : require('../../../assets/images/role1.png')} // Ensure the image source is handled correctly
+                  images={item.images} // Ensure the image source is handled correctly
                   title={item.title}
                   // cityName={item.city_name}
                   country={item.location}

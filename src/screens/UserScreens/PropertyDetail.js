@@ -5,7 +5,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Modal from 'react-native-modal';
-
+import { DOMAIN, getPropertiesById } from '../../utils/apiUtils';  // API import
 import colors from '../../styles/colors';
 import Button from '../../components/Button';
 import { useAuth } from '../../contexts/AuthContext';
@@ -15,40 +15,56 @@ const { width, height } = Dimensions.get('window');
 const PropertyDetail = ({ route, navigation }) => {
   const { property } = route.params;
   const { userData } = useAuth();
-  useEffect(() => {
-    console.log('Property received in detail screen:', property);  // Check if the property is being received correctly
-  }, []);
-
-
+  
+  const [propertyDetails, setPropertyDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  // const [userData, setUserData] = useState(null);
 
-  // Function to handle the press event
+  // Fetch single property details
+  useEffect(() => {
+    const fetchPropertyDetails = async () => {
+      try {
+        setLoading(true);
+        const response = await getPropertiesById(property.id, userData.token);
+        setPropertyDetails(response.data);  // Assuming data is returned under `data`
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching property details:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchPropertyDetails();
+  }, [property.id, userData.token]);
+
+  // Toggle favorite handler
   const handleToggleFavorite = () => {
     setIsFavorite(!isFavorite);
   };
 
-
+  // Toggle modal
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
 
+  // Handle image press
   const handleImagePress = () => {
-    const images = [property.imageSource]; // Replace with actual image URIs
-    navigation.navigate('UserStack', { screen: 'UserSearch' });
-
+    const images = [propertyDetails.imageSource]; // Replace with actual image URIs
     navigation.navigate('UserStack', {screen:'ImageSlider', params:{images} });
-    console.log(property)
   };
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>  
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styles.container}>
-      <View style={{
-        flexDirection: 'row', top: 30,
-        left: 20,
-        zIndex: 10, justifyContent: 'space-between', width: '100%', position: 'absolute', alignItems: 'center', alignContent: 'center'
-      }}>
+      <View style={{flexDirection: 'row', top: 30, left: 20, zIndex: 10, justifyContent: 'space-between', width: '100%', position: 'absolute'}}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={20} color={colors.primary} />
         </TouchableOpacity>
@@ -56,33 +72,20 @@ const PropertyDetail = ({ route, navigation }) => {
           style={[styles.heartIcon, { backgroundColor: isFavorite ? colors.buttons : colors.boldtextcolor }]}
           onPress={handleToggleFavorite}
         >
-          <MaterialCommunityIcons
-            name={isFavorite ? 'cards-heart' : 'cards-heart-outline'}
-            size={15}
-            color='white'
-          />
+          <MaterialCommunityIcons name={isFavorite ? 'cards-heart' : 'cards-heart-outline'} size={15} color='white'/>
         </TouchableOpacity>
       </View>
       <View style={styles.category}>
-        <Text style={styles.categorytext}>{property.propertyCategory}</Text>
+        <Text style={styles.categorytext}>{propertyDetails.propertyCategory}</Text>
       </View>
 
-      <Image source={property.imageSource ? {uri: property.imageSource}: require('../../../assets/images/role1.png')} style={styles.image} />
-      <View style={{left: 250,top:200 , position:'absolute'}}>
-        <View >
-          <Image source={property.imageSource ? {uri: property.imageSource}: require('../../../assets/images/role3.png')} style={{marginBottom:15, width: width * 0.2, height: height * 0.08, borderRadius: 20, borderWidth: 2, borderColor: colors.white }}></Image>
-        </View>
-        <View>
-          <Image source={property.imageSource ? {uri: property.imageSource}: require('../../../assets/images/role2.png')} style={{marginBottom:15, width: width * 0.2, height: height * 0.08, borderRadius: 20, borderWidth: 2, borderColor: colors.white }}></Image>
-        </View>
-        <TouchableOpacity onPress={handleImagePress}>
-          <View style={{backgroundColor:colors.black, opacity:0.5,width: width * 0.2, height: height * 0.08,borderRadius: 20,}}>
-          <Image source={property.imageSource ? {uri: property.imageSource}: require('../../../assets/images/role1.png')} style={{marginBottom:15, width: width * 0.2, height: height * 0.08, borderRadius: 20, borderWidth: 2, borderColor: colors.white }}></Image>
-          </View>
-          
-        </TouchableOpacity>
-        <Entypo style={{position:'obsolute', bottom:40,left:20}} name='plus'size={24} color={colors.white}/>
-      </View>
+      <Image
+  source={propertyDetails.images.length > 0 ? { uri: `${DOMAIN}${propertyDetails.images[0].imagePath}` } : require('../../../assets/images/role1.png')}
+  style={styles.image}
+/>
+
+
+      {/* Render the rest of the property details */}
       <View style={styles.detailsContainer}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={styles.title}>{property.title}</Text>
@@ -142,28 +145,19 @@ const PropertyDetail = ({ route, navigation }) => {
 
         </View>
       </View>
-       <Modal
-       isVisible={isModalVisible}
-       onBackdropPress={toggleModal}
-       backdropColor={colors.primary}
-       backdropOpacity={0.8}
-       style={styles.modal}
-     >
-       <View style={styles.modalContent}>
-        <View style={styles.noContainerModal}>
-        <Text style={styles.modalText}>{userData.phone_no}</Text>
-         </View>
-         <Button
-           title="Cancel"
-           onPress={toggleModal}
-           style={styles.modalButton}
-         />
-       </View>
-     </Modal>
+      
+      
+      <Modal isVisible={isModalVisible} onBackdropPress={toggleModal} backdropColor={colors.primary} backdropOpacity={0.8} style={styles.modal}>
+        <View style={styles.modalContent}>
+          <View style={styles.noContainerModal}>
+            <Text style={styles.modalText}>{userData.phone_no}</Text>
+          </View>
+          <Button title="Cancel" onPress={toggleModal} style={styles.modalButton} />
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

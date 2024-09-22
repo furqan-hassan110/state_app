@@ -7,7 +7,7 @@ const { width, height } = Dimensions.get('window');
 
 const Homecards = ({ imageSource, label }) => {
   return (
-    <View style={styles.cardContainer}>
+    <View style={styles.cardContainer} >
       <Image source={imageSource} style={styles.image} />
       <View style={styles.textContainer}>
         <Text style={styles.text}>{label}</Text>

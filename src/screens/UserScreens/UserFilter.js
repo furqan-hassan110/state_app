@@ -65,9 +65,9 @@ const UserFilter = () => {
     setSelectedBedrooms(0); // Reset bedrooms
     setSelectedBathrooms(0); // Reset bathrooms
     setSelectedCarSpaces(0); // Reset car spaces
-    setSelectedConstructionStatus('New'); // Reset construction status
-    setSelectedPropertyType('Commercial'); // Reset property type
-    setSelectedLandSize(600); // Reset land size
+    setSelectedConstructionStatus(''); // Reset construction status
+    setSelectedPropertyType(''); // Reset property type
+    setSelectedLandSize(''); // Reset land size
   };
   // console.log("UserFilter Component Rendered");
 

@@ -5,11 +5,11 @@ import colors from '../styles/colors';
 import img1 from '../../assets/images/role1.png'; 
 import { useLoved } from '../contexts/LovedContext';
 import { useAuth } from '../contexts/AuthContext';
-import { addLovedProperty, removeLovedProperties } from '../utils/apiUtils';
+import { addLovedProperty, removeLovedProperties , DOMAIN} from '../utils/apiUtils';
 
 const { width, height } = Dimensions.get('window');
 
-const SearchResultCard = ({ id, imageSource, title, location, cityName, country, price, isLovedScreen }) => {
+const SearchResultCard = ({ id, images, title, location, cityName, country, price, isLovedScreen }) => {
   const { lovedProperties, setLovedProperties } = useLoved();
   const { userData } = useAuth();
   const userToken = userData?.token;
@@ -41,7 +41,14 @@ const SearchResultCard = ({ id, imageSource, title, location, cityName, country,
   return (
     <View style={styles.cardContainer}>
       <View style={styles.imageWrapper}>
-        <Image source={imageSource} style={styles.image} />
+      <Image
+          source={
+            images.length
+              ? {uri: `${DOMAIN}${images[0].imagePath}`}
+              : require('../../assets/images/role1.png')
+          }
+          style={styles.image}
+        />
         
         <TouchableOpacity
           style={[styles.heartIcon, { backgroundColor: isLoved ? colors.buttons : 'transparent' }]}

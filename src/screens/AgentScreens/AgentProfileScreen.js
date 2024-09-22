@@ -118,11 +118,10 @@ const AgentProfileScreen = () => {
             <View style={styles.username}>
               <Feather name="mail" size={18} color={colors.black} style={styles.icon} />
               <TextInput
-                style={styles.infoText}
-                value={userData.email}
-                editable={isEditing}
-                onChangeText={value => handleTextChange('email', value)}
-              />
+      style={styles.infoText}
+      value={userData.email}
+      editable={false} // Email field is always non-editable
+    />
             </View>
           </View>
         </View>

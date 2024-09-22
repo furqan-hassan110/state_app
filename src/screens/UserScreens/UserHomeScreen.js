@@ -87,6 +87,10 @@ const UserHomeScreen = () => {
     navigation.navigate('UserStack', { screen: 'PropertyDetail', params: { property } });
   };
 
+  const handleCategoryPress = (category) => {
+    navigation.navigate('UserSearch', { selectedCategory: category });
+  };
+
   if (loading) {
     return  <ActivityIndicator size="large" color="#0000ff" />;
   }
@@ -112,20 +116,20 @@ const UserHomeScreen = () => {
         />
         <ScrollView>
           <View>
-            <FlatList
-              data={propertyDetail}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item) => item.category}
-              renderItem={({ item }) => (
-                <Category
-                  title={item.category}
-                  onPress={() => filterResults(item.category)}
-                  isSelected={item.category === selectedCategory}
-                />
-              )}
-              style={styles.categoriesList}
-            />
+          <FlatList
+  data={propertyDetail}
+  horizontal
+  showsHorizontalScrollIndicator={false}
+  keyExtractor={(item) => item.category}
+  renderItem={({ item }) => (
+    <Category
+      title={item.category}
+      onPress={() => handleCategoryPress(item.category)} // Pass the selected category
+      isSelected={item.category === selectedCategory}
+    />
+  )}
+  style={styles.categoriesList}
+/>
           </View>
           <View style={{}}>
             <FlatList
@@ -134,7 +138,9 @@ const UserHomeScreen = () => {
               showsHorizontalScrollIndicator={false}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
+                <TouchableOpacity  onPress={() => handleCategoryPress(item.category)} >
                 <Homecards imageSource={item.imageSource} label={item.category} />
+                </TouchableOpacity>
               )}
               contentContainerStyle={styles.listContainer}
             />
@@ -156,7 +162,7 @@ const UserHomeScreen = () => {
                   <TouchableOpacity onPress={() => handlePropertyClick(item)}>
                     <PropertyCard
                       id={item.id}
-                      imageSource={item.image ? { uri: item.image } : require('../../../assets/images/role1.png')}
+                      images={item.images}
                       title={item.title}
                       country={item.location}
                       price={item.sellingPrice}

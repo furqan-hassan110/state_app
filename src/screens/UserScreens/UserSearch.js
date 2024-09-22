@@ -15,47 +15,42 @@ const UserSearch = () => {
   const [properties, setProperties] = useState([]);
   const route = useRoute();
   const navigation = useNavigation();
-  const { filters } = route.params;
-  const { query, fromHome } = route.params || {}; // Destructure fromHome from params
-  console.log(query);
-
+  
+  // Retrieve filters or category from route parameters
+  const { filters, query, fromHome, selectedCategory } = route.params || {};
+  
   useEffect(() => {
     const fetchProperties = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
-        console.log("Retrieved token:", token);
-
         if (token) {
           const res = await getProperties(token);
-          console.log("[RES - GET ALL PROPERTIES] ==> ", res);
           setProperties(res?.data || []);
-        } else {
-          console.log("Token not found");
         }
       } catch (err) {
-        console.log("[RES - GET ALL PROPERTIES] ==> ", err);
+        console.log("[ERROR] Fetching properties: ", err);
       }
     };
 
     fetchProperties();
   }, []);
 
-  const filteredResults = Array.isArray(properties) ? properties.filter((property) => {
+  const filteredResults = properties.filter((property) => {
     const searchQuery = query ? query.toLowerCase() : ''; // Default to empty string if query is undefined
     const fromHomeScreen = fromHome || false; // Default to false if fromHome is not provided
 
     // Check if the property title matches the search query when coming from the home screen
     const matchesQuery = fromHomeScreen && property.propertyCategory && property.propertyCategory.toLowerCase() === searchQuery.toLowerCase();
     
-    // Check if the property matches the filters passed from UserFilter
-    const matchesCategory = !fromHomeScreen && filters?.category ? property.propertyCategory.toLowerCase() === filters.category.toLowerCase() : true;
-    const matchesPrice = filters?.price ? property.sellingPrice <= filters.price : true;
-    const matchesBedrooms = filters?.bedrooms ? property.bedrooms === filters.bedrooms : true;
-    const matchesBathrooms = filters?.bathrooms ? property.bathrooms === filters.bathrooms : true;
-    const matchesCarSpaces = filters?.carSpaces ? property.carSpaces === filters.carSpaces : true;
-    const matchesConstructionStatus = filters?.constructionStatus ? property.constructionStatus?.toLowerCase() === filters.constructionStatus.toLowerCase() : true;
-    const matchesPropertyType = filters?.propertyType ? property.propertyType?.toLowerCase() === filters.propertyType.toLowerCase() : true;
-    const matchesLandSize = filters?.landSize ? property.landSize >= filters.landSize : true;
+    // Check if the property matches the selected category or filters passed from UserFilter
+    const matchesCategory = selectedCategory ? property.propertyCategory.toLowerCase() === selectedCategory.toLowerCase() : true;
+    const matchesPrice = !fromHomeScreen && filters?.price ? property.sellingPrice <= filters.price : true;
+    const matchesBedrooms = !fromHomeScreen && filters?.bedrooms ? property.bedrooms === filters.bedrooms : true;
+    const matchesBathrooms = !fromHomeScreen && filters?.bathrooms ? property.bathrooms === filters.bathrooms : true;
+    const matchesCarSpaces = !fromHomeScreen && filters?.carSpaces ? property.carSpaces === filters.carSpaces : true;
+    const matchesConstructionStatus = !fromHomeScreen && filters?.constructionStatus ? property.constructionStatus?.toLowerCase() === filters.constructionStatus.toLowerCase() : true;
+    const matchesPropertyType = !fromHomeScreen && filters?.propertyType ? property.propertyType?.toLowerCase() === filters.propertyType.toLowerCase() : true;
+    const matchesLandSize = !fromHomeScreen && filters?.landSize ? property.landSize >= filters.landSize : true;
 
     // Apply search query filter if coming from the home screen
     if (fromHomeScreen) {
@@ -72,13 +67,13 @@ const UserSearch = () => {
         matchesLandSize
       );
     }
-  }) : [];
+  });
 
   const renderSearchResult = ({ item }) => {
     return (
       <SearchCards
         id={item.id}
-        imageSource={item.image ? { uri: item.image } : require('../../../assets/images/role1.png')}
+        images={item.images}
         title={item.title}
         location={item.location}
         price={item.sellingPrice}
@@ -100,7 +95,7 @@ const UserSearch = () => {
       <SearchBar showFilterIcon={false} />
       <FlatList
         data={filteredResults}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={renderSearchResult}
         numColumns={2}
         contentContainerStyle={styles.listContent}

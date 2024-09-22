@@ -3,12 +3,12 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, ToastAndro
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../styles/colors';
 import { useLoved } from '../contexts/LovedContext';
-import { addLovedProperty, removeLovedProperties } from '../utils/apiUtils';
+import { addLovedProperty, removeLovedProperties, DOMAIN } from '../utils/apiUtils';
 import { useAuth } from '../contexts/AuthContext';
 
 const { width, height } = Dimensions.get('window');
 
-const PropertyCard = ({ id, imageSource, title, cityName, country, price }) => {
+const PropertyCard = ({ id, imageSource, title, cityName, country, price, images }) => {
   const { lovedProperties, setLovedProperties } = useLoved();
   const { userData } = useAuth();
   const userToken = userData?.token;
@@ -40,7 +40,14 @@ const PropertyCard = ({ id, imageSource, title, cityName, country, price }) => {
   return (
     <View style={styles.cardContainer}>
       <View style={styles.imageContainer}>
-        <Image source={imageSource} style={styles.image} />
+      <Image
+          source={
+            images.length
+              ? {uri: `${DOMAIN}${images[0].imagePath}`}
+              : require('../../assets/images/role1.png')
+          }
+          style={styles.image}
+        />
         <TouchableOpacity
           style={[styles.heartIcon, { backgroundColor: isLoved ? colors.buttons : 'transparent' }]}
           onPress={handleToggleLoved}

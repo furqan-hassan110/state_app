@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
+  ToastAndroid,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -24,31 +25,53 @@ const AddListingStep3 = ({route}) => {
   const navigation = useNavigation();
   const [sellPrice, setSellPrice] = useState('');
   const [rentPrice, setRentPrice] = useState('');
-  const [rentType, setRentType] = useState('Monthly');
+  const [rentType, setRentType] = useState('');
   const [bedrooms, setBedrooms] = useState('');
   const [bathrooms, setBathrooms] = useState('');
   const [carSpace, setCarSpace] = useState('');
-  const [totalRooms, setTotalRooms] = useState('<4');
+  const [totalRooms, setTotalRooms] = useState('');
   const [isModalVisible, setModalVisible] = useState(false);
 
   const handleNext = () => {
+    if (
+      !route.params?.listingTitle || 
+      !route.params?.location || 
+      !route.params?.address || 
+      !route.params?.construction_status || 
+      !route.params?.listing_type || 
+      !route.params?.property_category || 
+      !route.params?.property_size || 
+      !route.params?.property_type || // add missing fields here
+      !sellPrice || 
+      !rentPrice || 
+      !rentType || 
+      !totalRooms || 
+      !bedrooms || 
+      !bathrooms || 
+      !carSpace || 
+      !images
+    ) {
+      ToastAndroid.show('Please fill all the fields', ToastAndroid.SHORT);
+      return;
+    }
+  
+    // Proceed to create property
     const propertyObject = {
-      title: route.params?.listingTitle || 'Sample Title',
-      location: route.params?.listingLocation || 'Sample Location',
-      address: route.params?.listingAddress || 'Sample Address',
-      construction_status:
-        route.params?.constructionStatus || 'Under Construction',
-      listing_type: route.params?.listingType || 'rent',
-      property_category: route.params?.propertyCategory || 'Residential',
-      property_size: route.params?.propertySize || '1200',
-      property_type: route.params?.propertyType || 'Apartment',
-      selling_amount: sellPrice || '',
-      rent_amount: rentPrice || '',
-      rent_payable: rentType || 'Monthly',
-      total_room_count: totalRooms || '2',
+      title: route.params?.listingTitle,
+      location: route.params?.location,
+      address: route.params?.address,
+      construction_status: route.params?.construction_status,
+      listing_type: route.params?.listing_type,
+      property_category: route.params?.property_category,
+      property_size: route.params?.property_size,
+      property_type: route.params?.property_type,
+      selling_amount: sellPrice,
+      rent_amount: rentPrice,
+      rent_payable: rentType,
+      total_room_count: totalRooms,
       bedroom_count: bedrooms,
-      bathroom_count: bathrooms || '',
-      car_space_count: carSpace || '',
+      bathroom_count: bathrooms,
+      car_space_count: carSpace,
       images,
     };
 
@@ -75,7 +98,7 @@ const AddListingStep3 = ({route}) => {
     formData.append('bedroom_count', propertyObject.bedroom_count);
     formData.append('bathroom_count', propertyObject.bathroom_count);
     formData.append('car_space_count', propertyObject.car_space_count);
-    // console.log('FORM DATA ==> ', formData);
+    console.log('FORM DATA ==> ', formData);
     const {userData} = token;
     const userToken = userData?.token;
 

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions , ScrollView} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, ScrollView, Alert, ToastAndroid } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import SearchBar from '../../components/SearchBar';
 import colors from '../../styles/colors';
 import { useNavigation } from '@react-navigation/native';
 
@@ -14,13 +13,12 @@ const AddListingScreen = () => {
   const [constructionStatus, setConstructionStatus] = useState(null);
   const [propertyCategory, setPropertyCategory] = useState(null);
   const [propertyType, setPropertyType] = useState(null);
-  const [listingTitle, setListingTitle] = useState();
-  const [listingAddress, setListingAddress] = useState();
-  const [listingLocation, setListingLocation] = useState();
-
+  const [listingTitle, setListingTitle] = useState('');
+  const [listingAddress, setListingAddress] = useState('');
+  const [listingLocation, setListingLocation] = useState('');
 
   const handleSelection = (type, value) => {
-    switch(type) {
+    switch (type) {
       case 'listingType':
         setListingType(value);
         break;
@@ -37,6 +35,13 @@ const AddListingScreen = () => {
   };
 
   const handleNext = () => {
+    // Validation: Check if all fields are filled
+    if (!listingTitle || !listingAddress || !listingLocation || !listingType || !constructionStatus || !propertyCategory || !propertyType) {
+      ToastAndroid.show('Please fill all the feilds', ToastAndroid.SHORT);
+      return;
+    }
+
+    // Navigate to the next screen if validation passes
     navigation.navigate('AddListingScreen2', {
       constructionStatus,
       listingTitle,
@@ -50,52 +55,42 @@ const AddListingScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-        <View style={{flexDirection:'row',alignItems:'center'}}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <TouchableOpacity style={styles.backbutton} onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={24} color={colors.primary} />
         </TouchableOpacity>
-      <Text style={styles.title}>Add Listing</Text>
+        <Text style={styles.title}>Add Listing</Text>
       </View>
       <Text style={styles.subtitle}>Hi Cynthia, Fill detail of your <Text style={styles.highlight}>real estate</Text></Text>
 
-      {/* <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="The Lodge House"
-          placeholderTextColor="#000"
-          editable={false}
-        />
-        <Ionicons name="home-outline" size={24} color="#000" style={styles.homeIcon} />
-      </View> */}
-      <SearchBar style={{marginBottom:10}}/>
       <View>
-      <Text style={styles.sectionTitle}>Title</Text>
+        <Text style={styles.sectionTitle}>Title</Text>
         <TextInput
           style={styles.textInput}
           placeholder="Enter Listing Title"
           placeholderTextColor={colors.textinputplaceholdercolor}
           value={listingTitle}
-          onChangeText={setListingTitle} 
+          onChangeText={setListingTitle}
         />
       </View>
       <View>
-      <Text style={styles.sectionTitle}>Address</Text>
+        <Text style={styles.sectionTitle}>Address</Text>
         <TextInput
           style={styles.textInput}
-          placeholder="Enter Listing Title"
+          placeholder="Enter Listing Address"
           placeholderTextColor={colors.textinputplaceholdercolor}
           value={listingAddress}
-          onChangeText={setListingAddress} 
+          onChangeText={setListingAddress}
         />
       </View>
       <View>
-      <Text style={styles.sectionTitle}>Location</Text>
+        <Text style={styles.sectionTitle}>Location</Text>
         <TextInput
           style={styles.textInput}
-          placeholder="Enter Listing Title"
+          placeholder="Enter Listing Location"
           placeholderTextColor={colors.textinputplaceholdercolor}
           value={listingLocation}
-          onChangeText={setListingLocation} 
+          onChangeText={setListingLocation}
         />
       </View>
 
