@@ -9,6 +9,7 @@ import AgentSearchScreen from '../screens/AgentScreens/AgentSearchScreen';
 import EditListingScreen from '../screens/AgentScreens/EditListingScreen';
 import AgentProfileScreen from '../screens/AgentScreens/AgentProfileScreen';
 import PropertyDetail from '../screens/AgentScreens/propertyDetails';
+import AgentSearchResult from '../screens/AgentScreens/AgentSearchResult';
 
 const Stack = createStackNavigator();
 
@@ -51,6 +52,9 @@ const AgentNavigator = () => {
 
       <Stack.Screen name="AgentSearchScreen" 
       component={AgentSearchScreen} 
+      options={{ headerShown: false }} />
+      <Stack.Screen name="AgentSearchResult" 
+      component={AgentSearchResult} 
       options={{ headerShown: false }} />
       {/* <Stack.Screen
         name="SelectRoleScreen"

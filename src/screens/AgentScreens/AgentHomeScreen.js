@@ -4,7 +4,7 @@ import { View, Text, Image, StyleSheet, Dimensions, FlatList, ScrollView, Toucha
 import { LovedProvider } from '../../contexts/LovedContext';
 import logo from '../../../assets/images/logo.png';
 import profile from '../../../assets/images/profile.png';
-import SearchBar from '../../components/SearchBar';
+import SearchBarForAgent from '../../components/SearchBarForAgent';
 import Category from '../../components/Category';
 import PropertyCard from '../../components/PropertyCard';
 import colors from '../../styles/colors';
@@ -92,9 +92,10 @@ const AgentHomeScreen = () => {
         </View>
         <Text style={styles.text1}>Let's start exploring</Text>
         <View style={{marginRight:80, flexDirection:'row', alignItems:'center'}}>
-        <SearchBar
+        <SearchBarForAgent
         customWidth={width*0.95}
         customHeight={height*0.07}
+        // onPress={}
           // width={width*0.7}
           // height={height*0.1} 
           placeholder="Search for properties" 
@@ -129,7 +130,7 @@ const AgentHomeScreen = () => {
               showsHorizontalScrollIndicator={false}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => handleCategoryClick(item.category)}>
+                <TouchableOpacity >
                 <Homecards imageSource={item.imageSource} label={item.category} />
                 </TouchableOpacity>
               )}

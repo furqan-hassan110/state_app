@@ -87,14 +87,14 @@ const SelectRoleScreen = () => {
             fontFamily="Lato-Bold"
           />
         </View>
-        <View style={{flexDirection: 'row', marginTop: 'auto'}}>
+        {/* <View style={{flexDirection: 'row', marginTop: 'auto'}}>
           <Text style={styles.alreadytext}>
             If you already have an account ?
           </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
             <Text style={styles.sign}> Sign In</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     </View>
   );
