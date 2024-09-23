@@ -61,10 +61,13 @@ const AddListingStep2 = ({route}) => {
 
   const handleNext = () => {
     if (images.length === 0) {
-      ToastAndroid.show( 'Please select at least one image before proceeding.', ToastAndroid.SHORT);
+      ToastAndroid.show(
+        'Please select at least one image before proceeding.',
+        ToastAndroid.SHORT,
+      );
       return; // Prevent navigation if validation fails
     }
-  
+
     // If validation passes, navigate to the next screen
     navigation.navigate('AddListingScreen3', {
       ...route.params,

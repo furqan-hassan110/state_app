@@ -1,29 +1,40 @@
-import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Dimensions, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../styles/colors';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
-const SearchBarForAgent = ({ 
-  placeholder, 
-  value, 
+const SearchBarForAgent = ({
+  placeholder,
+  value,
   onPress,
-  onChangeText = () => { }, 
+  onChangeText = () => {},
   customWidth = width * 0.93, // Default width 93% of the screen width
-  customHeight = height * 0.07 
+  customHeight = height * 0.07,
 }) => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState(value || '');
   const [isFocused, setIsFocused] = useState(false); // Add state for focus
 
   const handleSearch = () => {
-    navigation.navigate('UserStack', { 
-      screen: 'UserSearch', 
-      params: { query: searchQuery} ,
-      fromHome: true // Pass any default filters if needed
+    console.log('WOKRING');
+    navigation.navigate('AgentStack', {
+      screen: 'AgentSearch',
+      params: {
+        query: searchQuery,
+        fromHome: true, // Pass any default filters if needed
+      },
     });
   };
 
@@ -35,19 +46,19 @@ const SearchBarForAgent = ({
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <View style={[styles.container, { width: customWidth, height: customHeight }]}>
-        <Ionicons 
-          name={'search'} 
-          size={24} 
-          color="gray" 
-          style={styles.searchIcon} 
-         
+      <View
+        style={[styles.container, {width: customWidth, height: customHeight}]}>
+        <Ionicons
+          name={'search'}
+          size={24}
+          color="gray"
+          style={styles.searchIcon}
         />
         <TextInput
           style={styles.input}
           placeholder={placeholder}
           placeholderTextColor={colors.textinputplaceholdercolor}
-          onChangeText={(text) => {
+          onChangeText={text => {
             setSearchQuery(text);
             onChangeText(text); // Call the passed onChangeText function
           }}
@@ -60,12 +71,22 @@ const SearchBarForAgent = ({
           }} // Set focus state to false only if input is empty
         />
         {isFocused || searchQuery ? (
-          <TouchableOpacity style={styles.searchIconcon} >
-            <Ionicons name="search" size={20} color="white" style={styles.searchIcon} />
+          <TouchableOpacity style={styles.searchIconcon} onPress={handleSearch}>
+            <Ionicons
+              name="search"
+              size={20}
+              color="white"
+              style={styles.searchIcon}
+            />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity style={styles.filterIconcon} onPress={onPress}>
-            <MaterialCommunityIcons name="tune-vertical-variant" size={20} color="white" style={styles.filterIcon} />
+            <MaterialCommunityIcons
+              name="tune-vertical-variant"
+              size={20}
+              color="white"
+              style={styles.filterIcon}
+            />
           </TouchableOpacity>
         )}
       </View>

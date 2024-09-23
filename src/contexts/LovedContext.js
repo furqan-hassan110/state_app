@@ -72,6 +72,13 @@ export const LovedProvider = ({children}) => {
     });
   };
 
+  const removeLovedPropertyContext = property => {
+    setLovedProperties(prevProperties => {
+      const updatedProperties = [...prevProperties, property];
+      return updatedProperties;
+    });
+  };
+
   // Function to add a subscribed user
   const addSubscribedUser = user => {
     setSubscribedUsers(prevUsers => [...prevUsers, user]);

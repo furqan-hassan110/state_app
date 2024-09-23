@@ -106,6 +106,7 @@ const AgentSearchResult = () => {
               rentType={item.rentPayable}
               sellingPrice={item.sellingPrice}
               images={item.images}
+              onRefresh={() => fetchProperties()}
             />
           </TouchableOpacity>
         )}

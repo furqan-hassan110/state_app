@@ -1,14 +1,24 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, ScrollView, Alert, ToastAndroid } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  Alert,
+  ToastAndroid,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import colors from '../../styles/colors';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const AddListingScreen = () => {
   const navigation = useNavigation();
-  
+
   const [listingType, setListingType] = useState('');
   const [constructionStatus, setConstructionStatus] = useState('');
   const [propertyCategory, setPropertyCategory] = useState('');
@@ -36,7 +46,15 @@ const AddListingScreen = () => {
 
   const handleNext = () => {
     // Validation: Check if all fields are filled
-    if (!listingTitle || !listingAddress || !listingLocation || !listingType || !constructionStatus || !propertyCategory || !propertyType) {
+    if (
+      !listingTitle ||
+      !listingAddress ||
+      !listingLocation ||
+      !listingType ||
+      !constructionStatus ||
+      !propertyCategory ||
+      !propertyType
+    ) {
       ToastAndroid.show('Please fill all the feilds', ToastAndroid.SHORT);
       return;
     }
@@ -55,13 +73,18 @@ const AddListingScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <TouchableOpacity style={styles.backbutton} onPress={() => navigation.goBack()}>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <TouchableOpacity
+          style={styles.backbutton}
+          onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={24} color={colors.primary} />
         </TouchableOpacity>
         <Text style={styles.title}>Add Listing</Text>
       </View>
-      <Text style={styles.subtitle}>Hi Cynthia, Fill detail of your <Text style={styles.highlight}>real estate</Text></Text>
+      <Text style={styles.subtitle}>
+        Hi Cynthia, Fill detail of your{' '}
+        <Text style={styles.highlight}>real estate</Text>
+      </Text>
 
       <View>
         <Text style={styles.sectionTitle}>Title</Text>
@@ -100,10 +123,18 @@ const AddListingScreen = () => {
           {['new', 'used'].map(status => (
             <TouchableOpacity
               key={status}
-              style={[styles.optionButton, constructionStatus === status && styles.selectedOption]}
-              onPress={() => handleSelection('constructionStatus', status)}
-            >
-              <Text style={[styles.optionText, constructionStatus === status && styles.selectedOptionText]}>{status}</Text>
+              style={[
+                styles.optionButton,
+                constructionStatus === status && styles.selectedOption,
+              ]}
+              onPress={() => handleSelection('constructionStatus', status)}>
+              <Text
+                style={[
+                  styles.optionText,
+                  constructionStatus === status && styles.selectedOptionText,
+                ]}>
+                {status}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -115,10 +146,18 @@ const AddListingScreen = () => {
           {['rent', 'sell'].map(type => (
             <TouchableOpacity
               key={type}
-              style={[styles.optionButton, listingType === type && styles.selectedOption]}
-              onPress={() => handleSelection('listingType', type)}
-            >
-              <Text style={[styles.optionText, listingType === type && styles.selectedOptionText]}>{type}</Text>
+              style={[
+                styles.optionButton,
+                listingType === type && styles.selectedOption,
+              ]}
+              onPress={() => handleSelection('listingType', type)}>
+              <Text
+                style={[
+                  styles.optionText,
+                  listingType === type && styles.selectedOptionText,
+                ]}>
+                {type}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -130,10 +169,18 @@ const AddListingScreen = () => {
           {['house', 'apartment'].map(category => (
             <TouchableOpacity
               key={category}
-              style={[styles.optionButton, propertyCategory === category && styles.selectedOption]}
-              onPress={() => handleSelection('propertyCategory', category)}
-            >
-              <Text style={[styles.optionText, propertyCategory === category && styles.selectedOptionText]}>{category}</Text>
+              style={[
+                styles.optionButton,
+                propertyCategory === category && styles.selectedOption,
+              ]}
+              onPress={() => handleSelection('propertyCategory', category)}>
+              <Text
+                style={[
+                  styles.optionText,
+                  propertyCategory === category && styles.selectedOptionText,
+                ]}>
+                {category}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -145,10 +192,18 @@ const AddListingScreen = () => {
           {['commercial', 'industrial', 'land'].map(type => (
             <TouchableOpacity
               key={type}
-              style={[styles.optionButton, propertyType === type && styles.selectedOption]}
-              onPress={() => handleSelection('propertyType', type)}
-            >
-              <Text style={[styles.optionText, propertyType === type && styles.selectedOptionText]}>{type}</Text>
+              style={[
+                styles.optionButton,
+                propertyType === type && styles.selectedOption,
+              ]}
+              onPress={() => handleSelection('propertyType', type)}>
+              <Text
+                style={[
+                  styles.optionText,
+                  propertyType === type && styles.selectedOptionText,
+                ]}>
+                {type}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -173,22 +228,22 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     // fontWeight: 'bold',
-    fontFamily:'Lato-Bold',
-    color:colors.boldtextcolor,
+    fontFamily: 'Lato-Bold',
+    color: colors.boldtextcolor,
     // marginLeft:
     // alignSelf:''
-    marginLeft:60
+    marginLeft: 60,
     // color: '#333',
   },
   subtitle: {
     fontSize: 25,
     color: colors.primary,
-    fontFamily:'Lato-Regular',
+    fontFamily: 'Lato-Regular',
     marginTop: 20,
   },
   highlight: {
     // fontWeight: 'bold',
-    fontFamily:'Lato-Bold',
+    fontFamily: 'Lato-Bold',
     color: colors.boldtextcolor,
   },
   backbutton: {
@@ -211,7 +266,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7F7F7',
   },
   textInput: {
-    color:colors.black,
+    color: colors.black,
     width: width * 0.88,
     backgroundColor: colors.textinputfill,
     padding: 10,
@@ -228,14 +283,13 @@ const styles = StyleSheet.create({
   },
   section: {
     // marginBottom: 20,
-    marginTop:20
-
+    marginTop: 20,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     // color: '#333',
-    color:colors.primary,
+    color: colors.primary,
     marginBottom: 10,
     // marginTop:10
   },
@@ -254,7 +308,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   selectedOption: {
-    backgroundColor: colors.primary, 
+    backgroundColor: colors.primary,
     borderColor: '#0047AB',
   },
   optionText: {
@@ -265,12 +319,12 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   nextButton: {
-    backgroundColor: colors.buttons, 
+    backgroundColor: colors.buttons,
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
     marginTop: 'auto',
-    marginBottom:50
+    marginBottom: 50,
   },
   nextButtonText: {
     color: '#fff',

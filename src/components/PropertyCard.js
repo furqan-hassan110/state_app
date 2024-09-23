@@ -1,19 +1,39 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, ToastAndroid } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  ToastAndroid,
+} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../styles/colors';
-import { useLoved } from '../contexts/LovedContext';
-import { addLovedProperty, removeLovedProperties, DOMAIN } from '../utils/apiUtils';
-import { useAuth } from '../contexts/AuthContext';
+import {useLoved} from '../contexts/LovedContext';
+import {
+  addLovedProperty,
+  removeLovedProperties,
+  DOMAIN,
+} from '../utils/apiUtils';
+import {useAuth} from '../contexts/AuthContext';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
-const PropertyCard = ({ id, imageSource, title, cityName, country, price, images }) => {
-  const { lovedProperties, setLovedProperties } = useLoved();
-  const { userData } = useAuth();
+const PropertyCard = ({
+  id,
+  // imageSource,
+  title,
+  cityName,
+  country,
+  price,
+  images,
+}) => {
+  const {lovedProperties, setLovedProperties} = useLoved();
+  const {userData} = useAuth();
   const userToken = userData?.token;
 
-  const isLoved = lovedProperties.some((p) => p.id === id);
+  const isLoved = lovedProperties.some(p => p.id === id);
 
   const handleToggleLoved = () => {
     if (isLoved) {
@@ -21,26 +41,39 @@ const PropertyCard = ({ id, imageSource, title, cityName, country, price, images
       removeLovedProperties(id, userToken)
         .then(response => {
           setLovedProperties(prev => prev.filter(p => p.id !== id));
-          ToastAndroid.show('Property removed from loved list', ToastAndroid.SHORT);
-          console.log("Loved Property Removed:", response);
+          ToastAndroid.show(
+            'Property removed from loved list',
+            ToastAndroid.SHORT,
+          );
+          console.log('Loved Property Removed:', response);
         })
-        .catch(error => console.log("Error Removing Loved Property:", error));
+        .catch(error => console.log('Error Removing Loved Property:', error));
     } else {
       // Add property to loved list
       addLovedProperty(id, userToken)
         .then(response => {
-          setLovedProperties(prev => [...prev, { id, imageSource, title, cityName, country, price }]);
+          setLovedProperties(prev => [
+            ...prev,
+            {
+              id,
+              title,
+              cityName,
+              country,
+              price,
+              images,
+            },
+          ]);
           ToastAndroid.show('Property added to loved list', ToastAndroid.SHORT);
-          console.log("Loved Property Added:", response);
+          console.log('Loved Property Added:', response);
         })
-        .catch(error => console.log("Error Adding Loved Property:", error));
+        .catch(error => console.log('Error Adding Loved Property:', error));
     }
   };
 
   return (
     <View style={styles.cardContainer}>
       <View style={styles.imageContainer}>
-      <Image
+        <Image
           source={
             images.length
               ? {uri: `${DOMAIN}${images[0].imagePath}`}
@@ -49,13 +82,15 @@ const PropertyCard = ({ id, imageSource, title, cityName, country, price, images
           style={styles.image}
         />
         <TouchableOpacity
-          style={[styles.heartIcon, { backgroundColor: isLoved ? colors.buttons : 'transparent' }]}
-          onPress={handleToggleLoved}
-        >
+          style={[
+            styles.heartIcon,
+            {backgroundColor: isLoved ? colors.buttons : 'transparent'},
+          ]}
+          onPress={handleToggleLoved}>
           <MaterialCommunityIcons
             name={isLoved ? 'cards-heart-outline' : 'cards-heart'}
             size={15}
-            color='white'
+            color="white"
           />
         </TouchableOpacity>
       </View>
@@ -63,7 +98,11 @@ const PropertyCard = ({ id, imageSource, title, cityName, country, price, images
         <Text style={styles.title}>{title}</Text>
         {/* <Text style={styles.cityName}>{cityName}</Text> */}
         <View style={styles.locationContainer}>
-          <MaterialCommunityIcons name='map-marker' size={15} color={colors.boldtextcolor} />
+          <MaterialCommunityIcons
+            name="map-marker"
+            size={15}
+            color={colors.boldtextcolor}
+          />
           <Text style={styles.country}>{country}</Text>
         </View>
         <Text style={styles.price}>$ {price}</Text>
@@ -81,12 +120,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     backgroundColor: '#f0f0f0',
-    marginTop: 10
+    marginTop: 10,
   },
   imageContainer: {
     flex: 1,
     position: 'relative',
-    padding: 10
+    padding: 10,
   },
   image: {
     borderRadius: 25,
@@ -101,7 +140,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 20,
     zIndex: 1,
-    borderRadius: 50
+    borderRadius: 50,
   },
   detailsContainer: {
     flex: 1,
@@ -111,7 +150,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     color: colors.boldtextcolor,
-    marginBottom: 10
+    marginBottom: 10,
   },
   cityName: {
     fontSize: 12,
@@ -126,14 +165,14 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontFamily: 'Lato-Regular',
     fontSize: 10,
-    color: colors.boldtextcolor
+    color: colors.boldtextcolor,
   },
   price: {
     marginTop: 40,
     fontFamily: 'Lato-Black',
     fontSize: 15,
     color: colors.boldtextcolor,
-  }
+  },
 });
 
 export default PropertyCard;

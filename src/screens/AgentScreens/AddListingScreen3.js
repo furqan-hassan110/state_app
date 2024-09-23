@@ -19,9 +19,7 @@ import {useAuth} from '../../contexts/AuthContext';
 const {width, height} = Dimensions.get('window');
 
 const AddListingStep3 = ({route}) => {
-  const {images} = route.params;
   const token = useAuth();
-  console.log('IAMGES ==> ', images);
   const navigation = useNavigation();
   const [sellPrice, setSellPrice] = useState('');
   const [rentPrice, setRentPrice] = useState('');
@@ -33,29 +31,39 @@ const AddListingStep3 = ({route}) => {
   const [isModalVisible, setModalVisible] = useState(false);
 
   const handleNext = () => {
+    const {
+      images,
+      listingTitle,
+      listingLocation,
+      listingAddress,
+      constructionStatus,
+      listingType,
+      propertyCategory,
+      propertyType,
+    } = route.params;
     if (
-      !sellPrice || 
-      !rentPrice || 
-      !rentType || 
-      !totalRooms || 
-      !bedrooms || 
-      !bathrooms || 
-      !carSpace 
+      !sellPrice ||
+      !rentPrice ||
+      !rentType ||
+      !totalRooms ||
+      !bedrooms ||
+      !bathrooms ||
+      !carSpace
     ) {
       ToastAndroid.show('Please fill all the fields', ToastAndroid.SHORT);
       return;
     }
-  
+
     // Proceed to create property
     const propertyObject = {
-      title: route.params?.listingTitle,
-      location: route.params?.location,
-      address: route.params?.address,
-      construction_status: route.params?.constructionStatus,
-      listing_type: route.params?.listingType,
-      property_category: route.params?.propertyCategory,
+      title: listingTitle,
+      location: listingLocation,
+      address: listingAddress,
+      construction_status: constructionStatus,
+      listing_type: listingType,
+      property_category: propertyCategory,
       property_size: '700',
-      property_type: route.params?.propertyType,
+      property_type: propertyType,
       selling_amount: sellPrice,
       rent_amount: rentPrice,
       rent_payable: rentType,
@@ -222,9 +230,28 @@ const AddListingStep3 = ({route}) => {
         </View>
       </View>
 
-      <Text style={styles.label}>Total Rooms</Text>
+      <View style={styles.featureContainer}>
+        <Text style={styles.featureLabel}>Total Rooms</Text>
+        <View style={styles.counterContainer}>
+          <TouchableOpacity
+            style={styles.counterButton}
+            onPress={() =>
+              setTotalRooms(prev => Math.max(Number(prev) - 1, 0))
+            }>
+            <Text style={styles.counterText}>-</Text>
+          </TouchableOpacity>
+          <Text style={styles.counterValue}>{totalRooms}</Text>
+          <TouchableOpacity
+            style={styles.counterButton}
+            onPress={() => setTotalRooms(prev => Number(prev) + 1)}>
+            <Text style={styles.counterText}>+</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* <Text style={styles.label}>Total Rooms</Text>
       <View style={styles.roomOptionsContainer}>
-        {['<4', '4', '6', '>6'].map(option => (
+        {['3', '4', '6', '7'].map(option => (
           <TouchableOpacity
             key={option}
             style={[
@@ -241,7 +268,7 @@ const AddListingStep3 = ({route}) => {
             </Text>
           </TouchableOpacity>
         ))}
-      </View>
+      </View> */}
 
       <TouchableOpacity style={styles.finishButton} onPress={handleNext}>
         <Text style={styles.finishButtonText}>Finish</Text>

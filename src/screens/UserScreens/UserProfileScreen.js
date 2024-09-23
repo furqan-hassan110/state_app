@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -10,15 +10,15 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
-  ToastAndroid
+  ToastAndroid,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import colors from '../../styles/colors';
 import Button from '../../components/Button';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import profile from '../../../assets/images/profile.png';
 import Feather from 'react-native-vector-icons/Feather';
-import { useAuth } from '../../contexts/AuthContext';
+import {useAuth} from '../../contexts/AuthContext';
 import {
   logout,
   requestSubscribtion,
@@ -27,13 +27,18 @@ import {
 } from '../../utils/apiUtils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const UserProfileScreen = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState(null);
   const navigation = useNavigation();
-  const { userData: contextUserData, handleSubscribe, contextLogout, updateUserContextData } = useAuth();
+  const {
+    userData: contextUserData,
+    handleSubscribe,
+    contextLogout,
+    updateUserContextData,
+  } = useAuth();
 
   const userToken = contextUserData?.token;
 
@@ -61,12 +66,12 @@ const UserProfileScreen = () => {
         .then(async () => {
           Alert.alert(
             'Success',
-            'Your application has been submitted. Please wait for your approval.'
+            'Your application has been submitted. Please wait for your approval.',
           );
-  
+
           // Update context and local storage to indicate the request is pending
           await handleSubscribe();
-          updateUserContextData({ is_subscribed: 0 }); // Set to 0 (requested)
+          updateUserContextData({is_subscribed: 0}); // Set to 0 (requested)
           await AsyncStorage.setItem('isSubscribed', 'false'); // Store as false
         })
         .catch(error => {
@@ -77,17 +82,19 @@ const UserProfileScreen = () => {
       Alert.alert('Error', 'No user token found for subscription.');
     }
   };
-  
 
   const handleEditProfile = () => {
     if (isEditing && userData) {
-      const { name, email, phone_no } = userData;
+      const {name, email, phone_no} = userData;
 
-      updateProfile(userToken, { name, email, phone_no })
+      updateProfile(userToken, {name, email, phone_no})
         .then(async () => {
           ToastAndroid.show('Profile updated successfully', ToastAndroid.SHORT);
-          updateUserContextData({ name, email, phone_no });
-          await AsyncStorage.setItem('userData', JSON.stringify({ ...userData, name, email, phone_no }));
+          updateUserContextData({name, email, phone_no});
+          await AsyncStorage.setItem(
+            'userData',
+            JSON.stringify({...userData, name, email, phone_no}),
+          );
         })
         .catch(error => {
           console.error('Profile update failed:', error);
@@ -117,7 +124,9 @@ const UserProfileScreen = () => {
       <ScrollView>
         <View style={styles.profileContainer}>
           <View style={styles.headerContainer}>
-            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backbutton}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.backbutton}>
               <Ionicons name="chevron-back" size={18} color="black" />
             </TouchableOpacity>
             <Text style={styles.header}>Profile</Text>
@@ -127,7 +136,12 @@ const UserProfileScreen = () => {
           </View>
           <View style={styles.infoContainer}>
             <View style={styles.username}>
-              <Feather name="user" size={18} color={colors.black} style={{ padding: 10 }} />
+              <Feather
+                name="user"
+                size={18}
+                color={colors.black}
+                style={{padding: 10}}
+              />
               <TextInput
                 style={styles.infoText}
                 value={userData.name}
@@ -138,7 +152,12 @@ const UserProfileScreen = () => {
           </View>
           <View style={styles.infoContainer}>
             <View style={styles.username}>
-              <Feather name="phone" size={18} color={colors.black} style={{ padding: 10 }} />
+              <Feather
+                name="phone"
+                size={18}
+                color={colors.black}
+                style={{padding: 10}}
+              />
               <TextInput
                 style={styles.infoText}
                 value={userData.phone_no}
@@ -149,7 +168,12 @@ const UserProfileScreen = () => {
           </View>
           <View style={styles.infoContainer}>
             <View style={styles.username}>
-              <Feather name="mail" size={18} color={colors.black} style={{ padding: 10 }} />
+              <Feather
+                name="mail"
+                size={18}
+                color={colors.black}
+                style={{padding: 10}}
+              />
               <TextInput
                 style={styles.infoText}
                 value={userData.email}
@@ -160,11 +184,23 @@ const UserProfileScreen = () => {
         </View>
         <View style={styles.buttonContainer}>
           {!userData.is_subscribed && (
-            <Button onPress={handleUserSubscribe} title="Subscribe" style={styles.subscribeButton} />
+            <Button
+              onPress={handleUserSubscribe}
+              title="Subscribe"
+              style={styles.subscribeButton}
+            />
           )}
           <View style={styles.buttonGroup}>
-            <Button onPress={handleEditProfile} title={isEditing ? 'Save Changes' : 'Edit Profile'} style={styles.editProfileButton} />
-            <Button title="Log Out" style={styles.editProfileButton} onPress={handleLogout} />
+            <Button
+              onPress={handleEditProfile}
+              title={isEditing ? 'Save Changes' : 'Edit Profile'}
+              style={styles.editProfileButton}
+            />
+            <Button
+              title="Log Out"
+              style={styles.editProfileButton}
+              onPress={handleLogout}
+            />
           </View>
         </View>
       </ScrollView>
@@ -186,7 +222,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 30,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   headerContainer: {
     flexDirection: 'row',
@@ -198,7 +234,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato-Bold',
     fontSize: 20,
     alignSelf: 'center',
-    marginRight: 140
+    marginRight: 140,
   },
   backbutton: {
     backgroundColor: colors.textinputfill,

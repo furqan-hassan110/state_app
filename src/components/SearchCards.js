@@ -1,20 +1,43 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, ToastAndroid } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+  ToastAndroid,
+} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../styles/colors';
-import img1 from '../../assets/images/role1.png'; 
-import { useLoved } from '../contexts/LovedContext';
-import { useAuth } from '../contexts/AuthContext';
-import { addLovedProperty, removeLovedProperties , DOMAIN} from '../utils/apiUtils';
+import {useLoved} from '../contexts/LovedContext';
+import {useAuth} from '../contexts/AuthContext';
+import {
+  addLovedProperty,
+  removeLovedProperties,
+  DOMAIN,
+} from '../utils/apiUtils';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
-const SearchResultCard = ({ id, images, title, location, cityName, country, price, isLovedScreen }) => {
-  const { lovedProperties, setLovedProperties } = useLoved();
-  const { userData } = useAuth();
+const SearchResultCard = ({
+  id,
+  images,
+  title,
+  location,
+  cityName,
+  country,
+  price,
+  isLovedScreen,
+}) => {
+  const {lovedProperties, setLovedProperties} = useLoved();
+  const {userData} = useAuth();
   const userToken = userData?.token;
 
-  const isLoved = lovedProperties.some((p) => p.id === id);
+  const isLoved = lovedProperties.find(p => {
+    console.log(p.id, id);
+    return p.id === id;
+  });
 
   const handleToggleLoved = () => {
     if (isLoved) {
@@ -22,26 +45,32 @@ const SearchResultCard = ({ id, images, title, location, cityName, country, pric
       removeLovedProperties(id, userToken)
         .then(response => {
           setLovedProperties(prev => prev.filter(p => p.id !== id));
-          ToastAndroid.show('Property removed from loved list', ToastAndroid.SHORT);
-          console.log("Loved Property Removed:", response);
+          ToastAndroid.show(
+            'Property removed from loved list',
+            ToastAndroid.SHORT,
+          );
+          console.log('Loved Property Removed:', response);
         })
-        .catch(error => console.log("Error Removing Loved Property:", error));
+        .catch(error => console.log('Error Removing Loved Property:', error));
     } else if (!isLovedScreen) {
       // Add property to loved list only if it's not the loved screen
       addLovedProperty(id, userToken)
         .then(response => {
-          setLovedProperties(prev => [...prev, { id, imageSource, title, cityName, country, price }]);
+          setLovedProperties(prev => [
+            ...prev,
+            {id, images, title, cityName, country, price},
+          ]);
           ToastAndroid.show('Property added to loved list', ToastAndroid.SHORT);
-          console.log("Loved Property Added:", response);
+          console.log('Loved Property Added:', response);
         })
-        .catch(error => console.log("Error Adding Loved Property:", error));
+        .catch(error => console.log('Error Adding Loved Property:', error));
     }
   };
 
   return (
     <View style={styles.cardContainer}>
       <View style={styles.imageWrapper}>
-      <Image
+        <Image
           source={
             images.length
               ? {uri: `${DOMAIN}${images[0].imagePath}`}
@@ -49,28 +78,36 @@ const SearchResultCard = ({ id, images, title, location, cityName, country, pric
           }
           style={styles.image}
         />
-        
+
         <TouchableOpacity
-          style={[styles.heartIcon, { backgroundColor: isLoved ? colors.buttons : 'transparent' }]}
-          onPress={handleToggleLoved}
-        >
+          style={[
+            styles.heartIcon,
+            {backgroundColor: isLoved ? colors.buttons : 'transparent'},
+          ]}
+          onPress={handleToggleLoved}>
           <MaterialCommunityIcons
             name={isLoved ? 'cards-heart' : 'cards-heart-outline'}
             size={15}
-            color='white'
+            color="white"
           />
         </TouchableOpacity>
-        
+
         <Text style={styles.priceText}>${price || 'N/A'}</Text>
       </View>
 
       <View style={styles.textContainer}>
         <Text style={styles.titleText}>{title || 'No Title'}</Text>
       </View>
-      
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <MaterialCommunityIcons name="map-marker" size={12} color={colors.boldtextcolor} />
-        <Text style={styles.locationText}>{location || 'Unknown Location'}</Text>
+
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <MaterialCommunityIcons
+          name="map-marker"
+          size={12}
+          color={colors.boldtextcolor}
+        />
+        <Text style={styles.locationText}>
+          {location || 'Unknown Location'}
+        </Text>
       </View>
     </View>
   );

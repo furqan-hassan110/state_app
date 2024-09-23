@@ -34,14 +34,13 @@ const AgentLovedScreen = ({navigation}) => {
 
   const fetchUser = () => {
     if (!userToken) {
-      console.error('User token is missing');
       setLoading(false);
       return;
     }
 
     fetchAllUser(userToken)
       .then(response => {
-        console.log('Success fetched all users', response.data);
+        console.log('Success fetched all users', response);
         setAllUsers(response.data);
         setLoading(false);
       })

@@ -7,6 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Alert,
+  ToastAndroid,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../styles/colors';
@@ -38,32 +39,37 @@ const PropertyCardForAgent = ({
   totalRooms,
   onRefresh,
 }) => {
-  console.log(' IMAGESS ==> ', images);
   const token = useAuth();
   const navigation = useNavigation();
 
   const handleDelete = () => {
     Alert.alert(
-      "Confirm Delete",
-      "Are you sure you want to delete this property?",
+      'Confirm Delete',
+      'Are you sure you want to delete this property?',
       [
         {
-          text: "Cancel",
-          style: "cancel",
+          text: 'Cancel',
+          style: 'cancel',
         },
         {
-          text: "OK",
+          text: 'OK',
           onPress: () => {
-            const { userData } = token;
+            const {userData} = token;
             const userToken = userData?.token;
-  
+
             deleteCategory(id, userToken)
               .then(res => {
                 if (res.success) {
-                  Alert.alert('Success', 'Property category deleted successfully');
-                  onRefresh(); // Call onRefresh to update the list if needed
+                  ToastAndroid.show(
+                    'Property deleted successfully',
+                    ToastAndroid.SHORT,
+                  );
+                  onRefresh();
                 } else {
-                  Alert.alert('Error', 'Failed to delete property category');
+                  ToastAndroid.show(
+                    'Failed to delete property category',
+                    ToastAndroid.SHORT,
+                  );
                 }
               })
               .catch(err => {
@@ -72,10 +78,10 @@ const PropertyCardForAgent = ({
           },
         },
       ],
-      { cancelable: false }
+      {cancelable: false},
     );
   };
-  
+
   const handleUpdate = () => {
     navigation.navigate('EditListingScreen', {id: id});
   };

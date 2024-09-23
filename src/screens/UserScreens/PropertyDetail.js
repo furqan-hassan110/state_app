@@ -1,21 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Modal from 'react-native-modal';
-import { DOMAIN, getPropertiesById } from '../../utils/apiUtils';  // API import
+import {DOMAIN, getPropertiesById} from '../../utils/apiUtils'; // API import
 import colors from '../../styles/colors';
 import Button from '../../components/Button';
-import { useAuth } from '../../contexts/AuthContext';
+import {useAuth} from '../../contexts/AuthContext';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
-const PropertyDetail = ({ route, navigation }) => {
-  const { property } = route.params;
-  const { userData } = useAuth();
-  
+const PropertyDetail = ({route, navigation}) => {
+  const {property} = route.params;
+  console.log('PROPERTY DETAILS ==> ', property);
+  const {userData} = useAuth();
+
   const [propertyDetails, setPropertyDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -27,7 +36,7 @@ const PropertyDetail = ({ route, navigation }) => {
       try {
         setLoading(true);
         const response = await getPropertiesById(property.id, userData.token);
-        setPropertyDetails(response.data);  // Assuming data is returned under `data`
+        setPropertyDetails(response.data); // Assuming data is returned under `data`
         setLoading(false);
       } catch (error) {
         console.error('Error fetching property details:', error);
@@ -51,43 +60,69 @@ const PropertyDetail = ({ route, navigation }) => {
   // Handle image press
   const handleImagePress = () => {
     const images = [propertyDetails.imageSource]; // Replace with actual image URIs
-    navigation.navigate('UserStack', {screen:'ImageSlider', params:{images} });
+    navigation.navigate('UserStack', {screen: 'ImageSlider', params: {images}});
   };
 
   if (loading) {
     return (
       <View style={styles.container}>
-        <Text>Loading...</Text>  
+        <Text>Loading...</Text>
       </View>
     );
   }
 
   return (
     <ScrollView style={styles.container}>
-      <View style={{flexDirection: 'row', top: 30, left: 20, zIndex: 10, justifyContent: 'space-between', width: '100%', position: 'absolute'}}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+      <View
+        style={{
+          flexDirection: 'row',
+          top: 30,
+          left: 20,
+          zIndex: 10,
+          justifyContent: 'space-between',
+          width: '100%',
+          position: 'absolute',
+        }}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={20} color={colors.primary} />
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.heartIcon, { backgroundColor: isFavorite ? colors.buttons : colors.boldtextcolor }]}
-          onPress={handleToggleFavorite}
-        >
-          <MaterialCommunityIcons name={isFavorite ? 'cards-heart' : 'cards-heart-outline'} size={15} color='white'/>
+          style={[
+            styles.heartIcon,
+            {
+              backgroundColor: isFavorite
+                ? colors.buttons
+                : colors.boldtextcolor,
+            },
+          ]}
+          onPress={handleToggleFavorite}>
+          <MaterialCommunityIcons
+            name={isFavorite ? 'cards-heart' : 'cards-heart-outline'}
+            size={15}
+            color="white"
+          />
         </TouchableOpacity>
       </View>
       <View style={styles.category}>
-        <Text style={styles.categorytext}>{propertyDetails.propertyCategory}</Text>
+        <Text style={styles.categorytext}>
+          {propertyDetails.propertyCategory}
+        </Text>
       </View>
 
       <Image
-  source={propertyDetails.images.length > 0 ? { uri: `${DOMAIN}${propertyDetails.images[0].imagePath}` } : require('../../../assets/images/role1.png')}
-  style={styles.image}
-/>
-
+        source={
+          propertyDetails.images.length > 0
+            ? {uri: `${DOMAIN}${propertyDetails.images[0].imagePath}`}
+            : require('../../../assets/images/role1.png')
+        }
+        style={styles.image}
+      />
 
       {/* Render the rest of the property details */}
       <View style={styles.detailsContainer}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <Text style={styles.title}>{property.title}</Text>
           <Text style={styles.price}>$ {property.sellingPrice}</Text>
         </View>
@@ -102,57 +137,93 @@ const PropertyDetail = ({ route, navigation }) => {
           <Text style={styles.contactText}>Contact Agent</Text>
         </TouchableOpacity> */}
         <View style={styles.agentContainer}>
-          <Image source={require('../../../assets/images/profile.png')} style={styles.agentImage} />
+          <Image
+            source={require('../../../assets/images/profile.png')}
+            style={styles.agentImage}
+          />
           <View>
-            <Text style={styles.agentName}>Cynthia</Text>
-            <Text style={styles.agentTitle}>Real Estate Agent</Text>
+            <Text style={styles.agentName}>{property.createdBy.name}</Text>
+            <Text style={styles.agentTitle}>{property.createdBy.email}</Text>
           </View>
         </View>
         <View style={styles.livingdetails}>
           <View style={styles.bedroomcontainer}>
-            <MaterialIcon name='bedroom-parent' color={colors.buttons} size={20} />
-            <Text style={styles.livingtext}>Bedrooms {property.bedroomCount}</Text>
+            <MaterialIcon
+              name="bedroom-parent"
+              color={colors.buttons}
+              size={20}
+            />
+            <Text style={styles.livingtext}>
+              Bedrooms {property.bedroomCount}
+            </Text>
           </View>
           <View style={styles.bedroomcontainer}>
-            <MaterialIcon name='bathroom' color={colors.buttons} size={20} />
-            <Text style={styles.livingtext}>Bathroom {property.bathroomCount}</Text>
+            <MaterialIcon name="bathroom" color={colors.buttons} size={20} />
+            <Text style={styles.livingtext}>
+              Bathroom {property.bathroomCount}
+            </Text>
           </View>
           <View style={styles.bedroomcontainer}>
-            <MaterialIcon name='garage' color={colors.buttons} size={20} />
-            <Text style={styles.livingtext}>Garage {property.carSpaceCount}</Text>
+            <MaterialIcon name="garage" color={colors.buttons} size={20} />
+            <Text style={styles.livingtext}>
+              Garage {property.carSpaceCount}
+            </Text>
           </View>
         </View>
         <View style={styles.locationdetailscontainer}>
           <Text style={styles.locationdetials}>Location</Text>
-          <View style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{ width: width * 0.14, height: height * 0.06, backgroundColor: colors.textinputfill, borderRadius: 40, justifyContent: 'center', alignItems: 'center' }}>
-              <MaterialCommunityIcons name='map-marker' size={24} color={colors.black} />
+          <View
+            style={{marginTop: 10, flexDirection: 'row', alignItems: 'center'}}>
+            <View
+              style={{
+                width: width * 0.14,
+                height: height * 0.06,
+                backgroundColor: colors.textinputfill,
+                borderRadius: 40,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <MaterialCommunityIcons
+                name="map-marker"
+                size={24}
+                color={colors.black}
+              />
             </View>
-            <Text style={styles.adreessText}>
-              {property.location}
-            </Text>
+            <Text style={styles.adreessText}>{property.location}</Text>
           </View>
-          <View >
+          <View>
             <Text style={styles.locationdetials}>Cost of living</Text>
-            <View style={{
-              width: width * 0.30,
-              height: height * 0.06,
-              backgroundColor: colors.textinputfill, borderRadius: 25, justifyContent: 'center', alignItems: 'center', marginBottom: 10
-            }}>
+            <View
+              style={{
+                width: width * 0.3,
+                height: height * 0.06,
+                backgroundColor: colors.textinputfill,
+                borderRadius: 25,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: 10,
+              }}>
               <Text style={styles.priceText}>$ {property.sellingPrice}</Text>
             </View>
           </View>
-
         </View>
       </View>
-      
-      
-      <Modal isVisible={isModalVisible} onBackdropPress={toggleModal} backdropColor={colors.primary} backdropOpacity={0.8} style={styles.modal}>
+
+      <Modal
+        isVisible={isModalVisible}
+        onBackdropPress={toggleModal}
+        backdropColor={colors.primary}
+        backdropOpacity={0.8}
+        style={styles.modal}>
         <View style={styles.modalContent}>
           <View style={styles.noContainerModal}>
             <Text style={styles.modalText}>{userData.phone_no}</Text>
           </View>
-          <Button title="Cancel" onPress={toggleModal} style={styles.modalButton} />
+          <Button
+            title="Cancel"
+            onPress={toggleModal}
+            style={styles.modalButton}
+          />
         </View>
       </Modal>
     </ScrollView>
@@ -184,7 +255,7 @@ const styles = StyleSheet.create({
     // margin:20,
     // zIndex: 1,
     borderRadius: 50,
-    marginRight: 40
+    marginRight: 40,
   },
   category: {
     position: 'absolute',
@@ -213,13 +284,13 @@ const styles = StyleSheet.create({
   },
   categorytext: {
     fontSize: 18,
-    fontFamily: 'Lato-Regular'
+    fontFamily: 'Lato-Regular',
   },
   image: {
     width: width / 1.07,
     height: height / 1.45,
     resizeMode: 'cover',
-    borderRadius: 50
+    borderRadius: 50,
   },
   detailsContainer: {
     padding: 10,
@@ -249,14 +320,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 10,
     backgroundColor: colors.buttons,
-    marginVertical: 15
+    marginVertical: 15,
   },
   divider: {
     width: width * 0.9,
     alignSelf: 'center',
     height: 1,
     borderRadius: 10,
-    backgroundColor: colors.textinputfill
+    backgroundColor: colors.textinputfill,
   },
   contactText: {
     color: colors.white,
@@ -288,7 +359,7 @@ const styles = StyleSheet.create({
   agentTitle: {
     fontSize: 12,
     color: colors.boldtextcolor,
-    fontFamily: 'Lato-Regular'
+    fontFamily: 'Lato-Regular',
   },
   livingdetails: {
     flexWrap: 'wrap',
@@ -306,12 +377,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   livingtext: {
     color: colors.boldtextcolor,
     fontSize: 12,
-    fontFamily: 'Lato-Regular'
+    fontFamily: 'Lato-Regular',
   },
   locationdetailscontainer: {
     marginTop: 20,
@@ -326,7 +397,7 @@ const styles = StyleSheet.create({
     color: colors.boldtextcolor,
     fontFamily: 'Lato-Regular',
     fontSize: 12,
-    marginLeft: 10
+    marginLeft: 10,
   },
   priceText: {
     alignSelf: 'center',
@@ -335,7 +406,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     // marginLeft: 20,
     color: colors.boldtextcolor,
-
   },
   modal: {
     justifyContent: 'flex-end',
@@ -348,21 +418,21 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     alignItems: 'center',
   },
-  noContainerModal:{
-    width:width*0.80,
-    height:height*0.08,
-    borderRadius:20,
-    backgroundColor:colors.primary,
-    justifyContent:'center',
-    alignItems:'center',
+  noContainerModal: {
+    width: width * 0.8,
+    height: height * 0.08,
+    borderRadius: 20,
+    backgroundColor: colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 20,
   },
   modalText: {
     fontSize: 18,
     fontFamily: 'Lato-Bold',
     color: colors.white,
-    // 
-    
+    //
+
     // alignSelf:'center',
   },
   modalButton: {
