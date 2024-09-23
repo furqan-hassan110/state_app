@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Formik} from 'formik';
@@ -45,6 +46,7 @@ const LoginScreen = () => {
           await login(res.data);
           console.log('OK to go..');
         } else {
+          Alert.alert('ERROR', 'Permission Denied!');
           console.log('Permission denied..');
         }
       })
@@ -111,9 +113,12 @@ const LoginScreen = () => {
                   onPress={handleSubmit}
                   style={styles.button}
                 />
+              </View>
+              {role === 'user' && (
                 <View
                   style={{
                     flexDirection: 'row',
+                    justifyContent: 'center',
                   }}>
                   <Text style={styles.alreadytext}>
                     Don't have an account ?
@@ -123,7 +128,7 @@ const LoginScreen = () => {
                     <Text style={styles.signIn}> Register</Text>
                   </TouchableOpacity>
                 </View>
-              </View>
+              )}
             </>
           )}
         </Formik>

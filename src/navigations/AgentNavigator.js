@@ -10,6 +10,7 @@ import EditListingScreen from '../screens/AgentScreens/EditListingScreen';
 import AgentProfileScreen from '../screens/AgentScreens/AgentProfileScreen';
 import PropertyDetail from '../screens/AgentScreens/propertyDetails';
 import AgentSearchResult from '../screens/AgentScreens/AgentSearchResult';
+import ImageSlider from '../components/ImageSlider';
 
 const Stack = createStackNavigator();
 
@@ -42,20 +43,32 @@ const AgentNavigator = () => {
         component={EditListingScreen}
         options={{headerShown: false}}
       />
-      <Stack.Screen name="AgentProfileScreen" 
-      component={AgentProfileScreen} 
-      options={{headerShown: false}}
+      <Stack.Screen
+        name="AgentProfileScreen"
+        component={AgentProfileScreen}
+        options={{headerShown: false}}
       />
-      <Stack.Screen name="PropertyDetail" 
-      component={PropertyDetail} 
-      options={{ headerShown: false }} />
+      <Stack.Screen
+        name="PropertyDetail"
+        component={PropertyDetail}
+        options={{headerShown: false}}
+      />
 
-      <Stack.Screen name="AgentSearchScreen" 
-      component={AgentSearchScreen} 
-      options={{ headerShown: false }} />
-      <Stack.Screen name="AgentSearchResult" 
-      component={AgentSearchResult} 
-      options={{ headerShown: false }} />
+      <Stack.Screen
+        name="AgentSearchScreen"
+        component={AgentSearchScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AgentSearchResult"
+        component={AgentSearchResult}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ImageSlider"
+        component={ImageSlider}
+        options={{headerShown: false}}
+      />
       {/* <Stack.Screen
         name="SelectRoleScreen"
         component={SelectRoleScreen}

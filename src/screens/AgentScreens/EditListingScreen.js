@@ -323,7 +323,7 @@ const EditListingScreen = () => {
       <Text style={styles.label}>Sell Price</Text>
       <TextInput
         style={styles.textInput}
-        value={propertyData?.selling_amount}
+        value={sellPrice}
         onChangeText={setSellPrice}
         keyboardType="numeric"
         placeholder="$ 180,000"
@@ -333,7 +333,7 @@ const EditListingScreen = () => {
       <Text style={styles.label}>Rent Price</Text>
       <TextInput
         style={styles.textInput}
-        value={propertyData?.rent_amount}
+        value={rentPrice}
         onChangeText={setRentPrice}
         keyboardType="numeric"
         placeholder="$ 315 /month"

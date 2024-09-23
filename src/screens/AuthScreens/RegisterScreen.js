@@ -28,7 +28,7 @@ const {width, height} = Dimensions.get('window');
 
 const RegisterScreen = () => {
   const initialValues = {name: '', email: '', password: '', phoneNo: ''};
-  const {role, setUserData, login, selectRole} = useAuth();
+  const {setIsAuthenticated, setUserData} = useAuth();
   const navigation = useNavigation();
 
   const validationSchema = Yup.object({
@@ -49,13 +49,12 @@ const RegisterScreen = () => {
         values.phoneNo,
       );
       console.log('[REGISTER RES] ==> ', res);
-
       // Check if the token is received, meaning the registration was successful
       if (res.data.token) {
         console.log('Registration successful. Token received:', res.data.token);
-
-        // Navigate to the profile screen or any screen after registration
-        navigation.navigate('AgentProfileScreen');
+        setIsAuthenticated(true);
+        setUserData(res.data);
+        navigation.navigate('UserStack', {screen: 'UserProfileScreen'});
       } else {
         console.log('Registration failed: No token received.');
       }

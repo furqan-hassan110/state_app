@@ -72,19 +72,21 @@ export const AuthProvider = ({children}) => {
       console.error('Failed to login:', e);
     }
   };
+
   const updateUserContextData = newUserData => {
     setUserData(prevData => ({
       ...prevData,
       ...newUserData,
     }));
   };
-  
 
   const handleSubscribe = async () => {
     try {
       await AsyncStorage.setItem('isSubscribed', 'true');
       setIsSubscribed(true); // Update context state
-      alert('Your application has been submitted. Please wait for your approval.');
+      alert(
+        'Your application has been submitted. Please wait for your approval.',
+      );
     } catch (e) {
       console.error('Subscription failed:', e);
     }
@@ -144,8 +146,9 @@ export const AuthProvider = ({children}) => {
     login,
     contextLogout: logout,
     setUserData,
-    updateUserContextData, // Add this here
-    handleSubscribe, // Add handleSubscribe to context
+    updateUserContextData,
+    handleSubscribe,
+    setIsAuthenticated,
   };
 
   return (

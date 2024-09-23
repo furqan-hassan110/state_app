@@ -59,7 +59,7 @@ const PropertyDetail = ({route, navigation}) => {
 
   // Handle image press
   const handleImagePress = () => {
-    const images = [propertyDetails.imageSource]; // Replace with actual image URIs
+    const images = propertyDetails.images; // Replace with actual image URIs
     navigation.navigate('UserStack', {screen: 'ImageSlider', params: {images}});
   };
 
@@ -119,14 +119,54 @@ const PropertyDetail = ({route, navigation}) => {
         }
         style={styles.image}
       />
+      <View style={{left: 250, top: 450, position: 'absolute'}}>
+        <TouchableOpacity onPress={handleImagePress}>
+          <View
+            style={{
+              backgroundColor: colors.black,
+              opacity: 0.5,
+              width: width * 0.2,
+              height: height * 0.08,
+              borderRadius: 20,
+            }}>
+            <Image
+              source={
+                propertyDetails.images.length
+                  ? {uri: `${DOMAIN}${propertyDetails.images[0].imagePath}`}
+                  : require('../../../assets/images/role1.png')
+              }
+              style={{
+                marginBottom: 15,
+                width: width * 0.2,
+                height: height * 0.08,
+                borderRadius: 20,
+                borderWidth: 2,
+                borderColor: colors.white,
+              }}></Image>
+          </View>
+        </TouchableOpacity>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            position: 'obsolute',
+            bottom: 40,
+            left: 20,
+          }}>
+          <Entypo name="plus" size={24} color={colors.white} />
+          <Text style={{fontSize: 18, color: 'white'}}>
+            {propertyDetails.images.length ? propertyDetails.images.length : 3}
+          </Text>
+        </View>
+      </View>
 
       {/* Render the rest of the property details */}
       <View style={styles.detailsContainer}>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text style={styles.title}>{property.title}</Text>
-          <Text style={styles.price}>$ {property.sellingPrice}</Text>
+          <Text style={styles.title}>{propertyDetails.title}</Text>
+          <Text style={styles.price}>$ {propertyDetails.sellingPrice}</Text>
         </View>
-        <Text style={styles.location}>{property.location}</Text>
+        <Text style={styles.location}>{propertyDetails.location}</Text>
         <Button
           title="Contact Agent"
           onPress={toggleModal}
@@ -142,8 +182,12 @@ const PropertyDetail = ({route, navigation}) => {
             style={styles.agentImage}
           />
           <View>
-            <Text style={styles.agentName}>{property.createdBy.name}</Text>
-            <Text style={styles.agentTitle}>{property.createdBy.email}</Text>
+            <Text style={styles.agentName}>
+              {propertyDetails.createdBy.name}
+            </Text>
+            <Text style={styles.agentTitle}>
+              {propertyDetails.createdBy.email}
+            </Text>
           </View>
         </View>
         <View style={styles.livingdetails}>
@@ -154,19 +198,19 @@ const PropertyDetail = ({route, navigation}) => {
               size={20}
             />
             <Text style={styles.livingtext}>
-              Bedrooms {property.bedroomCount}
+              Bedrooms {propertyDetails.bedroomCount}
             </Text>
           </View>
           <View style={styles.bedroomcontainer}>
             <MaterialIcon name="bathroom" color={colors.buttons} size={20} />
             <Text style={styles.livingtext}>
-              Bathroom {property.bathroomCount}
+              Bathroom {propertyDetails.bathroomCount}
             </Text>
           </View>
           <View style={styles.bedroomcontainer}>
             <MaterialIcon name="garage" color={colors.buttons} size={20} />
             <Text style={styles.livingtext}>
-              Garage {property.carSpaceCount}
+              Garage {propertyDetails.carSpaceCount}
             </Text>
           </View>
         </View>
@@ -189,7 +233,7 @@ const PropertyDetail = ({route, navigation}) => {
                 color={colors.black}
               />
             </View>
-            <Text style={styles.adreessText}>{property.location}</Text>
+            <Text style={styles.adreessText}>{propertyDetails.location}</Text>
           </View>
           <View>
             <Text style={styles.locationdetials}>Cost of living</Text>
@@ -203,7 +247,9 @@ const PropertyDetail = ({route, navigation}) => {
                 alignItems: 'center',
                 marginBottom: 10,
               }}>
-              <Text style={styles.priceText}>$ {property.sellingPrice}</Text>
+              <Text style={styles.priceText}>
+                $ {propertyDetails.sellingPrice}
+              </Text>
             </View>
           </View>
         </View>
@@ -217,7 +263,9 @@ const PropertyDetail = ({route, navigation}) => {
         style={styles.modal}>
         <View style={styles.modalContent}>
           <View style={styles.noContainerModal}>
-            <Text style={styles.modalText}>{userData.phone_no}</Text>
+            <Text style={styles.modalText}>
+              {propertyDetails.createdBy.phoneNo}
+            </Text>
           </View>
           <Button
             title="Cancel"

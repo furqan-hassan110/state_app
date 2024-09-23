@@ -58,8 +58,11 @@ const PropertyDetail = ({route, navigation}) => {
 
   // Handle image press
   const handleImagePress = () => {
-    const images = [propertyDetails.imageSource]; // Replace with actual image URIs
-    navigation.navigate('UserStack', {screen: 'ImageSlider', params: {images}});
+    const images = propertyDetails.images; // Replace with actual image URIs
+    navigation.navigate('AgentStack', {
+      screen: 'ImageSlider',
+      params: {images},
+    });
   };
 
   if (loading) {
@@ -118,6 +121,42 @@ const PropertyDetail = ({route, navigation}) => {
         }
         style={styles.image}
       />
+      <View style={{left: 250, top: 450, position: 'absolute'}}>
+        <TouchableOpacity onPress={handleImagePress}>
+          <View
+            style={{
+              backgroundColor: colors.black,
+              opacity: 0.5,
+              width: width * 0.2,
+              height: height * 0.08,
+              borderRadius: 20,
+            }}>
+            <Image
+              source={
+                propertyDetails.images.length
+                  ? {uri: `${DOMAIN}${propertyDetails.images[0].imagePath}`}
+                  : require('../../../assets/images/role1.png')
+              }
+              style={{
+                marginBottom: 15,
+                width: width * 0.2,
+                height: height * 0.08,
+                borderRadius: 20,
+                borderWidth: 2,
+                borderColor: colors.white,
+              }}></Image>
+          </View>
+        </TouchableOpacity>
+        <Text style={{position: 'obsolute', bottom: 40, left: 20}}>
+          {propertyDetails.images.length}
+        </Text>
+        {/* <Entypo
+          style={{position: 'obsolute', bottom: 40, left: 20}}
+          name="plus"
+          size={24}
+          color={colors.white}
+        /> */}
+      </View>
 
       {/* Render the rest of the property details */}
       <View style={styles.detailsContainer}>
@@ -222,7 +261,9 @@ const PropertyDetail = ({route, navigation}) => {
         style={styles.modal}>
         <View style={styles.modalContent}>
           <View style={styles.noContainerModal}>
-            <Text style={styles.modalText}>{userData.phone_no}</Text>
+            <Text style={styles.modalText}>
+              {propertyDetails.createdBy.phoneNo}
+            </Text>
           </View>
           <Button
             title="Cancel"
